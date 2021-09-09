@@ -1,0 +1,26 @@
+[
+  {
+    "id": "100000000278",
+    "name": "ANALYSIS INTEREST CHKG",
+    "accountNumber": 100000000278,
+    "accountType": "SavingsAccount",
+    "primaryAccountOwner": "1234567890",
+    "secondaryAccountOwners": "",
+    "accountStatus": "ON_HOLD",
+    "accountBalance": 18835362.3,
+    "availableBalance": 18835362.3,
+    "accountCurrency": "USD",
+    "accountLabel": "ANALYSIS INTEREST CHKG",
+    "interestRate": null,
+    "taxIdentificationNumber": "",
+    "openedDate": "2018-02-02",
+    "closedDate": null,
+    "auditInfo": {
+        "createdDate": "2020-03-15T15:03:01Z",
+        "createdBy": "system",
+        "updatedDate": "2021-08-03T05:01:09Z",
+        "updatedBy": "system",
+        "isDeleted": false
+    }
+  }
+]

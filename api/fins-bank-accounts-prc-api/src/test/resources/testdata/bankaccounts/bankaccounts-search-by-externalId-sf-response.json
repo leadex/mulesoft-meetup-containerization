@@ -1,0 +1,32 @@
+[
+  {
+    "id": "a4l5e0000003J1bAAE",
+    "externalIds": [
+      {
+        "externalId": "100000000278",
+        "externalIdType": [
+          "FIS"
+        ],
+        "status": "VALID",
+        "statusLastChangedDate": "2021-07-28T19:32:24.000Z"
+      }
+    ],
+    "accountCurrency": "USD",
+    "accountBalance": 500.0,
+    "accountType": "CheckingAccount",
+    "accountLabel": "Demand Deposit",
+    "availableBalance": 500.0,
+    "openedDate": "2017-02-04",
+    "accountNumber": "100000000278",
+    "accountStatus": "OPEN",
+    "name": "Demand Deposit",
+    "primaryAccountOwner": "0015e00000Fn8vFAAR",
+    "auditInfo": {
+      "createdDate": "2021-07-28T19:32:24Z",
+      "createdBy": "Accelerator Admin",
+      "updatedDate": "2021-08-03T09:57:01Z",
+      "updatedBy": "Accelerator Admin",
+      "isDeleted": false
+    }
+  }
+]

@@ -1,0 +1,16 @@
+#%RAML 1.0 Trait
+usage: Apply this trait to the /ping endpoint of System APIs
+
+uses:
+  ResponseTypes: ../libraries/ResponseTypeLibrary.raml
+
+queryParameters:
+  checkDependencies?:
+    description: Set to true to check and report status of all dependencies, such as system connections and downstream APIs; default is false
+    type: boolean
+responses:
+  200:
+    body:
+      application/json:
+        type: ResponseTypes.PingResponse
+        example: !include ../examples/PingResponseExample.raml

@@ -1,0 +1,88 @@
+{
+    "metaData": {
+        "status": {
+            "code": 0,
+            "message": "PROCESS COMPLETE"
+        }
+    },
+    "CustomerList": [
+        {
+            "customerId": 6090,
+            "NameFull": "JUAN DELA CRUZ",
+            "firstName": "JUAN",
+            "middleName": null,
+            "lastName": "DELA CRUZ",
+            "addresslineFull": "144 SAMPAGUITA ST  MAKATI  AR  72212",
+            "homePhone": "463-555-1234",
+            "businessPhone": "463-555-1234",
+            "cellPhone": null,
+            "taxIdNumber": "000-2900-67",
+            "dateOfBirth": "1968-02-24"
+        },
+        {
+            "customerId": 9112,
+            "NameFull": "BETTY LEE HAW",
+            "firstName": "BETTY",
+            "middleName": "LEE",
+            "lastName": "HAW",
+            "addresslineFull": "123 CHURCH ST  BANGKOK  AR  72212",
+            "homePhone": "463-555-1234",
+            "businessPhone": null,
+            "cellPhone": null,
+            "taxIdNumber": "000-4100-65",
+            "dateOfBirth": "1968-02-24"
+        },
+        {
+            "customerId": 21106,
+            "NameFull": "OLD STONE BAKERY 3",
+            "firstName": "STONE",
+            "middleName": "BAKERY",
+            "lastName": "OLD",
+            "addresslineFull": "1526 WEST RD  INDIANAPOLIS  IN  46201",
+            "homePhone": "463-555-1234",
+            "businessPhone": "463-555-1234",
+            "cellPhone": "463-555-1234",
+            "taxIdNumber": "000-4108-65",
+            "dateOfBirth": "1986-01-07"
+        },
+        {
+            "customerId": 6662,
+            "NameFull": "ADAM SMITH",
+            "firstName": "ADAM",
+            "middleName": null,
+            "lastName": "SMITH",
+            "addresslineFull": "123 SILOM ST  BANGKOK  10500",
+            "homePhone": null,
+            "businessPhone": null,
+            "cellPhone": "463-555-1234",
+            "taxIdNumber": "123-4100-65",
+            "dateOfBirth": "1972-12-23"
+        },
+        {
+            "customerId": 14902,
+            "NameFull": "BRAIN SMITH",
+            "firstName": "BRAIN",
+            "middleName": null,
+            "lastName": "SMITH",
+            "addresslineFull": "123 SILOM ST  BANGKOK  10500",
+            "homePhone": null,
+            "businessPhone": "463-565-1634",
+            "cellPhone": null,
+            "taxIdNumber": "123-45-9889",
+            "dateOfBirth": "1975-03-26"
+        },
+        {
+            "customerId": 6658,
+            "NameFull": "ADAM SMITH",
+            "firstName": "ADAM",
+            "middleName": null,
+            "lastName": "SMITH",
+            "addresslineFull": "123 SILOM ST  BANGKOK  10500",
+            "homePhone": "469-556-1234",
+            "businessPhone": null,
+            "cellPhone": null,
+            "taxIdNumber": "162-89-6789",
+            "dateOfBirth": "1990-01-18"
+        }
+    ]
+}

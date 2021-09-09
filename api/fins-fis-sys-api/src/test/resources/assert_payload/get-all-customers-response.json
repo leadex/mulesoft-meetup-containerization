@@ -1,0 +1,290 @@
+[
+    {
+        "id": "6090",
+        "partyRoleType": "Customer",
+        "party": [
+            {
+                "id": null,
+                "partyType": "Individual",
+                "personName": "JUAN DELA CRUZ",
+                "firstName": "JUAN",
+                "lastName": "DELA CRUZ",
+                "birthDate": "1968-02-24",
+                "saluation": "",
+                "gender": "",
+                "middleName": "",
+                "mothersMaidenName": "",
+                "contactPoints": [
+                    {
+                        "id": null,
+                        "contactPointType": [
+                            "ContactPointAddress"
+                        ],
+                        "activeFromDate": "2021-07-16",
+                        "primaryFlag": true,
+                        "addressLine1": "144 SAMPAGUITA ST  MAKATI  AR  72212",
+                        "cityName": null,
+                        "stateProvinceName": null,
+                        "countryName": null,
+                        "postalCodeText": null
+                    },
+                    {
+                        "id": null,
+                        "contactPointType": [
+                            "ContactPointPhone"
+                        ],
+                        "activeFromDate": "2021-07-16",
+                        "primaryFlag": true,
+                        "telephoneNumber": "463-555-1234"
+                    }
+                ]
+            }
+        ],
+        "customerNumber": "000-2900-67",
+        "customerStatus": "ACTIVE",
+        "auditInfo": {
+            "createdDate": "2021-07-16T09:38:17Z",
+            "createdBy": "system",
+            "updatedDate": "2021-07-16T09:38:17Z",
+            "updatedBy": "system",
+            "isDeleted": false
+        }
+    },
+    {
+        "id": "9112",
+        "partyRoleType": "Customer",
+        "party": [
+            {
+                "id": null,
+                "partyType": "Individual",
+                "personName": "BETTY LEE HAW",
+                "firstName": "BETTY",
+                "lastName": "HAW",
+                "birthDate": "1968-02-24",
+                "saluation": "",
+                "gender": "",
+                "middleName": "LEE",
+                "mothersMaidenName": "",
+                "contactPoints": [
+                    {
+                        "id": null,
+                        "contactPointType": [
+                            "ContactPointAddress"
+                        ],
+                        "activeFromDate": "2021-07-16",
+                        "primaryFlag": true,
+                        "addressLine1": "123 CHURCH ST  BANGKOK  AR  72212",
+                        "cityName": null,
+                        "stateProvinceName": null,
+                        "countryName": null,
+                        "postalCodeText": null
+                    },
+                    {
+                        "id": null,
+                        "contactPointType": [
+                            "ContactPointPhone"
+                        ],
+                        "activeFromDate": "2021-07-16",
+                        "primaryFlag": true,
+                        "telephoneNumber": "463-555-1234"
+                    }
+                ]
+            }
+        ],
+        "customerNumber": "000-4100-65",
+        "customerStatus": "ACTIVE",
+        "auditInfo": {
+            "createdDate": "2021-07-16T09:38:17Z",
+            "createdBy": "system",
+            "updatedDate": "2021-07-16T09:38:17Z",
+            "updatedBy": "system",
+            "isDeleted": false
+        }
+    },
+    {
+        "id": "21106",
+        "partyRoleType": "Customer",
+        "party": [
+            {
+                "id": null,
+                "partyType": "Individual",
+                "personName": "OLD STONE BAKERY 3",
+                "firstName": "STONE",
+                "lastName": "OLD",
+                "birthDate": "1986-01-07",
+                "saluation": "",
+                "gender": "",
+                "middleName": "BAKERY",
+                "mothersMaidenName": "",
+                "contactPoints": [
+                    {
+                        "id": null,
+                        "contactPointType": [
+                            "ContactPointAddress"
+                        ],
+                        "activeFromDate": "2021-07-16",
+                        "primaryFlag": true,
+                        "addressLine1": "1526 WEST RD  INDIANAPOLIS  IN  46201",
+                        "cityName": null,
+                        "stateProvinceName": null,
+                        "countryName": null,
+                        "postalCodeText": null
+                    },
+                    {
+                        "id": null,
+                        "contactPointType": [
+                            "ContactPointPhone"
+                        ],
+                        "activeFromDate": "2021-07-16",
+                        "primaryFlag": true,
+                        "telephoneNumber": "463-555-1234"
+                    }
+                ]
+            }
+        ],
+        "customerNumber": "000-4108-65",
+        "customerStatus": "ACTIVE",
+        "auditInfo": {
+            "createdDate": "2021-07-16T09:38:17Z",
+            "createdBy": "system",
+            "updatedDate": "2021-07-16T09:38:17Z",
+            "updatedBy": "system",
+            "isDeleted": false
+        }
+    },
+    {
+        "id": "6662",
+        "partyRoleType": "Customer",
+        "party": [
+            {
+                "id": null,
+                "partyType": "Individual",
+                "personName": "ADAM SMITH",
+                "firstName": "ADAM",
+                "lastName": "SMITH",
+                "birthDate": "1972-12-23",
+                "saluation": "",
+                "gender": "",
+                "middleName": "",
+                "mothersMaidenName": "",
+                "contactPoints": [
+                    {
+                        "id": null,
+                        "contactPointType": [
+                            "ContactPointAddress"
+                        ],
+                        "activeFromDate": "2021-07-16",
+                        "primaryFlag": true,
+                        "addressLine1": "123 SILOM ST  BANGKOK  10500",
+                        "cityName": null,
+                        "stateProvinceName": null,
+                        "countryName": null,
+                        "postalCodeText": null
+                    }
+                ]
+            }
+        ],
+        "customerNumber": "123-4100-65",
+        "customerStatus": "ACTIVE",
+        "auditInfo": {
+            "createdDate": "2021-07-16T09:38:17Z",
+            "createdBy": "system",
+            "updatedDate": "2021-07-16T09:38:17Z",
+            "updatedBy": "system",
+            "isDeleted": false
+        }
+    },
+    {
+        "id": "14902",
+        "partyRoleType": "Customer",
+        "party": [
+            {
+                "id": null,
+                "partyType": "Individual",
+                "personName": "BRAIN SMITH",
+                "firstName": "BRAIN",
+                "lastName": "SMITH",
+                "birthDate": "1975-03-26",
+                "saluation": "",
+                "gender": "",
+                "middleName": "",
+                "mothersMaidenName": "",
+                "contactPoints": [
+                    {
+                        "id": null,
+                        "contactPointType": [
+                            "ContactPointAddress"
+                        ],
+                        "activeFromDate": "2021-07-16",
+                        "primaryFlag": true,
+                        "addressLine1": "123 SILOM ST  BANGKOK  10500",
+                        "cityName": null,
+                        "stateProvinceName": null,
+                        "countryName": null,
+                        "postalCodeText": null
+                    }
+                ]
+            }
+        ],
+        "customerNumber": "123-45-9889",
+        "customerStatus": "ACTIVE",
+        "auditInfo": {
+            "createdDate": "2021-07-16T09:38:17Z",
+            "createdBy": "system",
+            "updatedDate": "2021-07-16T09:38:17Z",
+            "updatedBy": "system",
+            "isDeleted": false
+        }
+    },
+    {
+        "id": "6658",
+        "partyRoleType": "Customer",
+        "party": [
+            {
+                "id": null,
+                "partyType": "Individual",
+                "personName": "ADAM SMITH",
+                "firstName": "ADAM",
+                "lastName": "SMITH",
+                "birthDate": "1990-01-18",
+                "saluation": "",
+                "gender": "",
+                "middleName": "",
+                "mothersMaidenName": "",
+                "contactPoints": [
+                    {
+                        "id": null,
+                        "contactPointType": [
+                            "ContactPointAddress"
+                        ],
+                        "activeFromDate": "2021-07-16",
+                        "primaryFlag": true,
+                        "addressLine1": "123 SILOM ST  BANGKOK  10500",
+                        "cityName": null,
+                        "stateProvinceName": null,
+                        "countryName": null,
+                        "postalCodeText": null
+                    },
+                    {
+                        "id": null,
+                        "contactPointType": [
+                            "ContactPointPhone"
+                        ],
+                        "activeFromDate": "2021-07-16",
+                        "primaryFlag": true,
+                        "telephoneNumber": "469-556-1234"
+                    }
+                ]
+            }
+        ],
+        "customerNumber": "162-89-6789",
+        "customerStatus": "ACTIVE",
+        "auditInfo": {
+            "createdDate": "2021-07-16T09:38:17Z",
+            "createdBy": "system",
+            "updatedDate": "2021-07-16T09:38:17Z",
+            "updatedBy": "system",
+            "isDeleted": false
+        }
+    }
+]

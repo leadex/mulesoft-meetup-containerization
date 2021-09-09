@@ -1,0 +1,146 @@
+version: "3.9"
+services:
+
+  fins-fis-sys-api:
+    image: fins-fis-sys-api:latest
+    networks:
+      - {{ mule_application_network }}
+    deploy:
+      replicas: {{ mule_application_list['fins-fis-sys-api']['replicas'] | default(1) }}
+      endpoint_mode: dnsrr
+      resources:
+        limits:
+          cpus: "{{ mule_application_list['fins-fis-sys-api']['cpu_limit'] }}"
+          memory: {{ mule_application_list['fins-fis-sys-api']['mem_limit'] }}
+    healthcheck:
+      test: ["CMD", "curl", "-k", "--silent", "https://localhost:8080/api/ping?checkDependencies=false"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: {{ mule_application_list['fins-fis-sys-api']['start_period'] }}
+    environment:
+      API_USERNAME: '{{ mule_anypoint_username }}'
+      API_PASSWORD: '{{ mule_anypoint_password }}'
+      ORG_NAME: '{{ mule_anypoint_org }}'
+      MULE_ENV: {{ mule_env }}
+      SERVER_NAME: {{ mule_env }}-fins-fis-sys-api
+
+  fins-salesforce-customers-sys-api:
+    image: fins-salesforce-customers-sys-api:latest
+    networks:
+      - {{ mule_application_network }}
+{% if mule_application_list['fins-salesforce-customers-sys-api']['published_port'] is defined %}
+    ports:
+    - target: 8080
+      published: {{ mule_application_list['fins-salesforce-customers-sys-api']['published_port'] }}
+      mode: ingress
+{% endif %}
+    deploy:
+      replicas: {{ mule_application_list['fins-salesforce-customers-sys-api']['replicas'] | default(1) }}
+      resources:
+        limits:
+          cpus: "{{ mule_application_list['fins-salesforce-customers-sys-api']['cpu_limit'] }}"
+          memory: {{ mule_application_list['fins-salesforce-customers-sys-api']['mem_limit'] }}
+    healthcheck:
+      test: ["CMD", "curl", "-k", "--silent", "https://localhost:8080/api/ping?checkDependencies=false"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: {{ mule_application_list['fins-salesforce-customers-sys-api']['start_period'] }}
+    environment:
+      API_USERNAME: '{{ mule_anypoint_username }}'
+      API_PASSWORD: '{{ mule_anypoint_password }}'
+      ORG_NAME: '{{ mule_anypoint_org }}'
+      MULE_ENV: {{ mule_env }}
+      SERVER_NAME: {{ mule_env }}-fins-salesforce-customers-sys-api
+
+  fins-salesforce-financial-sys-api:
+    image: fins-salesforce-financial-sys-api:latest
+    networks:
+      - {{ mule_application_network }}
+{% if mule_application_list['fins-salesforce-financial-sys-api']['published_port'] is defined %}
+    ports:
+    - target: 8080
+      published: {{ mule_application_list['fins-salesforce-financial-sys-api']['published_port'] }}
+      mode: ingress
+{% endif %}
+    deploy:
+      replicas: {{ mule_application_list['fins-salesforce-financial-sys-api']['replicas'] | default(1) }}
+      resources:
+        limits:
+          cpus: "{{ mule_application_list['fins-salesforce-financial-sys-api']['cpu_limit'] }}"
+          memory: {{ mule_application_list['fins-salesforce-financial-sys-api']['mem_limit'] }}
+    healthcheck:
+      test: ["CMD", "curl", "-k", "--silent", "https://localhost:8080/api/ping?checkDependencies=false"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: {{ mule_application_list['fins-salesforce-financial-sys-api']['start_period'] }}
+    environment:
+      API_USERNAME: '{{ mule_anypoint_username }}'
+      API_PASSWORD: '{{ mule_anypoint_password }}'
+      ORG_NAME: '{{ mule_anypoint_org }}'
+      MULE_ENV: {{ mule_env }}
+      SERVER_NAME: {{ mule_env }}-fins-salesforce-financial-sys-api
+
+  fins-bank-accounts-prc-api:
+    image: fins-bank-accounts-prc-api:latest
+    networks:
+      - {{ mule_application_network }}
+{% if mule_application_list['fins-bank-accounts-prc-api']['published_port'] is defined %}
+    ports:
+    - target: 8080
+      published: {{ mule_application_list['fins-bank-accounts-prc-api']['published_port'] }}
+      mode: ingress
+{% endif %}
+    deploy:
+      replicas: {{ mule_application_list['fins-bank-accounts-prc-api']['replicas'] | default(1) }}
+      resources:
+        limits:
+          cpus: "{{ mule_application_list['fins-bank-accounts-prc-api']['cpu_limit'] }}"
+          memory: {{ mule_application_list['fins-bank-accounts-prc-api']['mem_limit'] }}
+    healthcheck:
+      test: ["CMD", "curl", "-k", "--silent", "https://localhost:8080/api/ping?checkDependencies=false"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: {{ mule_application_list['fins-bank-accounts-prc-api']['start_period'] }}
+    environment:
+      API_USERNAME: '{{ mule_anypoint_username }}'
+      API_PASSWORD: '{{ mule_anypoint_password }}'
+      ORG_NAME: '{{ mule_anypoint_org }}'
+      MULE_ENV: {{ mule_env }}
+      SERVER_NAME: {{ mule_env }}-fins-bank-accounts-prc-api
+
+  fins-salesforce-financial-exp-api:
+    image: fins-salesforce-financial-exp-api:latest
+    networks:
+      - {{ mule_application_network }}
+{% if mule_application_list['fins-salesforce-financial-exp-api']['published_port'] is defined %}
+    ports:
+    - target: 8080
+      published: {{ mule_application_list['fins-salesforce-financial-exp-api']['published_port'] }}
+      mode: ingress
+{% endif %}
+    deploy:
+      replicas: {{ mule_application_list['fins-salesforce-financial-exp-api']['replicas'] | default(1) }}
+      resources:
+        limits:
+          cpus: "{{ mule_application_list['fins-salesforce-financial-exp-api']['cpu_limit'] }}"
+          memory: {{ mule_application_list['fins-salesforce-financial-exp-api']['mem_limit'] }}
+    healthcheck:
+      test: ["CMD", "curl", "-k", "--silent", "https://localhost:8080/api/ping?checkDependencies=false"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: {{ mule_application_list['fins-salesforce-financial-exp-api']['start_period'] }}
+    environment:
+      API_USERNAME: '{{ mule_anypoint_username }}'
+      API_PASSWORD: '{{ mule_anypoint_password }}'
+      ORG_NAME: '{{ mule_anypoint_org }}'
+      MULE_ENV: {{ mule_env }}
+      SERVER_NAME: {{ mule_env }}-fins-salesforce-financial-exp-api
+
+networks:
+  mule-api-net:
+    driver: overlay

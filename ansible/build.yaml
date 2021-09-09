@@ -1,0 +1,116 @@
+---
+
+- name: Prepare API implementation jar artifacts
+  hosts: 127.0.0.1
+  connection: local
+  vars:
+    apps_dir: "{{ playbook_dir }}/../api"
+    api_apps: []
+  tasks:
+
+    - name: Pip libs for docker-related ansible modules
+      pip:
+        name: "{{ docker_pip_packages }}"
+        state: present
+
+    - name: Ensure Maven (or expected to be on PATH)
+      ignore_errors: yes
+      package:
+        name: maven
+        state: present
+
+    - name: Building Maven packages
+      register: mvn_result
+      command:
+        cmd: "mvn clean package -DskipTests -s {{ playbook_dir }}/../misc/settings-accelerators.xml"
+        chdir: "{{ apps_dir }}/{{ item }}"
+      loop: "{{ mule_application_list.keys() | list  }}"
+
+    - name: Validate Maven package result
+      fail:
+        msg: "The command {{ item.cmd }} did not have a zero return code"
+      when: item.rc != 0
+      loop: "{{ mvn_result.results }}"
+      loop_control:
+        label: "{{ item.cmd }}"
+
+    - name: Find JAR artifacts files
+      register: jar_archives
+      find:
+        paths: "{{ apps_dir }}/{{ item }}/target"
+        patterns: "*.jar"
+        recurse: no
+      loop: "{{ mule_application_list.keys() | list }}"
+      loop_control:
+        label: "{{ item }}"
+
+    - name: Prepare JAR artifacts list
+      include_tasks: include_tasks/add-jar-list-item.yaml
+      loop: "{{ jar_archives.results }}"
+      loop_control:
+        label: "{{ item.item }}"
+
+
+- name: Prepare Mule Runtime for Docker image
+  hosts: 127.0.0.1
+  connection: local
+  tasks:
+
+    - name: Create an empty build directory
+      block:
+        - name: Empty existing directory
+          file:
+            state: absent
+            path: "{{ build_dir }}"
+
+        - name: Recreate directory
+          file:
+            state: directory
+            path: "{{ build_dir }}"
+
+    - name: Download Mule Runtime distibution
+      register: mule_package
+      get_url:
+        url: "{{ mule_runtime_package_url }}"
+        dest: "{{ build_dir }}"
+
+    - name: Unpack Mule Runtime distibution archive
+      register: mule_unpacked
+      unarchive:
+        src: "{{ mule_package.dest }}"
+        dest: "{{ build_dir }}"
+        list_files: yes
+
+    - name: Define path to Mule Runtime exploded contents
+      set_fact:
+        mule_exploded_local_dir: "{{ mule_unpacked.files[0].split('/').0 }}"
+        mule_exploded_full_dir: "{{ build_dir }}/{{ mule_unpacked.files[0].split('/').0 }}"
+
+    - name: Copy Mule Runtime configuration
+      template:
+        src: "{{ playbook_dir }}/templates/wrapper.conf.j2"
+        dest: "{{ mule_exploded_full_dir }}/conf/wrapper.conf"
+
+    - name: Copy Mule Runtime startup script
+      template:
+        src: "{{ playbook_dir }}/templates/start-mule.sh.j2"
+        dest: "{{ mule_exploded_full_dir }}/bin/start-mule.sh"
+        mode: 0770
+
+    - name: Copy application JARs into the build directory
+      copy:
+        src: "{{ item.path }}"
+        dest: "{{ build_dir }}"
+      loop: "{{ api_apps }}"
+
+
+- name: Build applications Docker images
+  hosts: 127.0.0.1
+  connection: local
+  tasks:
+
+    - name: Build API application container
+      include_tasks: include_tasks/build-application-image.yaml
+      loop: "{{ api_apps }}"
+      loop_control:
+        label: "Build image for {{ item.service_name }}"

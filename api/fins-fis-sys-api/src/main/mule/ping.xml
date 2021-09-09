@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	<sub-flow name="ping_get-health"
+		doc:id="b2327750-c0f4-4bc4-8a46-9db8b9519b63">
+		<set-variable
+			value='#[attributes.queryParams.checkDependencies == "true" default false]'
+			doc:name="checkDependencies"
+			doc:id="701fbd59-92f4-42b4-834b-72ad85f83043"
+			variableName="checkDependencies" />
+		<choice doc:name="Choice for check dependencies"
+			doc:id="e6543beb-f327-41ef-8070-3526a7f7f1ed">
+			<when expression="#[vars.checkDependencies]">
+				<logger level="INFO" doc:name="Logger" doc:id="23982c62-fb47-46d8-98a2-8d24d815aa6c" message='#["No Health Check for FIS"]'/>
+			</when>
+			<otherwise>
+				<set-variable doc:name="dependencyList"
+					doc:id="ea60bf92-3f27-425e-bb5c-ee01e3b43233"
+					variableName="dependencyList" value="#[null]" />
+			</otherwise>
+		</choice>
+		<ee:transform doc:name="Map Response"
+			doc:id="4041b3f2-9dc0-4b6e-94b4-f41ab8e99780">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	status: "OK",
+	apiName: p("api.name") default "",
+	apiVersion: p("api.version") default "",
+	(dependencies: vars.dependencyList map(item) -> {
+		name: item.name default "",
+		status: item.status default ""
+	})
+	if(vars.dependencyList != null)
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-variable value="200" doc:name="httpStatus"
+			doc:id="3c26033f-f3c2-4401-9b25-24ca89a1ab20"
+			variableName="httpStatus" />
+	</sub-flow>
+</mule>

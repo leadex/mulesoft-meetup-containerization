@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce-composite="http://www.mulesoft.org/schema/mule/salesforce-composite"
+	xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/salesforce-composite http://www.mulesoft.org/schema/mule/salesforce-composite/current/mule-salesforce-composite.xsd">
+	<sub-flow name="related-contacts_link-contact-with-account" doc:id="072a3e94-8553-4796-ab14-8b8cf8667578" >
+		<ee:transform doc:name="Update Contact Request" doc:id="22f514fb-a61c-44c1-8cfb-707e083e01db">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable resource="dwl/customers/relate-contact-account-request-for-sf.dwl" variableName="updateContact" />
+			</ee:variables>
+		</ee:transform>
+		<until-successful maxRetries="${retry.sfdc.maxretries}" doc:name="Retry" doc:id="c5307650-44cc-4811-9892-ef505759fc85" millisBetweenRetries="${retry.sfdc.timebetween}">							
+			<!--
+			<salesforce:update type="Contact" doc:name="Update Contact With Account" doc:id="5479d552-0063-4e4c-a7df-d0c430f46ec3" config-ref="Salesforce_Config" target="updatedContact">
+					<salesforce:records><![CDATA[#[vars.updateContact]]]></salesforce:records>
+			</salesforce:update>
+			-->
+			<ee:transform doc:name="Mock Update Contact With Account" doc:id="67afb519-701f-4a05-9a85-2f4cbb5b176c" >
+				<ee:message >
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="updatedContact" ><![CDATA[%dw 2.0
+output application/java
+---
+{
+  "id": null,
+  "items": [
+    {
+      "exception": null,
+      "message": null,
+      "payload": {
+        "created": false,
+        "success": true,
+        "id": "01t4x000000MgrzAAC",
+        "errors": [
+          
+        ]
+      },
+      "id": "01t4x000000MgrzAAC",
+      "successful": true,
+      "statusCode": null
+    }
+  ],
+  "successful": true
+}
+]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</until-successful>
+		<logger level="DEBUG" doc:name="Log Update ContactResult" doc:id="db199b7f-a7d0-463c-bf9d-9b18f5cc3c55" message="#[%dw 2.0&#10;output application/json&#10;---&#10;vars.updatedContact]" />
+		<validation:is-not-null doc:name="Contact Id updated Is not null" doc:id="62bd6f5e-11ba-431d-8e21-f468e235657e" config-ref="Validation_Config" value="#[vars.updatedContact.items[0].id]" message='#["Contact update failed"]' />
+	</sub-flow>
+	<sub-flow name="related-contacts_upsert-account-contact-relation" doc:id="68fd24d4-be7d-492d-bfdf-3f5d57b4ea02" >
+		<until-successful maxRetries="${retry.sfdc.maxretries}" doc:name="Retry" doc:id="65df38c0-3852-4f94-ac67-e5a931090767" millisBetweenRetries="${retry.sfdc.timebetween}">
+			<!--
+			<salesforce:query doc:name="Get AccountContactRelation Record" doc:id="cdbc33e1-3021-4105-b679-0b30ae50c366" config-ref="Salesforce_Config" target="accountContactRelation" targetValue="#[payload[0]]">
+				<salesforce:salesforce-query><![CDATA[SELECT Id,AccountId,ContactId
+	FROM AccountContactRelation
+	WHERE ContactId=':contactId' AND AccountId=':accountId']]></salesforce:salesforce-query>
+				<salesforce:parameters><![CDATA[#[output application/java
+	-&#45;&#45;
+	{
+		"accountId" : vars.customerId,
+		"contactId" : vars.contactId
+	}]]]></salesforce:parameters>
+			</salesforce:query>
+			-->
+			<ee:transform doc:name="Mock Get AccountContactRelation Record" doc:id="796c419f-5fff-4b54-9190-e13047939b1c" >
+				<ee:message >
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="accountContactRelation" ><![CDATA[%dw 2.0
+output application/java
+---
+{
+    "StartDate": null,
+    "AccountId": "0014x000009EdamAAC",
+    "Roles": "Other",
+    "Id": "07k4x000002pXIAAA2",
+    "ContactId": "0034x0000074PPEAA2",
+    "type": "AccountContactRelation",
+    "EndDate": null
+}]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</until-successful>
+		<choice doc:name="Is Account Contact Relation Exists?" doc:id="d0b80c96-2927-429b-b5c1-abf7c24401ee">
+			<when expression="#[!isEmpty(vars.accountContactRelation.Id)]">
+				<ee:transform doc:name="Update Account Contact Relation" doc:id="15c01690-1922-4afb-85a1-03062591b43c">
+					<ee:message>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable resource="dwl/customers/update-account-contact-relation.dwl" variableName="accountContactRelation" />
+					</ee:variables>
+				</ee:transform>
+		<until-successful maxRetries="${retry.sfdc.maxretries}" doc:name="Retry" doc:id="c8909acd-48ec-48f8-85f9-50615de61a50" millisBetweenRetries="${retry.sfdc.timebetween}">
+			<!--
+			<salesforce:update doc:name="Update Account Contact Relation" type="AccountContactRelation" doc:id="c0efd099-d152-403e-b755-35e0782766ab" config-ref="Salesforce_Config">
+				<salesforce:records><![CDATA[#[vars.accountContactRelation]]]></salesforce:records>	
+			</salesforce:update>
+			-->
+					<ee:transform doc:name="Mock Update Account Contact Relation" doc:id="215d7e2c-e548-486c-b576-2b84f14a11b8" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+  "id": null,
+  "items": [
+    {
+      "exception": null,
+      "message": null,
+      "payload": {
+        "created": false,
+        "success": true,
+        "id": "01t4x000000MgrzAAC",
+        "errors": [
+          
+        ]
+      },
+      "id": "01t4x000000MgrzAAC",
+      "successful": true,
+      "statusCode": null
+    }
+  ],
+  "successful": true
+}]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+		</until-successful>
+		<logger level="DEBUG" doc:name="Log Update Result" doc:id="9bf2be98-15e2-4075-a993-aafd062fc368" message="#[%dw 2.0&#10;output application/json&#10;---&#10;payload]" />
+		<validation:is-not-null doc:name="Contact Id updated Is not null" doc:id="91e7d9fc-4430-41bb-83e5-c74d02642a94" config-ref="Validation_Config" value="#[payload.items[0].id]" message='#["AccountContactRelation update failed"]' />
+			</when>
+			<otherwise>
+				<ee:transform doc:name="Create Account Contact Relation" doc:id="f5f50578-d554-4162-a30d-053637fb479f">
+					<ee:message />
+					<ee:variables>
+						<ee:set-variable resource="dwl/customers/create-account-contact-relation.dwl" variableName="accountContactRelation" />
+					</ee:variables>
+				</ee:transform>
+					<until-successful maxRetries="${retry.sfdc.maxretries}" doc:name="Retry" doc:id="752ee092-40ef-4d49-823b-ea85c86db256" millisBetweenRetries="${retry.sfdc.timebetween}">
+					<!--
+					<salesforce:create doc:name="Create Account Contact Relation" doc:id="579925f6-1f8a-46e0-85b7-abc0a804c2cd" config-ref="Salesforce_Config" type="AccountContactRelation">
+						<salesforce:records ><![CDATA[#[vars.accountContactRelation]]]></salesforce:records>
+					</salesforce:create>
+					-->
+					<ee:transform doc:name="Mock Create Account Contact Relation" doc:id="4f478795-fbb4-473c-8c6a-0cc123460262" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+  "id": null,
+  "items": [
+    {
+      "exception": null,
+      "message": null,
+      "payload": {
+        "created": false,
+        "success": true,
+        "id": "01t4x000000MgrzAAC",
+        "errors": [
+          
+        ]
+      },
+      "id": "01t4x000000MgrzAAC",
+      "successful": true,
+      "statusCode": null
+    }
+  ],
+  "successful": true
+}]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+				</until-successful>
+							<logger level="DEBUG" doc:name="Log Update Result" doc:id="25f912a9-fce7-4c57-9452-84644860ad1c" message="#[%dw 2.0&#10;output application/json&#10;---&#10;payload]" />
+							<validation:is-not-null doc:name="Contact Id updated Is not null" doc:id="3a06e251-3c4d-4873-96d8-7158c7cc593a" config-ref="Validation_Config" value="#[payload.items[0].id]" message='#["AccountContactRelation update failed"]' />
+							</otherwise>
+						</choice>	
+	</sub-flow>
+	<sub-flow name="related-contacts_get-releated-contacts-by-customer-id" doc:id="f174d1a1-228e-41b5-befd-dd3a9619a1c3" >
+		<try doc:name="Try" doc:id="e03954ca-10dd-4bf2-8017-18b57571ce74">
+			<!--
+			<salesforce:query doc:name="Get Related Contacts for an Account" doc:id="29b3d1d6-5e81-492b-9fc0-181d609ac923" config-ref="Salesforce_Config" target="relatedContacts">
+				<salesforce:salesforce-query><![CDATA[SELECT Id,AccountId,ContactId, Roles, StartDate, EndDate
+FROM AccountContactRelation
+WHERE AccountId=':Id']]></salesforce:salesforce-query>
+				<salesforce:parameters><![CDATA[#[output application/java
+-&#45;&#45;
+{
+	"Id" : vars.customerId
+}]]]></salesforce:parameters>
+			</salesforce:query>
+			-->
+			<ee:transform doc:name="Mock Get Related Contacts for an Account" doc:id="e734f82e-4ea1-431c-9adf-76b3db1ec5e1" >
+				<ee:message >
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="relatedContacts" ><![CDATA[%dw 2.0
+output application/java
+---
+[
+  {
+    "StartDate": null,
+    "AccountId": "0014x000009EdamAAC",
+    "Roles": "Other",
+    "Id": "07k4x000002pXIAAA2",
+    "ContactId": "0034x0000074PPEAA2",
+    "type": "AccountContactRelation",
+    "EndDate": null
+  },
+  {
+    "StartDate": null,
+    "AccountId": "0014x000009EdamAAC",
+    "Roles": "Executive Sponsor",
+    "Id": "07k4x000002pXIBAA2",
+    "ContactId": "0034x0000074PPFAA2",
+    "type": "AccountContactRelation",
+    "EndDate": null
+  },
+  {
+    "StartDate": null,
+    "AccountId": "0014x000009EdamAAC",
+    "Roles": "Business User",
+    "Id": "07k4x000002pXIGAA2",
+    "ContactId": "0034x0000074PPKAA2",
+    "type": "AccountContactRelation",
+    "EndDate": null
+  },
+  {
+    "StartDate": null,
+    "AccountId": "0014x000009EdamAAC",
+    "Roles": "Other",
+    "Id": "07k4x000002pXIHAA2",
+    "ContactId": "0034x0000074PO5AAM",
+    "type": "AccountContactRelation",
+    "EndDate": null
+  },
+  {
+    "StartDate": null,
+    "AccountId": "0014x000009EdamAAC",
+    "Roles": "Other",
+    "Id": "07k4x000002pXIJAA2",
+    "ContactId": "0034x0000074PPMAA2",
+    "type": "AccountContactRelation",
+    "EndDate": null
+  },
+  {
+    "StartDate": null,
+    "AccountId": "0014x000009EdamAAC",
+    "Roles": "Economic Buyer;Business User",
+    "Id": "07k4x00000BtPEGAA3",
+    "ContactId": "0034x00000ZwWKeAAN",
+    "type": "AccountContactRelation",
+    "EndDate": null
+  }
+]]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<error-handler>
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="6ffe0524-8cbc-4bf1-a55a-0e49608a47aa" type="ANY" when='#[error.detailedDescription contains "invalid ID field"]'>
+					<set-variable value="404" doc:name="Set httpStatus to 404" doc:id="48e207d6-b44a-4259-b6ba-ec6a98ef3209" variableName="httpStatus" />
+					<flow-ref doc:name="common-error-handler_connector-exception" doc:id="1fba2cb1-e96b-4b4a-9f41-5182ced3ce3d" name="common-error-handler_connector-exception" />
+				</on-error-continue>
+			</error-handler>
+		</try>
+		<choice doc:name="Check for http response" doc:id="0d898629-d103-4616-b790-9acf4baa6c45" >
+			<when expression="#[vars.httpStatus != null]" >
+				<ee:transform doc:name="Error Response" doc:id="e2438b70-407c-43e0-8d7c-b8e9453cf7af">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+vars.exceptionResponse]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+					</ee:variables>
+				</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Map Response" doc:id="533f9758-311c-47bf-9544-9910979d74b6">
+					<ee:message>
+						<ee:set-payload resource="dwl/customers/retrieve-related-contacts-by-customerid-response.dwl" />
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+	</sub-flow>
+	<sub-flow name="related-contacts_update-relationship-type" doc:id="47475273-da01-4916-923d-d3e4638f7705" >
+			<logger level="DEBUG" doc:name="Log Request Payload" doc:id="6f0dfd4c-fbe4-4651-864c-5879c35ebbf7" message="#[%dw 2.0&#10;output application/json&#10;---&#10;payload]" />
+			<ee:transform doc:name="Transform Message" doc:id="89a370a1-4ed6-414c-b5ed-35cd5f4dcb9a" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="originalPayload" ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="customers-common_get-account-by-id" doc:id="c3503716-ffb6-465d-9e7c-7d278007843a" name="customers-common_get-account-by-id"/>
+		<choice doc:name="Is Account Exists?" doc:id="fdf2f4a5-cf74-4ea4-8e79-663dc696d183">
+			<when expression="#[!isEmpty(payload.id)]">
+				<foreach doc:name="For Each" doc:id="bca3b165-9e16-467f-b543-d25ebec527a6" collection="#[vars.originalPayload]">
+					<set-variable value="#[payload.relatedParty[0].id]" doc:name="Set Variable" doc:id="7232e48c-4398-41dc-b4fe-2c15191c5299" variableName="contactId"/>
+					<until-successful maxRetries="${retry.sfdc.maxretries}" doc:name="Retry" doc:id="f151d2df-7ede-4957-a627-c7233d20beb7" millisBetweenRetries="${retry.sfdc.timebetween}">
+						<!--
+						<salesforce:query doc:name="Get Contact" doc:id="2b662250-133a-4464-9196-1da234b36e54" config-ref="Salesforce_Config" target="contactReturned" targetValue="#[payload[0]]">
+							<salesforce:salesforce-query><![CDATA[SELECT Id,AccountId FROM Contact
+	WHERE Id=':Id']]></salesforce:salesforce-query>
+							<salesforce:parameters><![CDATA[#[output application/java
+	-&#45;&#45;
+	{
+		"Id" : vars.contactId
+	}]]]></salesforce:parameters>
+						</salesforce:query>
+						-->
+						<ee:transform doc:name="Mock Get Contact" doc:id="ec82a181-8eff-46ae-9a1f-97468df62a83" >
+							<ee:message >
+							</ee:message>
+							<ee:variables >
+								<ee:set-variable variableName="contactReturned" ><![CDATA[%dw 2.0
+output application/java
+---
+{
+  "Id": "0034x00000GCkxGAAT",
+  "type": "Contact"
+}]]></ee:set-variable>
+							</ee:variables>
+						</ee:transform>
+					</until-successful>
+					<validation:is-not-null doc:name="Contact Id Is not null" doc:id="2be148cb-7dd1-4f92-8ff4-4e0f97114503" config-ref="Validation_Config" value="#[vars.contactReturned.Id]" message='#["Contact Not Found"]' />
+					
+						<choice doc:name="Is Private Contact?" doc:id="1c4ddaf2-734f-40b5-a0d9-63e9fc722a12" >
+						<when expression="#[isEmpty(vars.contactReturned.AccountId)]">
+							<flow-ref doc:name="related-contacts_link-contact-with-account" doc:id="2b4f92ff-d2a6-4f0b-b4a5-a57b14e34721" name="related-contacts_link-contact-with-account" target="updatedContact"/>
+						</when>
+						<otherwise >
+							<logger level="INFO" doc:name="Log message" doc:id="a08f4939-0301-4bda-bdfa-1ee894e58678" message='"Not a private Contact"'/>
+						</otherwise>
+					</choice>
+					<flow-ref doc:name="related-contacts_upsert-account-contact-relation" doc:id="172acdf1-bd33-4e04-9e0f-7bb235a85599" name="related-contacts_upsert-account-contact-relation" />
+				</foreach>
+				<ee:transform doc:name="Map Response" doc:id="8131bb3a-15a4-4648-b1ca-d975fdbf7ef6">
+			<ee:message>
+				<ee:set-payload resource="dwl/customers/customers-create-success.dwl" />
+			</ee:message>
+			<ee:variables>
+				<ee:set-variable variableName="httpStatus"><![CDATA[%dw 2.0
+output application/java
+---
+200]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+			</when>
+			<otherwise>
+				<logger level="INFO" doc:name="Logger" doc:id="e20f61ea-29a6-4a51-a470-969100d660b1" message='"Account Not Found"' />
+			</otherwise>
+		</choice>
+	</sub-flow>
+</mule>

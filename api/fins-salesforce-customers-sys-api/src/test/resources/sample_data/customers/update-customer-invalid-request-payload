@@ -1,0 +1,23 @@
+{
+	"id": "0014x00000H72YvAAJ",
+	"partyRoleType": "Customer",
+	"party": [{
+		"id": null,
+		"partyType": "Individual1",
+        "salutation": "Mrs",
+		"firstName": "Test FirstName 123",
+        "birthDate": "1994-03-17",
+		"externalIds": [{
+			"id": null,
+			"externalId":"98643",
+			"externalIdType": ["MDM"]
+		}]
+	}],
+    "externalIds": [{
+			"id": null,
+			"externalId":"98843",
+			"externalIdType": ["MDM"]
+		}],
+    "customerStatus": "ACTIVE",
+    "customerNumber":"xYZ889"
+}

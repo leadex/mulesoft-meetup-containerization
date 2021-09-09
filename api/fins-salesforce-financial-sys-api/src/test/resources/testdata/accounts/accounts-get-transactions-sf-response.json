@@ -1,0 +1,16 @@
+[
+  {
+    "FinServ__TransactionType__c": "Credit",
+    "FinServ__TransactionDate__c": "2020-07-01T19:00:00.000Z",
+    "FinServ__TransactionId__c": "43589083",
+    "Disputed__c": "false",
+    "type": "FinServ__FinancialAccountTransaction__c",
+    "FinServ__FinancialAccount__c": "a4l5e000000RPylAAG",
+    "Name": "T-000000027",
+    "FinServ__Amount__c": "20000.0",
+    "CreatedById": "0055e000003fNkkAAE",
+    "FinServ__TransactionStatus__c": "Posted",
+    "FinServ__TransactionSubtype__c": "On-Us Check Deposit",
+    "LastModifiedById": "0055e000003fNkkAAE"
+  }
+]

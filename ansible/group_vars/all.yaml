@@ -1,0 +1,61 @@
+---
+
+### Change the parameters below
+
+# URL to Mule Runtime archive package
+mule_runtime_package_url:
+
+# Anypoint organization credentials to upload statistics to Anypoint Platform
+mule_anypoint_client_id:
+mule_anypoint_client_secret:
+
+# Anypoint user credentials to register applications into Runtime Manager
+mule_anypoint_org:
+mule_anypoint_username:
+mule_anypoint_password:
+
+### The parameters below are not supposed to be changed in this file
+
+# Default Mule environment configuration
+mule_env: local
+
+# List of API implementation applications
+mule_application_list:
+  fins-fis-sys-api:
+    cpu_limit: '0.5'
+    mem_limit: 1G
+    start_period: 10m
+    published_port: 10090
+    replicas: 1
+  fins-salesforce-customers-sys-api:
+    cpu_limit: '0.7'
+    mem_limit: 1.5G
+    start_period: 10m
+    published_port: 10091
+    replicas: 1
+  fins-salesforce-financial-sys-api:
+    cpu_limit: '0.9'
+    mem_limit: 1G
+    start_period: 10m
+    published_port: 10092
+    replicas: 1
+  fins-bank-accounts-prc-api:
+    cpu_limit: '0.5'
+    mem_limit: 1G
+    start_period: 10m
+    published_port: 10093
+    replicas: 1
+  fins-salesforce-financial-exp-api:
+    cpu_limit: '0.5'
+    mem_limit: 1G
+    start_period: 10m
+    published_port: 8090
+    replicas: 1
+
+mule_application_network: mule-api-net
+
+build_dir: "{{ playbook_dir }}/build"
+build_mule_unpacked_dir: "{{ build_dir }}/mule-runtime"
+
+docker_pip_packages:
+  - docker

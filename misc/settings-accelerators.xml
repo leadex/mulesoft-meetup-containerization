@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+	<!-- Activate required profiles by default -->
+	<activeProfiles>
+		<activeProfile>global-settings</activeProfile>
+		<activeProfile>mule-repos</activeProfile>
+	</activeProfiles>
+
+	<profiles>
+		<!-- Profile to define global properties used in Maven projects -->
+		<profile>
+			<id>global-settings</id>
+			<properties>
+				<!-- Set this to the Business Group Id for your target Anypoint group -->
+				<!-- This is for local Exchange assets and CloudHub deployments -->
+				<global.anypoint.groupId>68ef9520-24e9-4cf2-b2f5-620025690913</global.anypoint.groupId>
+				<!-- Set this to uniquely identify CloudHub applications for your organization -->
+				<!-- Include a trailing hyphen for better readability but do not exceed 4 characters -->
+				<global.cloudhub.appPrefix>org-</global.cloudhub.appPrefix>
+			</properties>
+		</profile>
+
+		<!-- MuleSoft repositories profile -->
+		<profile>
+			<id>mule-repos</id>
+			<repositories>
+				<!-- Anypoint Exchange repositories -->
+				<repository>
+					<id>public-exchange</id>
+					<name>Accelerator Exchange</name>
+					<url>https://maven.anypoint.mulesoft.com/api/v1/organizations/68ef9520-24e9-4cf2-b2f5-620025690913/maven</url>
+				</repository>
+				<repository>
+					<id>us-exchange</id>
+					<name>US Exchange</name>
+					<url>https://maven.anypoint.mulesoft.com/api/v1/organizations/2c6fa6cd-f7fd-4975-9f7d-47d2fe509b85/maven</url>
+					<layout>default</layout>
+				</repository>
+				<repository>
+					<id>eu-exchange</id>
+					<name>EU Exchange</name>
+					<url>https://maven.eu1.anypoint.mulesoft.com/api/v1/organizations/e0b4a150-f59b-46d4-ad25-5d98f9deb24a/maven</url>
+					<layout>default</layout>
+				</repository>
+				<!-- Organization-specific Exchange dependencies; change the group ID to match the global property above -->
+				<repository>
+					<id>accelerator-exchange</id>
+					<name>Accelerator Exchange</name>
+					<url>https://maven.anypoint.mulesoft.com/api/v1/organizations/68ef9520-24e9-4cf2-b2f5-620025690913/maven</url>
+					<layout>default</layout>
+				</repository>
+				<repository>
+					<id>mule-enterprise</id>
+					<name>Mule Enterprise</name>
+					<url>https://repository.mulesoft.org/nexus-ee/content/repositories/releases-ee/</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+				</repository>
+			</repositories>
+		</profile>
+
+		<!-- Deployment profiles - customize to reflect your target organization's deployment environments -->
+		<profile>
+			<id>CloudHub-DEV</id>
+			<!-- Properties can also be overridden by applications in their cloudHubDeployment configuration -->
+			<properties>
+				<!-- Maven server entry with credentials for accessing the Anypoint instance for deployment -->
+				<cloudhub.mavenServerId>accelerator-exchange</cloudhub.mavenServerId>
+				<!-- Deployment target region and env -->
+				<cloudhub.region>us-east-1</cloudhub.region>
+				<cloudhub.businessGroupId>${global.anypoint.groupId}</cloudhub.businessGroupId>
+				<cloudhub.environment>DEV</cloudhub.environment>
+				<!-- Can further customize the deployed application name here -->
+				<cloudhub.applicationName>${global.cloudhub.appPrefix}${project.artifactId}-${api.version}-dev</cloudhub.applicationName>
+				<!-- Worker version, size and other characteristics -->
+				<cloudhub.muleVersion>4.3.0</cloudhub.muleVersion>
+				<!-- Set to true to automatically apply runtime patches -->
+				<cloudhub.applyLatestPatch>true</cloudhub.applyLatestPatch>
+				<cloudhub.workerType>MICRO</cloudhub.workerType>
+				<cloudhub.workers>1</cloudhub.workers>
+				<cloudhub.objectStoreV2>true</cloudhub.objectStoreV2>
+				<cloudhub.persistentQueues>false</cloudhub.persistentQueues>
+				<!-- Set this parameter to false to verify successful deployment before continuing -->
+				<cloudhub.skipDeploymentVerification>true</cloudhub.skipDeploymentVerification>
+				<cloudhub.deploymentTimeout>1000000</cloudhub.deploymentTimeout>
+
+				<!-- These specify the environment properties file and encryption key to use -->
+				<mule.environment>dev</mule.environment>
+				<mule.encryptionKey>Salesforce123456</mule.encryptionKey>
+				<!-- Client ID and secret are usually from the target environment or business group -->
+				<anypoint.platform.clientId>REPLACE</anypoint.platform.clientId>
+				<anypoint.platform.clientSecret>REPLACE</anypoint.platform.clientSecret>
+				<!-- Set to true to enable monitoring and visualization by default -->
+				<anypoint.platform.enableMonitoring>true</anypoint.platform.enableMonitoring>
+				<!-- Application client ID and secret are required if Client ID enforcement is enabled -->
+				<accelerator-api.client-id>REPLACE</accelerator-api.client-id>
+				<accelerator-api.client-secret>REPLACE</accelerator-api.client-secret>
+				<!-- Anypoint MQ client ID and secret are required for many apps -->
+				<accelerator-mq.client-id>REPLACE</accelerator-mq.client-id>
+				<accelerator-mq.client-secret>REPLACE</accelerator-mq.client-secret>
+
+				<!-- Application-specific passwords - specify as required based on applications deployed -->
+				<demandware.AMOAuth2.http-requestor.password></demandware.AMOAuth2.http-requestor.password>
+				<demandware.oAuth.http-requestor.password></demandware.oAuth.http-requestor.password>
+				<email-sys-api.smtp-email.password></email-sys-api.smtp-email.password>
+				<jira-auth.token></jira-auth.token>
+				<ofbiz.password></ofbiz.password>
+				<pim.database.password></pim.database.password>
+				<sap.password></sap.password>
+				<sfdc.password></sfdc.password>
+				<sfdc.token></sfdc.token>
+				<sfdc.b2b.password></sfdc.b2b.password>
+				<sfdc.b2b.token></sfdc.b2b.token>
+				<sfdc.b2b.client_secret></sfdc.b2b.client_secret>
+				<sftp.password></sftp.password>
+				<servicenow.password></servicenow.password>
+				<slack-sys-api.slack.access-token></slack-sys-api.slack.access-token>
+				<sms-sys-api.twilio.password></sms-sys-api.twilio.password>
+			</properties>
+		</profile>
+	</profiles>
+
+	<servers>
+	</servers>
+
+</settings>

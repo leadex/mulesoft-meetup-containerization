@@ -1,0 +1,25 @@
+#%RAML 1.0 Library
+usage: Provides a collection of common resources, traits and types for use in API Specifications
+
+securitySchemes:
+  BasicAuth:
+    type: Basic Authentication
+    displayName: basic-auth
+    description: This API supports Basic Authentication through standard headers
+
+uses:
+  ResponseTypes: libraries/ResponseTypeLibrary.raml
+
+traits:
+  ErrorResponses: !include traits/ErrorResponsesTrait.raml
+  PingResponse: !include traits/PingResponseTrait.raml
+  Locatable: !include traits/LocatableTrait.raml
+  Pageable: !include traits/PageableTrait.raml
+  Sortable: !include traits/SortableTrait.raml
+  Trackable: !include traits/TrackableTrait.raml
+
+types:
+  BasicResponse: ResponseTypes.BasicResponse
+  ErrorResponse: ResponseTypes.ErrorResponse
+  PingResponse: ResponseTypes.PingResponse
+  ResultMessage: ResponseTypes.ResultMessage

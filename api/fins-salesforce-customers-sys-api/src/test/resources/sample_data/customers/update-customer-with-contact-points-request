@@ -1,0 +1,79 @@
+{
+    "partyRoleType": "Customer",
+    "id": "0014x00000HwZFdAAN",
+    "party": [
+        {
+            "id": "0014x00000HwZFdAAN",
+            "salutation": "Mr.",
+            "personName": "Mandy Bednar",
+            "firstName": "Mandy",
+            "lastName": "Bednar",
+            "birthDate": "1984-03-17",
+            "partyType": "Individual",
+            "contactPoints": [
+                {
+                    "contactPointType": [
+                        "ContactPointAddress"
+                    ],
+                    "id": "0034x00000GCkxGAAT",
+                    "activeFromDate": "2021-04-14",
+                    "addressLine1": "Julianne Prairie",
+                    "cityName": "East Osbaldo",
+                    "postalCodeText": "",
+                    "stateProvinceName": "TX",
+                    "countryName": "USA",
+                    "geoLatitude": "14.997",
+                    "geoLongitude": "164.6381",
+                    "geoAccuracy": ""
+                },
+                {
+                    "contactPointType": [
+                        "ContactPointEmail"
+                    ],
+                    "id": "0034x00000GCkxGAAT",
+                    "activeFromDate": "2021-04-14",
+                    "emailAddress": "elisa.lockman@gmail.com"
+                },
+                {
+                    "contactPointType": [
+                        "ContactPointPhone"
+                    ],
+                    "id": "0034x00000GCkxGAAT",
+                    "activeFromDate": "2021-04-14",
+                    "telephoneNumber": "224-556-8959"
+                }
+            ],
+            "externalIds": [
+                {
+                    "id": "",
+                    "externalId": "fdddf723-1ce5-41e7-a627-bbcaa980438a",
+                    "externalIdType": [
+                        "MDM"
+                    ],
+                    "statusLastChangedDate": "2021-04-14T19:45:47Z",
+                    "status": "VALID"
+                }
+            ]
+        }
+    ],
+    "externalIds": [
+        {
+            "id": "",
+            "externalId": "fdddf723-1ce5-41e7-a627-bbcaa980438a",
+            "externalIdType": [
+                "MDM"
+            ],
+            "statusLastChangedDate": "2021-04-14T19:45:47Z",
+            "status": "VALID"
+        }
+    ],
+    "auditInfo": {
+        "createdDate": "2021-04-14T19:44:00Z",
+        "createdBy": "Admin Accelerator",
+        "updatedDate": "2021-04-14T19:45:47Z",
+        "updatedBy": "Admin Accelerator",
+        "isDeleted": false
+    },
+    "customerNumber": "ZYDUSYP1",
+    "customerStatus": "ACTIVE"
+}

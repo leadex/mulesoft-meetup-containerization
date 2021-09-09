@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+	xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<munit:config name="salesforce-financial-sys-api-test-suite.xml" />
+	<munit:test name="accounts-search_success" doc:id="f31cadaa-6399-4b62-af54-9fb502f2ad0d" >
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="salesforce:query" doc:id="68c230cd-30d4-4c99-96b9-c4d832000ed8" processor="salesforce:query">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="a280fae1-982f-41db-b23a-ec96903062a5" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('testdata/accounts/accounts-search-by-customerId-sf-response.json')]" mediaType="application/json" />
+				</munit-tools:then-return>
+		</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="set customerId queryParam" doc:id="51598138-c3a4-4545-b826-09f72f3912e1" >
+				<munit:attributes value='#[{"queryParams": {"customerId":"0015e0000099iStAAI"}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="get:\accounts:salesforce-financial-sys-api-config" doc:id="3fc3fda6-9c1f-4684-b0f6-d98f6a467639" name="get:\accounts:salesforce-financial-sys-api-config"/>
+			<ee:transform doc:name="Strip audit info" doc:id="2bbb9b44-54e1-465f-9e29-ed9cac0fb1b5" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map(item, index) -> 
+	item -- [ "auditInfo" ]]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Successfully transformed response" doc:id="d1c0913a-9e05-462d-884b-a125d56f85f5" actual="#[payload]" expected="#[read(MunitTools::getResourceAsString('testdata/accounts/accounts-search-by-customerId-final-response.json'), &quot;application/json&quot;)]" message="Response was not transformed as expected"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="accounts-search_failure" doc:id="8580695a-a217-4ad3-9335-5b21cbdae42f" expectedErrorType="MULE:UNKNOWN" ignore="true">
+			<munit:behavior>
+				<munit-tools:mock-when doc:name="salesforce:query throw error" doc:id="917de9ea-0b0d-4b18-97c5-dc67b2615197" processor="salesforce:query">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="a280fae1-982f-41db-b23a-ec96903062a5" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="MULE:UNKNOWN" />
+				</munit-tools:then-return>
+				</munit-tools:mock-when>
+			</munit:behavior>
+			<munit:execution>
+				<munit:set-event doc:name="set customerId queryParam" doc:id="7e4d0a0d-e14b-4ad7-b3d4-1c14b436c1e6">
+				<munit:attributes value='#[{"queryParams": {"customerId":"BAD_SF_ID"}}]' />
+				</munit:set-event>
+				<flow-ref doc:name="get:\accounts:salesforce-financial-sys-api-config" doc:id="558f245d-3067-4c27-8729-963c3bbc9312" name="get:\accounts:salesforce-financial-sys-api-config" />
+			</munit:execution>
+			<munit:validation>
+			<munit-tools:verify-call doc:name="final transformation not called" doc:id="b2cd1629-372b-4f6e-94d9-5a4af069896b" processor="ee:transform" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="3042a765-1a81-4287-9ae9-6b586255ecfd" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			</munit:validation>
+		</munit:test>
+	<munit:test name="accounts-get-by-id_success" doc:id="8950acb4-c3fb-40d7-a853-aac972ef7f0c" ignore="true">
+			<munit:behavior>
+				<munit-tools:mock-when doc:name="salesforce:query" doc:id="d00e2249-cdba-4543-b263-dc41bd9325a1" processor="salesforce:query">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="887590cd-4876-4c41-8b0a-4c2f72ad249a" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('testdata/accounts/accounts-get-by-id-sf-response.json')]" mediaType="application/json" />
+				</munit-tools:then-return>
+				</munit-tools:mock-when>
+			</munit:behavior>
+			<munit:execution>
+				<munit:set-event doc:name="set accountId uriParam" doc:id="d65556bf-e659-4b9c-b364-a83e6380a950">
+				<munit:attributes value='#[{"uriParams": {"accountId":"a4l5e000000RPylAAG"}}]' />
+				</munit:set-event>
+				<flow-ref doc:name="get:\accounts\(accountId):salesforce-financial-sys-api-config" doc:id="b19833df-73c6-48b0-879c-b78615293ab5" name="get:\accounts\(accountId):salesforce-financial-sys-api-config" />
+			<ee:transform doc:name="Strip audit info" doc:id="dcdd3094-b341-49bd-98cc-277bc9800643" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload -- [ "auditInfo" ]]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:assert-equals doc:name="Successfully transformed response" doc:id="046c521a-287e-411f-a283-89aee254a355" actual="#[payload]" expected="#[read(MunitTools::getResourceAsString('testdata/accounts/accounts-get-by-id-final-response.json'), &quot;application/json&quot;)]" message="Response was not Success" />
+			</munit:validation>
+		</munit:test>
+	<munit:test name="accounts-get-by-id_failure" doc:id="270e9171-0e4a-493d-a87a-7cadc25a472d" expectedErrorType="MULE:UNKNOWN" ignore="true">
+			<munit:behavior>
+				<munit-tools:mock-when doc:name="salesforce:query throw error" doc:id="5288316b-bb48-4067-bbf7-09720d48bbc2" processor="salesforce:query">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="887590cd-4876-4c41-8b0a-4c2f72ad249a" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+						<munit-tools:error typeId="MULE:UNKNOWN" />
+					</munit-tools:then-return>
+				</munit-tools:mock-when>
+			</munit:behavior>
+			<munit:execution>
+				<munit:set-event doc:name="set accountId uriParam" doc:id="62b3bc52-cdd4-47ff-ac56-7b2715196685">
+				<munit:attributes value='#[{"uriParams": {"accountId":"a4l5e000000RPylAAG"}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="get:\accounts\(accountId):salesforce-financial-sys-api-config" doc:id="fc111f20-2a4f-44d3-8715-ef51775725de" name="get:\accounts\(accountId):salesforce-financial-sys-api-config" />
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:verify-call doc:name="final transformation not called" doc:id="d89901da-3479-44ef-a02e-d08b2871eafb" times="0" processor="ee:transform">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="fb9a0b0d-9eb3-4b6b-b403-379422b69214" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				</munit-tools:verify-call>
+			</munit:validation>
+		</munit:test>
+	<munit:test name="accounts-create_success" doc:id="17bd2318-f42b-4107-866c-55989768e562">
+			<munit:behavior>
+				<munit-tools:mock-when doc:name="salesforce:query" doc:id="0f2dffc6-2b56-49fe-9039-98bcbb15e7e0" processor="salesforce:create">
+					<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="FinServ__FinancialAccount__c" attributeName="type" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('testdata/accounts/accounts-create-sf-response.json')]" mediaType="application/json" />
+				</munit-tools:then-return>
+				</munit-tools:mock-when>
+			</munit:behavior>
+			<munit:execution>
+				<munit:set-event doc:name="set request payload" doc:id="5772eeda-6dbe-4039-a1e7-749927d88682">
+					<munit:payload value="#[MunitTools::getResourceAsString('testdata/accounts/accounts-create-request.json')]" mediaType="application/json" />
+				</munit:set-event>
+				<flow-ref doc:name="post:\accounts:application\json:salesforce-financial-sys-api-config" doc:id="a632f87c-4587-4a1b-81eb-59e433ff9435" name="post:\accounts:application\json:salesforce-financial-sys-api-config" />
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:assert-equals doc:name="Successfully transformed response" doc:id="3c30122e-1f8c-4e47-b902-d7df1423533c" actual="#[payload]" expected="#[read(MunitTools::getResourceAsString('testdata/accounts/accounts-create-final-response.json'), &quot;application/json&quot;)]" message="Response was not Success" />
+			</munit:validation>
+		</munit:test>
+	<munit:test name="accounts-create_failure" doc:id="4d237ce4-23db-4046-9be4-bece8ee0ef98" expectedErrorType="MULE:UNKNOWN" ignore="true">
+			<munit:behavior>
+				<munit-tools:mock-when doc:name="salesforce:create throw error" doc:id="f588a070-6202-4076-b0e4-680f9a927e8e" processor="salesforce:create">
+					<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="FinServ__FinancialAccount__c" attributeName="type" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+						<munit-tools:error typeId="MULE:UNKNOWN" />
+					</munit-tools:then-return>
+				</munit-tools:mock-when>
+			</munit:behavior>
+			<munit:execution>
+				<munit:set-event doc:name="set request payload" doc:id="a03a0a76-ae03-4ce7-a263-44eb243b3ed4">
+				<munit:payload value="#[MunitTools::getResourceAsString('testdata/accounts/accounts-create-request.json')]" mediaType="application/json" />
+			</munit:set-event>
+			<flow-ref doc:name="post:\accounts:application\json:salesforce-financial-sys-api-config" doc:id="49b7701d-894f-4761-8855-89b6d8e9ff32" name="post:\accounts:application\json:salesforce-financial-sys-api-config" />
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:verify-call doc:name="final transformation not called" doc:id="0d1296e0-7445-4529-8042-9f6dcfe522ff" processor="ee:transform" times="0">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="fdc4987c-2709-428e-a600-5c27f75e4b9e" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				</munit-tools:verify-call>
+			</munit:validation>
+		</munit:test>
+	<munit:test name="accounts-update_success" doc:id="78508968-5f67-408b-a92e-07ece66a76bf">
+			<munit:behavior>
+				<munit-tools:mock-when doc:name="salesforce:query" doc:id="7902adf0-e431-40aa-97d6-ccc59c9e8e1d" processor="salesforce:update">
+					<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="FinServ__FinancialAccount__c" attributeName="type" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('testdata/accounts/accounts-update-sf-response.json')]" mediaType="application/json" />
+				</munit-tools:then-return>
+				</munit-tools:mock-when>
+			</munit:behavior>
+			<munit:execution>
+				<munit:set-event doc:name="set request payload" doc:id="e1aa8c09-2c75-47ac-89ce-223ee76bcc63">
+				<munit:payload value="#[MunitTools::getResourceAsString('testdata/accounts/accounts-update-request.json')]" mediaType="application/json" />
+				</munit:set-event>
+				<flow-ref doc:name="patch:\accounts\(accountId):application\json:salesforce-financial-sys-api-config" doc:id="8059f797-c29d-41a4-81db-067b0e1369d4" name="patch:\accounts\(accountId):application\json:salesforce-financial-sys-api-config" />
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:assert-equals doc:name="Successfully transformed response" doc:id="337b4179-a9f3-4164-bb59-82788fc4c45f" actual="#[payload]" expected="#[read(MunitTools::getResourceAsString('testdata/accounts/accounts-update-final-response.json'), &quot;application/json&quot;)]" message="Response was not Success" />
+			</munit:validation>
+		</munit:test>
+	<munit:test name="accounts-update_failure" doc:id="861ab931-bd6d-4ed9-804f-b112f225a746" expectedErrorType="MULE:UNKNOWN" ignore="true">
+			<munit:behavior>
+				<munit-tools:mock-when doc:name="salesforce:update throw error" doc:id="66561440-a5c2-40e9-a361-a60ffb2fa04b" processor="salesforce:update">
+					<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="FinServ__FinancialAccount__c" attributeName="type" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+						<munit-tools:error typeId="MULE:UNKNOWN" />
+					</munit-tools:then-return>
+				</munit-tools:mock-when>
+			</munit:behavior>
+			<munit:execution>
+				<munit:set-event doc:name="set request payload" doc:id="844b114b-bb49-42ef-be7c-f0bd440b6da5">
+				<munit:payload value="#[MunitTools::getResourceAsString('testdata/accounts/accounts-update-request.json')]" mediaType="application/json" />
+				</munit:set-event>
+				<flow-ref doc:name="patch:\accounts\(accountId):application\json:salesforce-financial-sys-api-config" doc:id="08488aff-4ba6-437b-baaa-06e122b3e7e4" name="patch:\accounts\(accountId):application\json:salesforce-financial-sys-api-config" />
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:verify-call doc:name="final transformation not called" doc:id="94f08a70-b51c-42a9-a87f-ac9fa1fd32ab" processor="ee:transform" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="c7ed5975-669f-48dd-ab2a-9731866e5b0f" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				</munit-tools:verify-call>
+			</munit:validation>
+		</munit:test>
+	<munit:test name="accounts-get-transactions_success" doc:id="89fecd85-d608-474c-bd97-b2cd88db756f">
+			<munit:behavior>
+				<munit-tools:mock-when doc:name="salesforce:query" doc:id="e2f9129c-5247-4ecc-b079-8107b087cca6" processor="salesforce:query">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="9f28204a-d08a-4b5f-b28b-5705e0eb966b" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('testdata/accounts/accounts-get-transactions-sf-response.json')]" mediaType="application/json" />
+				</munit-tools:then-return>
+				</munit-tools:mock-when>
+			</munit:behavior>
+			<munit:execution>
+				<munit:set-event doc:name="set accountId uriParam" doc:id="6401c515-380e-4614-a2d2-b12b6e49c4b0">
+				<munit:attributes value='#[{"uriParams": {"accountId":"a4l5e000000RPylAAG"}}]' />
+				</munit:set-event>
+				<flow-ref doc:name="get:\accounts\(accountId)\transactions:salesforce-financial-sys-api-config" doc:id="f18deacf-d070-4289-89cf-bb11433f46e2" name="get:\accounts\(accountId)\transactions:salesforce-financial-sys-api-config" />
+			<ee:transform doc:name="Strip audit info" doc:id="50384252-15bb-438e-9b0a-69dfc65835b5" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map(item, index) -> 
+	item -- [ "auditInfo" ]]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:assert-equals doc:name="Successfully transformed response" doc:id="2053eb76-87cc-4e6d-a0f5-7bd726bcc377" actual="#[payload]" expected="#[read(MunitTools::getResourceAsString('testdata/accounts/accounts-get-transactions-final-response.json'), &quot;application/json&quot;)]" message="Response was not Success" />
+			</munit:validation>
+		</munit:test>
+		<munit:test name="accounts-get-transactions_filter_data_success" doc:id="2bd44b7b-747b-478b-835c-44687f9f0009">
+			<munit:behavior>
+				<munit-tools:mock-when doc:name="salesforce:query" doc:id="4570b19f-3c81-4f1a-ac14-1a1a9bdf6ec5" processor="salesforce:query">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="9f28204a-d08a-4b5f-b28b-5705e0eb966b" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('testdata/accounts/accounts-get-transactions-sf-response.json')]" mediaType="application/json" />
+				</munit-tools:then-return>
+				</munit-tools:mock-when>
+			</munit:behavior>
+			<munit:execution>
+				<munit:set-event doc:name="set accountId uriParam" doc:id="ba37209e-4e93-4c74-90ab-ba11c92ef739">
+				<munit:attributes value='#[{ uriParams : {&#10;      "accountId": "a4l5e000000RPylAAG"&#10;    }, queryParams : {&#10;      "transactionType": "CreditTransaction"&#10;    }}]' />
+				</munit:set-event>
+				<flow-ref doc:name="get:\accounts\(accountId)\transactions:salesforce-financial-sys-api-config" doc:id="162af485-104a-4c18-8769-604804a8d458" name="get:\accounts\(accountId)\transactions:salesforce-financial-sys-api-config" />
+			<ee:transform doc:name="Strip audit info" doc:id="9d29c444-9817-456d-8b55-b1c1608a0569" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map(item, index) -> 
+	item -- [ "auditInfo" ]]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:assert-equals doc:name="Successfully transformed response" doc:id="bec084f8-bc4f-4032-94e5-f039da8f10e9" actual="#[payload]" expected="#[read(MunitTools::getResourceAsString('testdata/accounts/accounts-get-transactions-final-response.json'), &quot;application/json&quot;)]" message="Response was not Success" />
+			</munit:validation>
+		</munit:test>
+	<munit:test name="accounts-get-transactions_failure" doc:id="84ed6b1a-ec94-4e55-94f1-77f50c6c1307" expectedErrorType="MULE:UNKNOWN" ignore="true">
+			<munit:behavior>
+				<munit-tools:mock-when doc:name="salesforce:query throw error" doc:id="b1de8af4-ae38-4be2-a033-6aa903e03eac" processor="salesforce:query">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="9f28204a-d08a-4b5f-b28b-5705e0eb966b" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+						<munit-tools:error typeId="MULE:UNKNOWN" />
+					</munit-tools:then-return>
+				</munit-tools:mock-when>
+			</munit:behavior>
+			<munit:execution>
+				<munit:set-event doc:name="set accountId uriParam" doc:id="117b3af6-fd41-4260-950f-0eeacdbe1e1f">
+					<munit:attributes value='#[{"uriParams": {"accountId":"a4l5e000000RPylAAG"}}]' />
+				</munit:set-event>
+				<flow-ref doc:name="get:\accounts\(accountId)\transactions:salesforce-financial-sys-api-config" doc:id="fc6f1108-c7bb-4d26-8853-a7de30660645" name="get:\accounts\(accountId)\transactions:salesforce-financial-sys-api-config" />
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:verify-call doc:name="final transformation not called" doc:id="47604ab5-e687-46db-86e5-16ff8fc0c496" processor="ee:transform" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="a7d23228-14f5-45ae-b4cd-be46cbb4fb7e" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				</munit-tools:verify-call>
+			</munit:validation>
+		</munit:test>
+
+
+</mule>

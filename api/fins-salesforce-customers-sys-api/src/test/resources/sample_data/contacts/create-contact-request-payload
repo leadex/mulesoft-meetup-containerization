@@ -1,0 +1,53 @@
+{
+    "id": null,
+    "salutation": "Ms.",
+    "personName": "Alden Monahan",
+    "firstName": "Alden",
+    "lastName": "Monahan",
+    "birthDate": null,
+    "partyType": "Individual",
+    "contactPoints": [
+        {
+            "contactPointType": [
+                "ContactPointAddress"
+            ],
+            "id": null,
+            "activeFromDate": "2021-07-13",
+            "addressLine1": "Gloria Port",
+            "cityName": "Ullrichmouth",
+            "postalCodeText": "",
+            "stateProvinceName": "TX",
+            "countryName": "USA",
+            "geoLatitude": null,
+            "geoLongitude": null,
+            "geoAccuracy": null
+        },
+        {
+            "contactPointType": [
+                "ContactPointEmail"
+            ],
+            "id": null,
+            "activeFromDate": "2021-07-13",
+            "emailAddress": "testuser1626177216@gmail.com"
+        },
+        {
+            "contactPointType": [
+                "ContactPointPhone"
+            ],
+            "id": null,
+            "activeFromDate": "2021-07-13",
+            "telephoneNumber": "534-318-0788"
+        }
+    ],
+    "externalIds": [
+        {
+            "id": "",
+            "externalId": "f86eba80-786d-4071-8af4-7afe35ee5f17",
+            "externalIdType": [
+                "MDM"
+            ],
+            "statusLastChangedDate": "2021-07-13T19:01:33Z",
+            "status": "VALID"
+        }
+    ]
+}

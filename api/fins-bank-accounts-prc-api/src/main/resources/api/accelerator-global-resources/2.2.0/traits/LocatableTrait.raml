@@ -1,0 +1,9 @@
+#%RAML 1.0 Trait
+usage: Apply this trait to POST methods that must return a resource identifier on 201 responses
+responses:
+  201:
+    headers:
+      Location:
+        description: Relative URI of the newly-created resource
+        type: string
+        example: "/customers/95830940"

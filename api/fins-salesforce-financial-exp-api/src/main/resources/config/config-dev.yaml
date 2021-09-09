@@ -1,0 +1,22 @@
+api:
+  autodiscoveryID: "00000"
+
+https:
+  host: "0.0.0.0"
+  port: "8080"
+
+# FINS Bank Accounts Process API Request Configuration
+bank-accounts-prc:
+  host: "fins-bank-accounts-prc-api"
+  port: "8080"
+  ping-path: "/api/ping"
+  poller-path: "/api/accounts/poller"
+  response-timeout: "60000"
+  connection-idle-timeout: "3000"
+  http-frequency: "5000"
+  http-reconnection-attempts: "2"
+  
+until:
+  successful:
+    max-retries: "3"
+    time-between: "3000"

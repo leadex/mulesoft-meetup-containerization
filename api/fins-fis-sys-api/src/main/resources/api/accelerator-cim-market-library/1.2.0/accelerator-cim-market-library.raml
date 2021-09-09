@@ -1,0 +1,113 @@
+#%RAML 1.0 Library
+usage: Provides CIM types defined in the Market subject area
+
+uses:
+  PartyTypes: libraries/PartyTypeLibrary.raml
+
+types:
+  # Exported PartyTypes
+  Account:
+    type: PartyTypes.Account
+    example: !include ./examples/AccountExample.json
+  AccountContact:
+    type: PartyTypes.AccountContact
+    example: !include ./examples/AccountContactExample.json
+  AccountContactRole:
+    type: PartyTypes.AccountContactRole
+    example: !include ./examples/AccountContactRoleExample.json
+  AccountPartner:
+    type: PartyTypes.AccountPartner
+    example: !include ./examples/AccountPartnerExample.json
+  BillingFrequency:
+    type: PartyTypes.BillingFrequency
+    example: !include ./examples/BillingFrequencyExample.json
+  Competitor:
+    type: PartyTypes.Competitor
+    example: !include ./examples/CompetitorExample.json
+  ContactPoint:
+    type: PartyTypes.ContactPoint
+    example: !include ./examples/ContactPointExample.json
+  ContactPointAddress:
+    type: PartyTypes.ContactPointAddress
+    example: !include ./examples/ContactPointAddressExample.json
+  ContactPointApp:
+    type: PartyTypes.ContactPointApp
+    example: !include ./examples/ContactPointAppExample.json
+  ContactPointEmail:
+    type: PartyTypes.ContactPointEmail
+    example: !include ./examples/ContactPointEmailExample.json
+  ContactPointLocation:
+    type: PartyTypes.ContactPointLocation
+    example: !include ./examples/ContactPointLocationExample.json
+  ContactPointPhone:
+    type: PartyTypes.ContactPointPhone
+    example: !include ./examples/ContactPointPhoneExample.json
+  ContactPointSocial:
+    type: PartyTypes.ContactPointSocial
+    example: !include ./examples/ContactPointSocialExample.json
+  ContactPointType:
+    type: PartyTypes.ContactPointType
+    example: !include ./examples/ContactPointTypeExample.json
+  Customer:
+    type: PartyTypes.Customer
+    example: !include ./examples/CustomerExample.json
+  CustomerStatusHistory:
+    type: PartyTypes.CustomerStatusHistory
+    example: !include ./examples/CustomerStatusHistoryExample.json
+  Household:
+    type: PartyTypes.Household
+    example: !include ./examples/HouseholdExample.json
+  Individual:
+    type: PartyTypes.Individual
+    example: !include ./examples/IndividualExample.json
+  InternalBusinessUnit:
+    type: PartyTypes.InternalBusinessUnit
+    example: !include ./examples/InternalBusinessUnitExample.json
+  Lead:
+    type: PartyTypes.Lead
+    example: !include ./examples/LeadExample.json
+  Organization:
+    type: PartyTypes.Organization
+    example: !include ./examples/OrganizationExample.json
+  Party:
+    type: PartyTypes.Party
+    example: !include ./examples/PartyExample.json
+  PartyAdditionalName:
+    type: PartyTypes.PartyAdditionalName
+    example: !include ./examples/PartyAdditionalNameExample.json
+  PartyIdentification:
+    type: PartyTypes.PartyIdentification
+    example: !include ./examples/PartyIdentificationExample.json
+  PartyRelatedParty:
+    type: PartyTypes.PartyRelatedParty
+    example: !include ./examples/PartyRelatedPartyExample.json
+  PartyRelationshipType:
+    type: PartyTypes.PartyRelationshipType
+    example: !include ./examples/PartyRelationshipTypeExample.json
+  PartyRole:
+    type: PartyTypes.PartyRole
+    example: !include ./examples/PartyRoleExample.json
+  PartyWebAddress:
+    type: PartyTypes.PartyWebAddress
+    example: !include ./examples/PartyWebAddressExample.json
+  PersonEducation:
+    type: PartyTypes.PersonEducation
+    example: !include ./examples/PersonEducationExample.json
+  PersonEmployment:
+    type: PartyTypes.PersonEmployment
+    example: !include ./examples/PersonEmploymentExample.json
+  PersonLanguage:
+    type: PartyTypes.PersonLanguage
+    example: !include ./examples/PersonLanguageExample.json
+  PersonLifeEvent:
+    type: PartyTypes.PersonLifeEvent
+    example: !include ./examples/PersonLifeEventExample.json
+  Seller:
+    type: PartyTypes.Seller
+    example: !include ./examples/SellerExample.json
+  Supplier:
+    type: PartyTypes.Supplier
+    example: !include ./examples/SupplierExample.json
+  UncategorizedParty:
+    type: PartyTypes.UncategorizedParty
+    example: !include ./examples/UncategorizedPartyExample.json

@@ -1,0 +1,46 @@
+[
+    {
+        "id": "",
+        "name": "SERVICE CHARGE",
+        "description": "SERVICE CHARGE",
+        "amount": 10,
+        "transactionDate": "2018-03-07T03:57:15Z",
+        "transactionType": "DebitTransaction",
+        "transactionSubType": "CHECK",
+        "transactionStatus": "POSTED",
+        "postedDate": "2018-03-07T03:57:15Z",
+        "vendorName": "",
+        "isDisputed": false,
+        "disputedReason": "",
+        "notes": "",
+        "auditInfo": {
+            "createdDate": "2020-03-15T15:03:01Z",
+            "createdBy": "system",
+            "updatedDate": "2021-07-15T03:57:15Z",
+            "updatedBy": "system",
+            "isDeleted": false
+        }
+    },
+    {
+        "id": "",
+        "name": "IOD INTEREST PAID",
+        "description": "IOD INTEREST PAID",
+        "amount": 7.97,
+        "transactionDate": "2018-03-07T03:57:15Z",
+        "transactionType": "CreditTransaction",
+        "transactionSubType": "CHECK",
+        "transactionStatus": "POSTED",
+        "postedDate": "2018-03-07T03:57:15Z",
+        "vendorName": "",
+        "isDisputed": null,
+        "disputedReason": "",
+        "notes": "",
+        "auditInfo": {
+            "createdDate": "2020-03-15T15:03:01Z",
+            "createdBy": "system",
+            "updatedDate": "2021-07-15T03:57:15Z",
+            "updatedBy": "system",
+            "isDeleted": false
+        }
+    }
+]

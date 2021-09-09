@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<sub-flow name="ping_get-health"
+		doc:id="a54e7d6d-60c9-4d58-9a42-40855e767c6a">
+		<set-variable
+			value='#[attributes.queryParams.checkDependencies == "true" default false]'
+			doc:name="checkDependencies"
+			doc:id="bffeb0c6-510d-4e08-a4e0-1269803604ec"
+			variableName="checkDependencies" />
+		<choice doc:name="Choice for check dependencies"
+			doc:id="245af207-4b50-47d8-ac4d-87e6f48301fc">
+			<when expression="#[vars.checkDependencies]">
+				<flow-ref doc:name="ping_check-dependencies"
+					doc:id="ba480201-c8d2-4ce9-8729-6e106320e45d"
+					name="ping_check-dependencies" target="dependencyList" />
+			</when>
+			<otherwise>
+				<set-variable doc:name="dependencyList"
+					doc:id="67da54ed-1bf9-40f6-bbe6-41162a3e37f6"
+					variableName="dependencyList" value="#[null]" />
+			</otherwise>
+		</choice>
+		<ee:transform doc:name="Map Response"
+			doc:id="38321d86-8900-4b73-8db9-bb47908f4faf">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+fun getDependencyStatus(dependencies) = if(sizeOf(dependencies.*status find 'UP') == sizeOf(dependencies))
+	'OK'
+else if (sizeOf(dependencies.*status find 'DOWN') == sizeOf(dependencies))
+    'OFFLINE'
+else
+    'DEGRADED'
+---
+{
+	status: if (!isEmpty(vars.dependencyList)) getDependencyStatus(vars.dependencyList) else "OK",
+	apiName: p('api.name') default '',
+	apiVersion: p('api.version') default '',
+	(dependencies: vars.dependencyList map(item) -> {
+		name: item.name default '',
+		status: item.status default ''
+	})
+	if(vars.dependencyList != null)
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-variable value="200" doc:name="httpStatus"
+			doc:id="d1a76d34-db2f-4094-8e05-0100b67eb042"
+			variableName="httpStatus" />
+	</sub-flow>
+	<sub-flow name="ping_check-dependencies"
+		doc:id="b78391ad-a9b4-4055-94c0-29aaf6d40f25">
+		<try doc:name="Try" doc:id="16d4747a-6e23-4cca-829f-6e2b16d96e51" >
+
+			<scatter-gather doc:name="Scatter-Gather" doc:id="7442e6e1-dc14-4eac-9163-6ba12cca5171">
+			
+			<route>
+					<http:request method="GET" doc:name="Invoke FIS System API" doc:id="b93341e8-7ca4-45c3-b2be-f9c98e218675" config-ref="sys-fis_HTTP_Request_configuration" path="/ping" outputMimeType="application/json">
+					<http:query-params><![CDATA[#[output application/java
+---
+{
+	("checkDependencies" : "true") if vars.checkDependencies
+}]]]></http:query-params>
+				</http:request>
+			</route>
+			<route>
+					<http:request method="GET" doc:name="Invoke Salesforce Financial System API" doc:id="82b9a9fc-7ea4-48e0-8688-b6af38b50277" config-ref="sys-salesforce-financial_HTTP_Request_configuration" path="/ping" outputMimeType="application/json">
+					<http:query-params><![CDATA[#[output application/java
+---
+{
+	("checkDependencies" : "true") if vars.checkDependencies
+}]]]></http:query-params>
+				</http:request>
+				
+			</route>
+			<route>
+					<http:request method="GET" doc:name="Invoke Salesforce Customer System API" doc:id="a9be181d-ebd9-4085-b3bf-660712a16675" config-ref="sys-salesforce-customers_HTTP_Request_configuration" path="/ping" outputMimeType="application/json">
+					<http:query-params><![CDATA[#[output application/java
+---
+{
+	("checkDependencies" : "true") if vars.checkDependencies
+}]]]></http:query-params>
+				</http:request>
+			</route>
+		</scatter-gather>
+			<ee:transform doc:name="Map Dependencies" doc:id="d0356222-434f-47d6-bb9f-ef7f1436a47d">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+fun fixStatus(st) = if (st == 'OK') 'UP' else st
+output application/java
+---
+flatten(keysOf(payload) map ( 
+	[ { "name": payload[$].payload.apiName, "status": fixStatus(payload[$].payload.status) } ]
+	++ (if (!isEmpty(payload[$].payload.dependencies)) payload[$].payload.dependencies else [])
+))]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+			<error-handler>
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="d3264e73-91b3-43a8-9ca2-ac9073d26673" type="COMPOSITE_ROUTING">
+					<ee:transform doc:name="Map Dependencies" doc:id="3122dcc8-2137-473a-957d-69d14d0cd7af" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+fun mapSystemName(index) = {
+	'0': 'fins-fis-sys-api',
+	'1': 'fins-salesforce-financial-sys-api',
+	'2': 'fins-salesforce-customers-sys-api'
+}[index]
+
+fun fixStatus(st) = if (st == 'OK') 'UP' else st
+
+output application/java
+---
+flatten(
+	(keysOf(error.errorMessage.payload.failures as Object) map {
+		'name': mapSystemName($),
+		'status': 'DOWN'
+	})  
+	++  
+	(keysOf(error.errorMessage.payload.results as Object) map (
+		[{
+			'name': error.errorMessage.payload.results[$].payload.apiName,
+			'status': fixStatus(error.errorMessage.payload.results[$].payload.status)
+		}] 
+		++ 
+		if (!isEmpty(error.errorMessage.payload.results[$].payload.dependencies)) 
+			error.errorMessage.payload.results[$].payload.dependencies else []
+	))
+) ]]></ee:set-payload>
+						</ee:message>
+						<ee:variables >
+						</ee:variables>
+					</ee:transform>
+				</on-error-continue>
+			</error-handler>
+		</try>
+	</sub-flow>
+</mule>

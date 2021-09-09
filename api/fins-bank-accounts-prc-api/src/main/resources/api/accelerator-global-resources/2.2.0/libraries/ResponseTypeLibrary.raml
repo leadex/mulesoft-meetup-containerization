@@ -1,0 +1,87 @@
+#%RAML 1.0 Library
+usage: This library provides some common response message structures for APIs
+types:
+  ErrorResponse:
+    description: Represents a standard message body to be returned with error responses
+    properties:
+      errorCode:
+        type: string
+        description: "Short code to identify the error"
+        example: "INVALID_PARAMETER"
+      errorMessage:
+        type: string
+        description: "Verbose human readable error message"
+        example: "The value you entered is out of bounds"
+      transactionId:
+        type: string
+        description: "Request identifier"
+        example: "dd960082-abbf-47c2-8c65-f18eeb35848b"
+      timeStamp:
+        type: datetime
+        description: "event date time"
+        example: "2019-09-23T11:46:44.256-05:00"
+
+  PingStatus:
+    description: Represents a dependency status result for ping responses
+    properties:
+      name: 
+        description: Logical name of the connection (e.g., system name)
+        type: string
+      status:
+        description: Status of the connection, identifying whether the connection was validated (UP), the connection timed out (DOWN), or the connection attempt failed for some other reason (ERROR)
+        enum: [ "UP", "DOWN", "ERROR" ]
+
+  PingResponse:
+    description: Represents a standard response structure for API health checks
+    properties:
+      status:
+        description: Describes the overall status of the API, including system connectivity states. When dependency checks are included, the status identifies whether the API is fully functional (OK), one or more dependencies are down (DEGRADED), or all dependencies are down (OFFLINE).
+        type: string
+        enum: [ "OK", "DEGRADED", "OFFLINE" ]
+      apiName:
+        description: Asset name of the API returning the response
+        type: string
+        maxLength: 128
+      apiVersion: 
+        description: Complete version of the API returning the response; format is major.minor.patch
+        type: string
+        minLength: 5
+        maxLength: 11
+      timestamp:
+        type: datetime
+      dependencies?:
+        description: Optional list of connections this API is dependent upon
+        type: PingStatus[]
+
+  ResponseStatus:
+    description: Represents the overall status of the operation
+    enum: [ SUCCESS, WARNING, ERROR ]
+    example: SUCCESS
+
+  ResultParameter:
+    description: Represents an arbitrary name/value pair for returning extended response data
+    properties:
+      paramName: string
+      paramValue: string
+    example:
+      paramName: AccountId
+      paramValue: "123456"
+
+  ResultMessage:
+    description: Represents a single message to be included in the response
+    type: object
+    properties:
+      severity:
+        description: Indicates the severity of this particular message item
+        enum: [ INFO, WARNING, ERROR ]
+      code: string
+      message?: string
+      parameters?: ResultParameter[]
+    example: !include ../examples/ReturnResultMessage.raml
+
+  BasicResponse:
+    description: Represents a basic response structure that can be returned by APIs to indicate status and result messages for success or extended error scenarios
+    properties:
+      responseStatus: ResponseStatus
+      resultMessages?: ResultMessage[]
+    example: !include ../examples/ReturnBasicResponse.raml

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="ping-test-suite.xml" />
+	
+	<munit:test name="ping-test-suite_getHealthWithDependenciesTest" doc:id="ca23afc6-0107-4c35-84c2-9b9aa9ecb9e1" description="Get Health With Dependencies Test">
+		<munit:execution >
+			<munit:set-event doc:name="Set Query Param" doc:id="1c5a00b1-bb88-46f3-a932-6f3fb7aa93c5" >
+				<munit:attributes value='#[{ queryParams: { checkDependencies: "false" }}]' />
+			</munit:set-event>
+			<flow-ref doc:name="get:\ping:fis-sys-api-config" doc:id="1562e847-b4ca-4b61-a15d-67a0f509383a" name="get:\ping:fis-sys-api-config"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert 200 Response" doc:id="96c9392b-708f-485a-8b8d-95f21a41161c" actual="#[vars.httpStatus]" expected="200" message="Expected success response"/>
+			<munit-tools:assert-that doc:name="Assert Has Dependencies" doc:id="a68fd872-73dd-480f-8788-9c6041c55732" expression="#[payload.status]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	
+
+</mule>

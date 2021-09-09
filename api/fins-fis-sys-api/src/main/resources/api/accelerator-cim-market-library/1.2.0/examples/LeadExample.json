@@ -1,0 +1,213 @@
+{
+  "id": "amet aliquip",
+  "leadSource": "non laborum et fugiat ipsum",
+  "isConverted": false,
+  "photoURL": "ullamco",
+  "companyName": "reprehenderit mollit do in",
+  "stateProvinceName": "nulla",
+  "faxContactPhone": [
+    {
+      "contactPointType": [
+        "nulla id proident"
+      ],
+      "id": "fugiat dolor",
+      "telephoneNumber": "velit culpa id anim deserunt",
+      "activeFromDate": "1986-07-15",
+      "isSMSCapable": false
+    }
+  ],
+  "emailBouncedReason": "laborum",
+  "leadRating": "et deserunt",
+  "lastActivityDate": "1962-07-24",
+  "geoCodeLongitude": 61864239,
+  "partnerAccount": [
+    {
+      "id": null,
+      "name": "ex et",
+      "number": "voluptate elit ut qui eu",
+      "billFrequency": [
+        "laborum ut et irure"
+      ],
+      "party": [
+        "Excepteur occaecat magna incididunt"
+      ],
+      "parentAccount": [
+        "consequat"
+      ],
+      "useAsBillingAccount": true,
+      "shippingContact": [
+        "eu ea officia Lorem in"
+      ],
+      "defaultFreightTerms": "reprehenderit Ut in",
+      "primarySalesContactPoint": [
+        "proident minim occaecat"
+      ],
+      "sLAType": "officia consectetur ex cillum adipisicing",
+      "autoPayEnabledFlag": null,
+      "externalIds": [
+        {
+          "externalIdType": [
+            {
+              "id": null,
+              "name": "elit officia adipisicing"
+            }
+          ],
+          "externalId": "voluptate",
+          "id": "laboris ex velit",
+          "status": "VALID",
+          "statusLastChangedDate": null
+        }
+      ],
+      "shippingAddress": [
+        "proident"
+      ],
+      "partyRole": [
+        "quis sit ad Lorem"
+      ],
+      "autoPaymentMethod": [
+        "anim"
+      ],
+      "accountType": "cupidatat",
+      "sixtyDayBalanceAmount": -22133564,
+      "description": "sit et anim",
+      "balanceAmount": null,
+      "billDeliveryMethod": "culpa",
+      "lastActivityDate": "1969-06-25",
+      "holdStatusReason": "in nulla et Ut",
+      "assignTerritoryFlag": null,
+      "shippingEmail": [
+        "fugiat dolor aliqua labore"
+      ],
+      "salesPhone": [
+        {
+          "contactPointType": [
+            "adipisicing in elit consectetur occaecat"
+          ],
+          "id": null,
+          "telephoneNumber": "dolor",
+          "activeFromDate": "1945-11-12"
+        }
+      ],
+      "sLAExpirationDate": null,
+      "orderDeliveryMethod": [
+        "cupidatat sint id dolor qui"
+      ],
+      "ninetyDayBalanceAmount": 64645265,
+      "useAsShippingAccount": true,
+      "billContactAddress": [
+        {
+          "addressLine1": "in amet id sit",
+          "contactPointType": [
+            "aliqua adipisicing deserunt voluptate exercitation"
+          ],
+          "id": "labore nostrud consectetur voluptate",
+          "activeFromDate": "1965-08-30",
+          "forBusinessUse": true,
+          "geoLatitude": -12076980,
+          "addressLine3": "fugiat laboris laborum",
+          "auditInfo": {
+            "isDeleted": false,
+            "createdBy": "nulla et enim laborum velit",
+            "updatedBy": "magna in id anim",
+            "updatedDate": "2002-09-06T10:10:44.048Z",
+            "createdDate": null
+          },
+          "countryName": "incididunt laborum magna dolore Lorem",
+          "partyRole": [
+            "minim est deserunt magna dolore"
+          ],
+          "profileFirstCreatedDate": null,
+          "stateProvinceName": "laborum consequat",
+          "isUsedForBilling": true,
+          "addressLine2": "voluptate nulla fugiat sit deserunt",
+          "profileLastUpdatedDate": null,
+          "isUsedForShipping": true,
+          "forPersonalUse": null,
+          "party": [
+            "amet"
+          ],
+          "geoLongitude": -2821038,
+          "bestTimeToContactStartTime": null,
+          "bestTimeToContactEndTime": null,
+          "cityName": "do",
+          "primaryFlag": null,
+          "activeToDate": "2009-02-26",
+          "postalCodeText": "esse veniam aliquip do"
+        }
+      ]
+    }
+  ],
+  "streetName": "sed ea id incididunt",
+  "leadScore": -75116190,
+  "mobileContactPhone": [
+    {
+      "contactPointType": [
+        "commodo"
+      ],
+      "id": null,
+      "telephoneNumber": "reprehenderit minim dolore do",
+      "activeFromDate": "1978-09-18",
+      "countryName": "dolore nisi laboris mollit pariatur",
+      "areaCode": "ex dolor",
+      "phoneCountryCode": "labore sunt",
+      "primaryFlag": null,
+      "isFaxCapable": false,
+      "profileOccurrenceCount": null,
+      "forPersonalUse": null
+    }
+  ],
+  "externalIds": [
+    {
+      "externalIdType": [
+        "sit cillum"
+      ],
+      "externalId": "dolor",
+      "id": "in in"
+    }
+  ],
+  "leadStatus": "Excepteur amet ex",
+  "convertedDate": null,
+  "annualRevenue": null,
+  "description": "proident nisi dolore",
+  "convertedToAccount": [
+    "cillum dolor anim exercitation deserunt"
+  ],
+  "countryName": "minim enim elit ullamco ad",
+  "contactPointEmail": [
+    {
+      "emailAddress": "aliquip",
+      "contactPointType": [
+        {
+          "id": null,
+          "name": "Duis amet",
+          "auditInfo": {
+            "isDeleted": false,
+            "createdBy": "ut",
+            "updatedBy": "amet quis",
+            "updatedDate": "2021-01-26T08:20:34.993Z",
+            "createdDate": "1994-09-16T01:46:33.682Z"
+          },
+          "optInPriority": -41574142
+        }
+      ],
+      "id": null,
+      "activeFromDate": "1956-06-23",
+      "emailLatestBounceDateTime": "2003-01-21",
+      "profileFirstCreatedDate": "00:00:01",
+      "partyRole": [
+        "dolor Duis dolore sit"
+      ],
+      "auditInfo": {
+        "isDeleted": true,
+        "createdBy": "exercitation deserunt irure ut",
+        "updatedBy": "laborum eiusmod in consequat sit",
+        "updatedDate": null,
+        "createdDate": null
+      }
+    }
+  ],
+  "partyRole": [
+    "do magna reprehenderit consequat exercitation"
+  ],
+  "geoCodeAccuracy": -35227188
+}

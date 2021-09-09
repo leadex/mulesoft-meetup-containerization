@@ -1,0 +1,30 @@
+{
+  "BillingStreet": "Mill Street Lane 2",
+  "LastModifiedDate": "2021-04-14T19:45:47.000Z",
+  "LastModifiedBy": {
+    "Id": null,
+    "type": "User",
+    "Name": "Admin Accelerator"
+  },
+  "IsDeleted": "false",
+  "Global_Customer_Id__c": "123456789",
+  "CreatedBy": {
+    "Id": null,
+    "type": "User",
+    "Name": "Admin Accelerator"
+  },
+  "IsPersonAccount": "false",
+  "Name": "Sahana Inc",
+  "BillingLatitude": "14.997",
+  "type": "Account",
+  "AccountNumber": "ZYDUSYP1",
+  "Phone": "567-850-3754",
+  "BillingLongitude": "164.6381",
+  "CreatedDate": "2021-04-14T19:44:00.000Z",
+  "BillingPostalCode": "1233",
+  "Id": "0014x00000HwZFdAAN",
+  "BillinggCity": "East Osbaldo",
+  "BillingState": "TX",
+  "BillingCountry": "USA",
+  "BillingGeocodeAccuracy": null
+}

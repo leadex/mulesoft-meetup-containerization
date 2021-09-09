@@ -1,0 +1,56 @@
+[
+  {
+    "StartDate": null,
+    "AccountId": "0014x000009EdamAAC",
+    "Roles": "Other",
+    "Id": "07k4x000002pXIAAA2",
+    "ContactId": "0034x0000074PPEAA2",
+    "type": "AccountContactRelation",
+    "EndDate": null
+  },
+  {
+    "StartDate": null,
+    "AccountId": "0014x000009EdamAAC",
+    "Roles": "Executive Sponsor",
+    "Id": "07k4x000002pXIBAA2",
+    "ContactId": "0034x0000074PPFAA2",
+    "type": "AccountContactRelation",
+    "EndDate": null
+  },
+  {
+    "StartDate": null,
+    "AccountId": "0014x000009EdamAAC",
+    "Roles": "Business User",
+    "Id": "07k4x000002pXIGAA2",
+    "ContactId": "0034x0000074PPKAA2",
+    "type": "AccountContactRelation",
+    "EndDate": null
+  },
+  {
+    "StartDate": null,
+    "AccountId": "0014x000009EdamAAC",
+    "Roles": "Other",
+    "Id": "07k4x000002pXIHAA2",
+    "ContactId": "0034x0000074PO5AAM",
+    "type": "AccountContactRelation",
+    "EndDate": null
+  },
+  {
+    "StartDate": null,
+    "AccountId": "0014x000009EdamAAC",
+    "Roles": "Other",
+    "Id": "07k4x000002pXIJAA2",
+    "ContactId": "0034x0000074PPMAA2",
+    "type": "AccountContactRelation",
+    "EndDate": null
+  },
+  {
+    "StartDate": null,
+    "AccountId": "0014x000009EdamAAC",
+    "Roles": "Economic Buyer;Business User",
+    "Id": "07k4x00000BtPEGAA3",
+    "ContactId": "0034x00000ZwWKeAAN",
+    "type": "AccountContactRelation",
+    "EndDate": null
+  }
+]

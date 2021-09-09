@@ -1,0 +1,2218 @@
+{
+	"info": {
+		"_postman_id": "2408a88e-b031-4947-abcf-2b8e72b2e956",
+		"name": "accelerator-salesforce-customer-sys-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Query Health",
+			"item": [
+				{
+					"name": "Query Health",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-customer_sys_api}}/api/ping",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-customer_sys_api}}"
+							],
+							"path": [
+								"api",
+								"ping"
+							]
+						},
+						"description": "Call ping operation with no parameters"
+					},
+					"response": []
+				},
+				{
+					"name": "Query Health with Dependencies",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-customer_sys_api}}/api/ping?checkDependencies=true",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-customer_sys_api}}"
+							],
+							"path": [
+								"api",
+								"ping"
+							],
+							"query": [
+								{
+									"key": "checkDependencies",
+									"value": "true",
+									"description": "Include health of dependencies"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query Health with Invalid Parameter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-customer_sys_api}}/api/ping?checkDependencies=true-ish",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-customer_sys_api}}"
+							],
+							"path": [
+								"api",
+								"ping"
+							],
+							"query": [
+								{
+									"key": "checkDependencies",
+									"value": "true-ish",
+									"description": "Should not return dependencies"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Customers",
+			"item": [
+				{
+					"name": "Person Accounts",
+					"item": [
+						{
+							"name": "Create PersonAccount Without Contact Points- Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-correla",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"id\": null,\n\t\"partyRoleType\": \"Customer\",\n\t\"party\": [{\n\t\t\"id\": null,\n\t\t\"partyType\": \"Individual\",\n        \"salutation\": \"{{$randomNamePrefix}}\",\n\t\t\"firstName\": \"{{$randomFirstName}}\",\n        \"birthDate\":\"1988-01-12\",\n\t\t\"lastName\": \"{{$randomLastName}}\"\n\t}],\n\t\"externalIds\": [\n        {\n            \"externalIdType\": [\n                \"MDM\"\n            ],\n            \"externalId\": \"{{$randomUUID}}\",\n            \"id\": \"\",\n            \"status\": \"VALID\"\n        }\n    ],\n\t\"customerStatus\": \"ACTIVE\",\n    \"customerNumber\":\"{{$randomBankAccountBic}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers",
+									"protocol": "https",
+									"host": [
+										"{{host_salesforce-customer_sys_api}}"
+									],
+									"path": [
+										"api",
+										"customers"
+									]
+								},
+								"description": "Call ping operation with no parameters"
+							},
+							"response": []
+						},
+						{
+							"name": "Create PersonAccounts - PartyRole Not Customer Fails with 500",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-correla",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"id\": null,\n\t\"partyRoleType\": \"NotCustomer\",\n\t\"party\": [{\n\t\t\"id\": null,\n\t\t\"partyType\": \"Individual\",\n        \"salutation\": \"{{$randomNamePrefix}}\",\n\t\t\"firstName\": \"{{$randomFirstName}}\",\n        \"birthDate\":\"1984-03-17\",\n\t\t\"lastName\": \"{{$randomLastName}}\"\n\t}],\n\t\"externalIds\": [{\n\t\t\"id\": null,\n\t\t\"externalId\": \"{{$randomUUID}}\",\n\t\t\"externalIdType\": [\"MDM\"]\n\t}],\n    \"customerStatus\": \"ACTIVE\",\n    \"customerNumber\":\"{{$randomUUID}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers",
+									"protocol": "https",
+									"host": [
+										"{{host_salesforce-customer_sys_api}}"
+									],
+									"path": [
+										"api",
+										"customers"
+									]
+								},
+								"description": "Call ping operation with no parameters"
+							},
+							"response": []
+						},
+						{
+							"name": "Create PersonAccounts With Contact Points- Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-correla",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"id\": null,\n\t\"partyRoleType\": \"Customer\",\n\t\"party\": [{\n\t\t\"id\": null,\n\t\t\"partyType\": \"Individual\",\n        \"salutation\": \"{{$randomNamePrefix}}\",\n\t\t\"firstName\": \"{{$randomFirstName}}\",\n        \"birthDate\":\"1984-03-17\",\n\t\t\"lastName\": \"{{$randomLastName}}\",\n        \"contactPoints\":[\n    {\n        \"contactPointType\": [\n            \"ContactPointPhone\"\n        ],\n        \"id\": null,\n        \"activeFromDate\": \"2015-03-15\",\n        \"telephoneNumber\": \"{{$randomPhoneNumber}}\",\n        \"extensionNumber\": \"22444\",\n        \"formattedE164PhoneNumber\": \"+1 {{$randomPhoneNumber}}\",\n        \"formattedInternationalPhoneNumber\": \"001 {{$randomPhoneNumber}}\"\n    },\n    {\n        \"contactPointType\": [\n            \"ContactPointEmail\"\n        ],\n        \"id\": null,\n        \"activeFromDate\": \"2015-03-15\",\n        \"profileLastUpdatedDate\": \"00:01:01\",\n        \"emailAddress\": \"testuser{{$timestamp}}@gmail.com\",\n        \"emailBouncedReason\": \"test bounce\",\n        \"emailDomain\": \"{{$randomDomainName}}\",\n        \"emailMailBox\": \"spam\"\n    },\n    {\n        \"contactPointType\": [\n            \"ContactPointAddress\"\n        ],\n        \"id\": null,\n        \"activeFromDate\": \"2020-03-05\",\n        \"geoLongitude\": {{$randomLongitude}},\n        \"geoLatitude\": {{$randomLatitude}},\n        \"cityName\": \"{{$randomCity}}\",\n        \"addressLine1\": \"{{$randomStreetName}}\",\n        \"stateProvinceName\": \"TX\",\n        \"addressLine4\": \"{{$randomCity}}\",\n        \"countryName\": \"USA\"\n    }\n]\n\t}],\n\t\"externalIds\": [{\n\t\t\"id\": null,\n\t\t\"externalId\": \"{{$randomUUID}}\",\n\t\t\"externalIdType\": [\"MDM\"]\n\t}],\n\t\"customerStatus\": \"ACTIVE\",\n    \"customerNumber\":\"{{$randomBankAccountBic}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers",
+									"protocol": "https",
+									"host": [
+										"{{host_salesforce-customer_sys_api}}"
+									],
+									"path": [
+										"api",
+										"customers"
+									]
+								},
+								"description": "Call ping operation with no parameters"
+							},
+							"response": []
+						},
+						{
+							"name": "Create PersonAccounts with only mandatory fields- Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-correla",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"id\": null,\n\t\"partyRoleType\": \"Customer\",\n\t\"party\": [{\n\t\t\"id\": null,\n\t\t\"partyType\": \"Individual\",\n        \"salutation\": null,\n\t\t\"firstName\": null,\n        \"birthDate\":null,\n\t\t\"lastName\": \"{{$randomLastName}}\"\n\t}],\n    \"customerStatus\": \"ACTIVE\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers",
+									"protocol": "https",
+									"host": [
+										"{{host_salesforce-customer_sys_api}}"
+									],
+									"path": [
+										"api",
+										"customers"
+									]
+								},
+								"description": "Call ping operation with no parameters"
+							},
+							"response": []
+						},
+						{
+							"name": "Create PersonAccounts With Contact Points- Fail Missing Email Address",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-correla",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"id\": null,\n\t\"partyRoleType\": \"Customer\",\n\t\"party\": [{\n\t\t\"id\": null,\n\t\t\"partyType\": \"Individual\",\n        \"salutation\": \"{{$randomNamePrefix}}\",\n\t\t\"firstName\": \"{{$randomFirstName}}\",\n        \"birthDate\":\"1984-03-17\",\n\t\t\"lastName\": \"{{$randomLastName}}\",\n        \"contactPoints\":[\n    {\n        \"contactPointType\": [\n            \"ContactPointPhone\"\n        ],\n        \"id\": null,\n        \"activeFromDate\": \"2015-03-15\",\n        \"telephoneNumber\": \"{{$randomPhoneNumber}}\",\n        \"extensionNumber\": \"22444\",\n        \"formattedE164PhoneNumber\": \"+1 {{$randomPhoneNumber}}\",\n        \"formattedInternationalPhoneNumber\": \"001 {{$randomPhoneNumber}}\"\n    },\n    {\n        \"contactPointType\": [\n            \"ContactPointEmail\"\n        ],\n        \"id\": null,\n        \"activeFromDate\": \"2015-03-15\",\n        \"profileLastUpdatedDate\": \"00:01:01\",\n        \"emailAddress\": \"\",\n        \"emailBouncedReason\": \"test bounce\",\n        \"emailDomain\": \"{{$randomDomainName}}\",\n        \"emailMailBox\": \"spam\"\n    },\n    {\n        \"contactPointType\": [\n            \"ContactPointAddress\"\n        ],\n        \"id\": null,\n        \"activeFromDate\": \"2020-03-05\",\n        \"geoLongitude\": {{$randomLongitude}},\n        \"geoLatitude\": {{$randomLatitude}},\n        \"cityName\": \"{{$randomCity}}\",\n        \"addressLine1\": \"{{$randomStreetName}}\",\n        \"stateProvinceName\": \"TX\",\n        \"addressLine4\": \"{{$randomCity}}\",\n        \"countryName\": \"USA\"\n    }\n]\n\t}],\n\t\"externalIds\": [{\n\t\t\"id\": null,\n\t\t\"externalId\": \"{{$randomUUID}}\",\n\t\t\"externalIdType\": [\"MDM\"]\n\t}],\n\t\"customerStatus\": \"ACTIVE\",\n    \"customerNumber\":\"{{$randomBankAccountBic}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers",
+									"protocol": "https",
+									"host": [
+										"{{host_salesforce-customer_sys_api}}"
+									],
+									"path": [
+										"api",
+										"customers"
+									]
+								},
+								"description": "Call ping operation with no parameters"
+							},
+							"response": []
+						},
+						{
+							"name": "Update PersonAccounts Without Contact Points Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"partyRoleType\": \"Customer\",\n    \"id\": \"0014x00000HwZ1bAAF\",\n    \"party\": [\n        {\n            \"id\": null,\n            \"salutation\": \"Ms.\",\n            \"firstName\": \"Americo1\",\n            \"lastName\": \"Hauck\",\n            \"birthDate\": \"1991-03-12\",\n            \"partyType\": \"Individual\"\n        }\n    ],\n    \"externalIds\": [\n        {\n            \"id\": \"\",\n            \"externalId\": \"2c1b969b-055c-4782-96b1-535b88868064\",\n            \"externalIdType\": [\n                \"MDM\"\n            ],\n            \"statusLastChangedDate\": \"2021-04-14T18:04:00Z\",\n            \"status\": \"VALID\"\n        }\n    ],\n    \"auditInfo\": {\n        \"createdDate\": \"2021-04-14T18:04:00Z\",\n        \"createdBy\": \"Admin Accelerator\",\n        \"updatedDate\": \"2021-04-14T18:04:00Z\",\n        \"updatedBy\": \"Admin Accelerator\",\n        \"isDeleted\": false\n    },\n    \"customerNumber\": \"DSCEGGW2\",\n    \"customerStatus\": \"ACTIVE\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers/:customerId",
+									"protocol": "https",
+									"host": [
+										"{{host_salesforce-customer_sys_api}}"
+									],
+									"path": [
+										"api",
+										"customers",
+										":customerId"
+									],
+									"variable": [
+										{
+											"key": "customerId",
+											"value": "0014x00000HwZ1bAAF"
+										}
+									]
+								},
+								"description": "Call ping operation with no parameters"
+							},
+							"response": []
+						},
+						{
+							"name": "Update Contact Points Only Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"partyRoleType\": \"Customer\",\n    \"id\": \"0014x00000HwZ33AAF\",\n    \"party\": [\n        {\n            \"id\": null,\n            \"partyType\": \"Individual\",\n            \"contactPoints\": [\n                {\n                    \"contactPointType\": [\n                        \"ContactPointAddress\"\n                    ],\n                    \"id\": null,\n                    \"activeFromDate\": \"2021-04-14\",\n                    \"addressLine1\": \"Linwood Stravenue new\",\n                    \"cityName\": \"Port Gianniville\",\n                    \"postalCodeText\": \"\",\n                    \"stateProvinceName\": \"TX\",\n                    \"countryName\": \"USA\",\n                    \"geoLatitude\": \"-50.4669\",\n                    \"geoLongitude\": \"130.5886\",\n                    \"geoAccuracy\": \"\"\n                },\n                {\n                    \"contactPointType\": [\n                        \"ContactPointEmail\"\n                    ],\n                    \"id\": null,\n                    \"activeFromDate\": \"2021-04-14\",\n                    \"emailAddress\": \"testuser{{$timestamp}}@gmail.com\"\n                },\n                {\n                    \"contactPointType\": [\n                        \"ContactPointPhone\"\n                    ],\n                    \"id\": null,\n                    \"activeFromDate\": \"2021-04-14\",\n                    \"telephoneNumber\": \"{{$randomPhoneNumber}}\"\n                }\n            ]\n        }\n    ],\n    \"customerStatus\": \"ACTIVE\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers/:customerId",
+									"protocol": "https",
+									"host": [
+										"{{host_salesforce-customer_sys_api}}"
+									],
+									"path": [
+										"api",
+										"customers",
+										":customerId"
+									],
+									"variable": [
+										{
+											"key": "customerId",
+											"value": "0014x00000HwZ33AAF"
+										}
+									]
+								},
+								"description": "Call ping operation with no parameters"
+							},
+							"response": []
+						},
+						{
+							"name": "Update PersonAccounts With ContactPoints - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"partyRoleType\": \"Customer\",\n    \"id\": \"0014x00000HwYlKAAV\",\n    \"party\": [\n        {\n            \"id\": null,\n            \"salutation\": \"Ms.\",\n            \"personName\": \"Cecelia Criste\",\n            \"firstName\": \"Ceceliae\",\n            \"lastName\": \"Criste\",\n            \"birthDate\": \"1992-03-17\",\n            \"partyType\": \"Individual\",\n            \"contactPoints\": [\n                {\n                    \"contactPointType\": [\n                        \"ContactPointAddress\"\n                    ],\n                    \"id\": \"0034x00000GCjYAAA1\",\n                    \"activeFromDate\": \"2021-04-14\",\n                    \"addressLine1\": \"Linwood Stravenue\",\n                    \"cityName\": \"Port Gianniville\",\n                    \"postalCodeText\": \"\",\n                    \"stateProvinceName\": \"TX\",\n                    \"countryName\": \"USA\",\n                    \"geoLatitude\": \"-50.4669\",\n                    \"geoLongitude\": \"130.5886\",\n                    \"geoAccuracy\": \"\"\n                },\n                {\n                    \"contactPointType\": [\n                        \"ContactPointEmail\"\n                    ],\n                    \"id\": \"0034x00000GCjYAAA1\",\n                    \"activeFromDate\": \"2021-04-14\",\n                    \"emailAddress\": \"testuser{{$timestamp}}@gmail.com\"\n                },\n                {\n                    \"contactPointType\": [\n                        \"ContactPointPhone\"\n                    ],\n                    \"id\": \"0034x00000GCkYpAAL\",\n                    \"activeFromDate\": \"2021-04-14\",\n                    \"telephoneNumber\": \"978689000\"\n                }\n            ]\n        }\n    ],\n    \"externalIds\": [\n        {\n            \"id\": \"\",\n            \"externalId\": \"aac45ae9-0d97-4cb8-b3e3-0d01878975eb\",\n            \"externalIdType\": [\n                \"MDM\"\n            ],\n            \"statusLastChangedDate\": \"2021-04-14T17:12:39Z\",\n            \"status\": \"VALID\"\n        }\n    ],\n    \"auditInfo\": {\n        \"createdDate\": \"2021-04-14T17:12:39Z\",\n        \"createdBy\": \"Admin Accelerator\",\n        \"updatedDate\": \"2021-04-14T17:12:39Z\",\n        \"updatedBy\": \"Admin Accelerator\",\n        \"isDeleted\": false\n    },\n    \"customerNumber\": \"BYVOISD3\",\n    \"customerStatus\": \"ACTIVE\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers/:customerId",
+									"protocol": "https",
+									"host": [
+										"{{host_salesforce-customer_sys_api}}"
+									],
+									"path": [
+										"api",
+										"customers",
+										":customerId"
+									],
+									"variable": [
+										{
+											"key": "customerId",
+											"value": "0014x00000HwYlKAAV"
+										}
+									]
+								},
+								"description": "Call ping operation with no parameters"
+							},
+							"response": []
+						},
+						{
+							"name": "Update PersonAccount - Invalid Request Fails with 400",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"id\": null,\n\t\"partyRoleType\": \"Customer\",\n\t\"party\": [{\n\t\t\"id\": null ,\n\t\t\"partyType\": \"Individual1\",\n        \"salutation\": \"Mrs\",\n\t\t\"firstName\": \"Test Acc27 loc updated\",\n\t\t\"lastName\": \"LastName updated\",\n        \"contactPoints\": [\n                {\n                    \"contactPointType\": [\n                        \"ContactPointAddress\"\n                    ],\n                    \"id\": \"0034x00000GCjYAAA1\",\n                    \"activeFromDate\": \"2021-04-14\",\n                    \"addressLine1\": \"Linwood Stravenue\",\n                    \"cityName\": \"Port Gianniville\",\n                    \"postalCodeText\": \"\",\n                    \"stateProvinceName\": \"TX\",\n                    \"countryName\": \"USA\",\n                    \"geoLatitude\": \"-50.4669\",\n                    \"geoLongitude\": \"130.5886\",\n                    \"geoAccuracy\": \"\"\n                },\n                {\n                    \"contactPointType\": [\n                        \"ContactPointEmail\"\n                    ],\n                    \"id\": \"0034x00000GCjYAAA1\",\n                    \"activeFromDate\": \"2021-04-14\",\n                    \"emailAddress\": \"test@updated.com\"\n                },\n                {\n                    \"contactPointType\": [\n                        \"ContactPointPhone\"\n                    ],\n                    \"id\": \"0034x00000GCkYpAAL\",\n                    \"activeFromDate\": \"2021-04-14\",\n                    \"telephoneNumber\": \"\"\n                }\n            ]\n\t}],\n    \"customerStatus\":\"Active\",\n    \"customerNumber\":\"xYZ889\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers/:customerId",
+									"protocol": "https",
+									"host": [
+										"{{host_salesforce-customer_sys_api}}"
+									],
+									"path": [
+										"api",
+										"customers",
+										":customerId"
+									],
+									"variable": [
+										{
+											"key": "customerId",
+											"value": "{{customerId}}"
+										}
+									]
+								},
+								"description": "Call ping operation with no parameters"
+							},
+							"response": []
+						},
+						{
+							"name": "Update PersonAccount - PartyRole Type Not Customer -Fails with 400",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"id\": \"0014x00000HwZ1bAAF\",\n\t\"partyRoleType\": \"Not Customer\",\n\t\"party\": [{\n\t\t\"id\": \"1221334\" ,\n\t\t\"partyType\": \"Individual\",\n        \"salutation\": \"Mrs\",\n\t\t\"firstName\": \"Test Acc27 loc updated\",\n\t\t\"lastName\": \"LastName updated\"\n\t}],\n    \"customerStatus\": \"Active\",\n    \"customerNumber\":\"xYZ889\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers/:customerId",
+									"protocol": "https",
+									"host": [
+										"{{host_salesforce-customer_sys_api}}"
+									],
+									"path": [
+										"api",
+										"customers",
+										":customerId"
+									],
+									"variable": [
+										{
+											"key": "customerId",
+											"value": "0014x00000HwZ1bAAF"
+										}
+									]
+								},
+								"description": "Call ping operation with no parameters"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Organization Accounts",
+					"item": [
+						{
+							"name": "Create OrganizationAccounts  Without Contact Points- Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-correla",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"id\": null,\n\t\"partyRoleType\": \"Customer\",\n\t\"party\": [{\n\t\t\"id\": null,\n\t\t\"partyType\": \"Organization\",\n        \"name\":\"{{$randomCompanyName}}\"\n\t}],\n\t\"externalIds\": [{\n\t\t\"id\": null,\n\t\t\"externalId\": \"{{$randomUUID}}\",\n\t\t\"externalIdType\": [\"MDM\"]\n\t}],\n\t\"customerStatus\": \"ACTIVE\",\n    \"customerNumber\":\"{{$randomBankAccountBic}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers",
+									"protocol": "https",
+									"host": [
+										"{{host_salesforce-customer_sys_api}}"
+									],
+									"path": [
+										"api",
+										"customers"
+									]
+								},
+								"description": "Call ping operation with no parameters"
+							},
+							"response": []
+						},
+						{
+							"name": "Create OrganizationAccounts With Contact Points- Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-correla",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"id\": null,\n\t\"partyRoleType\": \"Customer\",\n\t\"party\": [{\n\t\t\"id\": null,\n\t\t\"partyType\": \"Organization\",\n        \"name\":\"{{$randomCompanyName}}\",\n        \"contactPoints\":[\n    {\n        \"contactPointType\": [\n            \"ContactPointPhone\"\n        ],\n        \"id\": null,\n        \"activeFromDate\": \"2015-03-15\",\n        \"telephoneNumber\": \"{{$randomPhoneNumber}}\",\n        \"extensionNumber\": \"22444\",\n        \"formattedE164PhoneNumber\": \"+1 {{$randomPhoneNumber}}\",\n        \"formattedInternationalPhoneNumber\": \"001 {{$randomPhoneNumber}}\"\n    },     \n    {\n        \"contactPointType\": [\n            \"ContactPointAddress\"\n        ],\n        \"id\": null,\n        \"activeFromDate\": \"2020-03-05\",\n        \"geoLongitude\": {{$randomLongitude}},\n        \"geoLatitude\": {{$randomLatitude}},\n        \"cityName\": \"{{$randomCity}}\",\n        \"addressLine1\": \"{{$randomStreetName}}\",\n        \"stateProvinceName\": \"TX\",\n        \"addressLine4\": \"{{$randomCity}}\",\n        \"countryName\": \"USA\"\n    }\n]\n\t}],\n\t\"externalIds\": [{\n\t\t\"id\": null,\n\t\t\"externalId\": \"{{$randomUUID}}\",\n\t\t\"externalIdType\": [\"MDM\"]\n\t}],\n\t\"customerStatus\": \"ACTIVE\",\n    \"customerNumber\":\"{{$randomBankAccountBic}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers",
+									"protocol": "https",
+									"host": [
+										"{{host_salesforce-customer_sys_api}}"
+									],
+									"path": [
+										"api",
+										"customers"
+									]
+								},
+								"description": "Call ping operation with no parameters"
+							},
+							"response": []
+						},
+						{
+							"name": "Update OrganizationAccounts Without Contact Points Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"partyRoleType\": \"Customer\",\n    \"id\": \"0014x00000UaD2LAAV\",\n    \"party\": [\n        {\n            \"id\": null,\n            \"name\":\"Larson - Hackett\",\n            \"partyType\": \"Organization\"\n        }\n    ],\n    \"externalIds\": [\n        {\n            \"id\": \"\",\n            \"externalId\": \"ae56eff9-7ae9-4921-894d-322737ab3288\",\n            \"externalIdType\": [\n                \"MDM\"\n            ],\n            \"statusLastChangedDate\": \"2021-04-14T18:04:00Z\",\n            \"status\": \"VALID\"\n        }\n    ],\n    \"auditInfo\": {\n        \"createdDate\": \"2021-04-14T18:04:00Z\",\n        \"createdBy\": \"Admin Accelerator\",\n        \"updatedDate\": \"2021-04-14T18:04:00Z\",\n        \"updatedBy\": \"Admin Accelerator\",\n        \"isDeleted\": false\n    },\n    \"customerNumber\": \"DSCEGGW2\",\n    \"customerStatus\": \"ACTIVE\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers/:customerId",
+									"protocol": "https",
+									"host": [
+										"{{host_salesforce-customer_sys_api}}"
+									],
+									"path": [
+										"api",
+										"customers",
+										":customerId"
+									],
+									"variable": [
+										{
+											"key": "customerId",
+											"value": "0014x00000UaD2LAAV"
+										}
+									]
+								},
+								"description": "Call ping operation with no parameters"
+							},
+							"response": []
+						},
+						{
+							"name": "Update Contact Points Only Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"partyRoleType\": \"Customer\",\n    \"id\": \"0014x00000UaD2LAAV\",\n    \"party\": [\n        {\n            \"id\": null,\n            \"partyType\": \"Organization\",\n            \"contactPoints\": [\n                {\n                    \"contactPointType\": [\n                        \"ContactPointAddress\"\n                    ],\n                    \"id\": null,\n                    \"activeFromDate\": \"2021-04-14\",\n                    \"addressLine1\": \"Linwood Stravenue new\",\n                    \"cityName\": \"Port Gianniville\",\n                    \"postalCodeText\": \"\",\n                    \"stateProvinceName\": \"TX\",\n                    \"countryName\": \"USA\",\n                    \"geoLatitude\": \"-50.4669\",\n                    \"geoLongitude\": \"130.5886\",\n                    \"geoAccuracy\": \"\"\n                },\n                {\n                    \"contactPointType\": [\n                        \"ContactPointPhone\"\n                    ],\n                    \"id\": null,\n                    \"activeFromDate\": \"2021-04-14\",\n                    \"telephoneNumber\": \"{{$randomPhoneNumber}}\"\n                }\n            ]\n        }\n    ],\n    \"customerStatus\": \"ACTIVE\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers/:customerId",
+									"protocol": "https",
+									"host": [
+										"{{host_salesforce-customer_sys_api}}"
+									],
+									"path": [
+										"api",
+										"customers",
+										":customerId"
+									],
+									"variable": [
+										{
+											"key": "customerId",
+											"value": "0014x00000UaD2LAAV"
+										}
+									]
+								},
+								"description": "Call ping operation with no parameters"
+							},
+							"response": []
+						},
+						{
+							"name": "Update PersonAccounts With ContactPoints - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"partyRoleType\": \"Customer\",\n    \"id\": \"0014x00000UaD2LAAV\",\n    \"party\": [\n        {\n            \"id\": null,\n            \"name\": \"Larson - Hackett\",\n            \"partyType\": \"Organization\",\n            \"contactPoints\": [\n                {\n                    \"contactPointType\": [\n                        \"ContactPointAddress\"\n                    ],\n                    \"id\":null,\n                    \"activeFromDate\": \"2021-07-12\",\n                    \"addressLine1\": \"Terrell Ports\",\n                    \"cityName\": \"Paramount\",\n                    \"stateProvinceName\": \"TX\",\n                    \"countryName\": \"USA\"\n                },\n                {\n                    \"contactPointType\": [\n                        \"ContactPointPhone\"\n                    ],\n                    \"id\":null,\n                    \"activeFromDate\": \"2021-07-12\",\n                    \"telephoneNumber\": \"409-256-6982\"\n                }\n            ]\n        }\n    ],\n    \"externalIds\": [\n        {\n            \"id\": \"\",\n            \"externalId\": \"ae56eff9-7ae9-4921-894d-322737ab3288\",\n            \"externalIdType\": [\n                \"MDM\"\n            ],\n            \"statusLastChangedDate\": \"2021-07-10T19:43:31Z\",\n            \"status\": \"VALID\"\n        }\n    ],\n    \"auditInfo\": {\n        \"createdDate\": \"2021-07-10T19:43:31Z\",\n        \"createdBy\": \"Admin Accelerator\",\n        \"updatedDate\": \"2021-07-10T19:43:31Z\",\n        \"updatedBy\": \"Admin Accelerator\",\n        \"isDeleted\": false\n    },\n    \"customerNumber\": \"IDSAESK1\",\n    \"customerStatus\": \"ACTIVE\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers/:customerId",
+									"protocol": "https",
+									"host": [
+										"{{host_salesforce-customer_sys_api}}"
+									],
+									"path": [
+										"api",
+										"customers",
+										":customerId"
+									],
+									"variable": [
+										{
+											"key": "customerId",
+											"value": "0014x00000UaD2LAAV"
+										}
+									]
+								},
+								"description": "Call ping operation with no parameters"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Related Contacts",
+					"item": [
+						{
+							"name": "Search Related Contacts By Customer Id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers/:customerId/relatedContacts",
+									"protocol": "https",
+									"host": [
+										"{{host_salesforce-customer_sys_api}}"
+									],
+									"path": [
+										"api",
+										"customers",
+										":customerId",
+										"relatedContacts"
+									],
+									"variable": [
+										{
+											"key": "customerId",
+											"value": "0014x00000UaD2LAAV"
+										}
+									]
+								},
+								"description": "Call ping operation with no parameters"
+							},
+							"response": []
+						},
+						{
+							"name": "Update Related Contacts By Customer Id -Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    {\n        \"partyRelationshipType\": [\n            \"OTHER\"\n        ],\n        \"id\": null,\n        \"relatedParty\": [{\n            \"id\":\"0034x00000ZwagFAAR\",\n            \"partyType\":\"Indivudual\"\n        }    \n        ],\n        \"party\": [{\n            \"id\": \"0014x00000UagyeAAB\",\n            \"partyType\": \"Indivudual\"\n        }\n        ],\n        \"relatedFromDate\": \"2021-07-02\",\n        \"relatedEndDate\": \"2025-08-02\"\n    },\n     {\n        \"partyRelationshipType\": [\n            \"USER\",\"OTHER\"\n        ],\n        \"id\": null,\n        \"relatedParty\": [{\n            \"id\":\"0034x00000ZwamSAAR\",\n            \"partyType\":\"Indivudual\"\n        }    \n        ],\n        \"party\": [{\n            \"id\": \"0014x00000UagyeAAB\",\n            \"partyType\": \"Indivudual\"\n        }\n        ],\n        \"relatedFromDate\": \"2021-07-02\",\n        \"relatedEndDate\": \"2025-08-02\"\n    }\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers/:customerId/relatedContacts",
+									"protocol": "https",
+									"host": [
+										"{{host_salesforce-customer_sys_api}}"
+									],
+									"path": [
+										"api",
+										"customers",
+										":customerId",
+										"relatedContacts"
+									],
+									"variable": [
+										{
+											"key": "customerId",
+											"value": "0014x00000UagyeAAB"
+										}
+									]
+								},
+								"description": "Call ping operation with no parameters"
+							},
+							"response": []
+						},
+						{
+							"name": "Update Related Contacts - Customer not foundreturns 404",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 404\", function () {",
+											"    pm.response.to.have.status(404);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    {\n        \"partyRelationshipType\": [\n            \"Other\"\n        ],\n        \"id\": null,\n        \"relatedParty\": [{\n            \"id\":\"0034x00000ZwALrAAN\",\n            \"partyType\":\"Individual\"\n        }\n            \n        ],\n        \"party\": [{\n            \"id\": \"0014x00000UaD2LAAV\",\n            \"partyType\": \"Individual\"\n        }\n        ],\n        \"relatedFromDate\": \"2021-07-02\",\n        \"relatedEndDate\": \"2025-08-02\"\n    }\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers/:customerId/relatedContacts",
+									"protocol": "https",
+									"host": [
+										"{{host_salesforce-customer_sys_api}}"
+									],
+									"path": [
+										"api",
+										"customers",
+										":customerId",
+										"relatedContacts"
+									],
+									"variable": [
+										{
+											"key": "customerId",
+											"value": "0014x00000UagyeA"
+										}
+									]
+								},
+								"description": "Call ping operation with no parameters"
+							},
+							"response": []
+						},
+						{
+							"name": "Update Related Contacts - Contact not found returns 500",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 500\", function () {",
+											"    pm.response.to.have.status(500);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    {\n        \"partyRelationshipType\": [\n            \"Other\"\n        ],\n        \"id\": null,\n        \"relatedParty\": [{\n            \"id\":\"0034x00000Z\",\n            \"partyType\":\"Individual\"\n        }\n            \n        ],\n        \"party\": [{\n            \"id\": \"0014x00000UaD2LAAV\",\n            \"partyType\": \"Individual\"\n        }\n        ],\n        \"relatedFromDate\": \"2021-07-02\",\n        \"relatedEndDate\": \"2025-08-02\"\n    }\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers/:customerId/relatedContacts",
+									"protocol": "https",
+									"host": [
+										"{{host_salesforce-customer_sys_api}}"
+									],
+									"path": [
+										"api",
+										"customers",
+										":customerId",
+										"relatedContacts"
+									],
+									"variable": [
+										{
+											"key": "customerId",
+											"value": "0014x00000UagyeAAB"
+										}
+									]
+								},
+								"description": "Call ping operation with no parameters"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get Customer By Id - Organization Account",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers/:customerId",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-customer_sys_api}}"
+							],
+							"path": [
+								"api",
+								"customers",
+								":customerId"
+							],
+							"variable": [
+								{
+									"key": "customerId",
+									"value": "0014x00000UaD2LAAV"
+								}
+							]
+						},
+						"description": "Call ping operation with no parameters"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Customer By Id - Person Account",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers/:customerId",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-customer_sys_api}}"
+							],
+							"path": [
+								"api",
+								"customers",
+								":customerId"
+							],
+							"variable": [
+								{
+									"key": "customerId",
+									"value": "0014x000009EdbsAAC"
+								}
+							]
+						},
+						"description": "Call ping operation with no parameters"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Customer By Id - Incorrect Id Returns Error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers/:customerId",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-customer_sys_api}}"
+							],
+							"path": [
+								"api",
+								"customers",
+								":customerId"
+							],
+							"variable": [
+								{
+									"key": "customerId",
+									"value": "0014x00000H6T8OAAC"
+								}
+							]
+						},
+						"description": "Call ping operation with no parameters"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Customer By Id - Invalid Id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers/:customerId",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-customer_sys_api}}"
+							],
+							"path": [
+								"api",
+								"customers",
+								":customerId"
+							],
+							"variable": [
+								{
+									"key": "customerId",
+									"value": "INVALIDID"
+								}
+							]
+						},
+						"description": "Call ping operation with no parameters"
+					},
+					"response": []
+				},
+				{
+					"name": "Search PersonAccounts by CustomerId - Returns Records",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers?customerId=0014x00000HwYlKAAV",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-customer_sys_api}}"
+							],
+							"path": [
+								"api",
+								"customers"
+							],
+							"query": [
+								{
+									"key": "customerId",
+									"value": "0014x00000HwYlKAAV"
+								}
+							]
+						},
+						"description": "Call ping operation with no parameters"
+					},
+					"response": []
+				},
+				{
+					"name": "Search OrganizationAccounts by CustomerId - Returns Records",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers?customerId=0014x00000UaD2LAAV",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-customer_sys_api}}"
+							],
+							"path": [
+								"api",
+								"customers"
+							],
+							"query": [
+								{
+									"key": "customerId",
+									"value": "0014x00000UaD2LAAV"
+								}
+							]
+						},
+						"description": "Call ping operation with no parameters"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Customers by Incorrect CustomerId - Returns Empty List Of Records",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers?customerId=0014x00000H6T8OAAC",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-customer_sys_api}}"
+							],
+							"path": [
+								"api",
+								"customers"
+							],
+							"query": [
+								{
+									"key": "customerId",
+									"value": "0014x00000H6T8OAAC"
+								}
+							]
+						},
+						"description": "Call ping operation with no parameters"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Customers by External Id - Returns Records",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers?externalId=abYmCi4rk0R5pzVVcerV4uTSBQ2&limit=1",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-customer_sys_api}}"
+							],
+							"path": [
+								"api",
+								"customers"
+							],
+							"query": [
+								{
+									"key": "externalId",
+									"value": "abYmCi4rk0R5pzVVcerV4uTSBQ2"
+								},
+								{
+									"key": "limit",
+									"value": "1"
+								},
+								{
+									"key": "offset",
+									"value": "0",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Call ping operation with no parameters"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Customers by Email Id- Returns Records",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers?emailAddress=christophe_wintheiser@hotmail.com",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-customer_sys_api}}"
+							],
+							"path": [
+								"api",
+								"customers"
+							],
+							"query": [
+								{
+									"key": "emailAddress",
+									"value": "christophe_wintheiser@hotmail.com"
+								}
+							]
+						},
+						"description": "Call ping operation with no parameters"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Customers by EmailId, CustomerId and Global Id- Returns Records matching Customer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers?emailAddress=testuser1626190290@gmail.com&customerId=0014x00000HwYlKAAV&externalId=aac45ae9-0d97-4cb8-b3e3-0d01878975eb",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-customer_sys_api}}"
+							],
+							"path": [
+								"api",
+								"customers"
+							],
+							"query": [
+								{
+									"key": "emailAddress",
+									"value": "testuser1626190290@gmail.com"
+								},
+								{
+									"key": "customerId",
+									"value": "0014x00000HwYlKAAV"
+								},
+								{
+									"key": "externalId",
+									"value": "aac45ae9-0d97-4cb8-b3e3-0d01878975eb"
+								}
+							]
+						},
+						"description": "Call ping operation with no parameters"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Customers by EmailId and External Id- Returns Records matching externalId",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers?emailAddress=test3@testsalesforce.com&externalId=DTNIMKE1",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-customer_sys_api}}"
+							],
+							"path": [
+								"api",
+								"customers"
+							],
+							"query": [
+								{
+									"key": "emailAddress",
+									"value": "test3@testsalesforce.com"
+								},
+								{
+									"key": "externalId",
+									"value": "DTNIMKE1"
+								}
+							]
+						},
+						"description": "Call ping operation with no parameters"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Customers by Begin Date and End Date -  Returns Records",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers?beginTime=2021-03-22T21:29:22Z&endTime=2021-03-24T21:29:22Z&externalId=78999",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-customer_sys_api}}"
+							],
+							"path": [
+								"api",
+								"customers"
+							],
+							"query": [
+								{
+									"key": "beginTime",
+									"value": "2021-03-22T21:29:22Z"
+								},
+								{
+									"key": "endTime",
+									"value": "2021-03-24T21:29:22Z"
+								},
+								{
+									"key": "externalId",
+									"value": "78999"
+								}
+							]
+						},
+						"description": "Call ping operation with no parameters"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Customers With No Query Params- Returns First 50 Records",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-customer_sys_api}}/api/customers",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-customer_sys_api}}"
+							],
+							"path": [
+								"api",
+								"customers"
+							]
+						},
+						"description": "Call ping operation with no parameters"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Contacts",
+			"item": [
+				{
+					"name": "Update Contact With ContactPoints - Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"0034x00000ZwAQIAA3\",\n    \"salutation\": \"Ms.\",\n    \"personName\": \"Alden updated Monahan\",\n    \"firstName\": \"Alden\",\n    \"lastName\": \"Monahan\",\n    \"birthDate\": null,\n    \"partyType\": \"Individual\",\n    \"contactPoints\": [\n        {\n            \"contactPointType\": [\n                \"ContactPointAddress\"\n            ],\n            \"id\": null,\n            \"activeFromDate\": \"2021-07-13\",\n            \"addressLine1\": \"Gloria Port\",\n            \"cityName\": \"Ullrichmouth\",\n            \"postalCodeText\": \"\",\n            \"stateProvinceName\": \"TX\",\n            \"countryName\": \"USA\",\n            \"geoLatitude\": null,\n            \"geoLongitude\": null,\n            \"geoAccuracy\": null\n        },\n        {\n            \"contactPointType\": [\n                \"ContactPointEmail\"\n            ],\n            \"id\": null,\n            \"activeFromDate\": \"2021-07-13\",\n            \"emailAddress\": \"testuser1626177216@gmail.com\"\n        },\n        {\n            \"contactPointType\": [\n                \"ContactPointPhone\"\n            ],\n            \"id\": null,\n            \"activeFromDate\": \"2021-07-13\",\n            \"telephoneNumber\": \"534-318-0788\"\n        }\n    ],\n    \"externalIds\": [\n        {\n            \"id\": \"\",\n            \"externalId\": \"f86eba80-786d-4071-8af4-7afe35ee5f17\",\n            \"externalIdType\": [\n                \"MDM\"\n            ],\n            \"statusLastChangedDate\": \"2021-07-13T15:27:29Z\",\n            \"status\": \"VALID\"\n        }\n    ],\n    \"auditInfo\": {\n        \"createdDate\": \"2021-07-13T11:53:37Z\",\n        \"createdBy\": \"Admin Accelerator\",\n        \"updatedDate\": \"2021-07-13T15:27:29Z\",\n        \"updatedBy\": \"Admin Accelerator\",\n        \"isDeleted\": false\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{host_salesforce-customer_sys_api}}/api/contacts/:contactId",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-customer_sys_api}}"
+							],
+							"path": [
+								"api",
+								"contacts",
+								":contactId"
+							],
+							"variable": [
+								{
+									"key": "contactId",
+									"value": "0034x00000ZwAQIAA3"
+								}
+							]
+						},
+						"description": "Call ping operation with no parameters"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Contact Without Contact Points Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"0034x00000ZwCegAAF\",\n    \"salutation\": \"Mrs.\",\n    \"personName\": \"Harold Nikolaus\",\n    \"firstName\": \"Harold{{$timestamp}}\",\n    \"lastName\": \"Nikolaus\",\n    \"birthDate\": null,\n    \"partyType\": \"Individual\",\n    \"externalIds\": [\n        {\n            \"id\": \"\",\n            \"externalId\": \"37480d4f-d503-4959-98a9-1f8ba2d5179e\",\n            \"externalIdType\": [\n                \"MDM\"\n            ],\n            \"statusLastChangedDate\": \"2021-07-13T15:26:36Z\",\n            \"status\": \"VALID\"\n        }\n    ],\n    \"auditInfo\": {\n        \"createdDate\": \"2021-07-13T15:26:36Z\",\n        \"createdBy\": \"Admin Accelerator\",\n        \"updatedDate\": \"2021-07-13T15:26:36Z\",\n        \"updatedBy\": \"Admin Accelerator\",\n        \"isDeleted\": false\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{host_salesforce-customer_sys_api}}/api/contacts/:customerId",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-customer_sys_api}}"
+							],
+							"path": [
+								"api",
+								"contacts",
+								":customerId"
+							],
+							"variable": [
+								{
+									"key": "customerId",
+									"value": "0034x00000ZwCegAAF"
+								}
+							]
+						},
+						"description": "Call ping operation with no parameters"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Contacts With Contact Points- Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-correla",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": null,\n    \"partyType\": \"Individual\",\n    \"salutation\": \"{{$randomNamePrefix}}\",\n    \"firstName\": \"{{$randomFirstName}}\",\n    \"personName\": \"{{$randomFirstName}}\",\n    \"birthDate\": \"1988-01-12\",\n    \"lastName\": \"{{$randomLastName}}\",\n    \"contactPoints\": [\n        {\n            \"contactPointType\": [\n                \"ContactPointPhone\"\n            ],\n            \"id\": null,\n            \"activeFromDate\": \"2015-03-15\",\n            \"telephoneNumber\": \"{{$randomPhoneNumber}}\",\n            \"extensionNumber\": \"22444\",\n            \"formattedE164PhoneNumber\": \"+1 {{$randomPhoneNumber}}\",\n            \"formattedInternationalPhoneNumber\": \"001 {{$randomPhoneNumber}}\"\n        },\n        {\n            \"contactPointType\": [\n                \"ContactPointEmail\"\n            ],\n            \"id\": null,\n            \"activeFromDate\": \"2015-03-15\",\n            \"profileLastUpdatedDate\": \"00:01:01\",\n            \"emailAddress\": \"testuser{{$timestamp}}@gmail.com\",\n            \"emailBouncedReason\": \"test bounce\",\n            \"emailDomain\": \"{{$randomDomainName}}\",\n            \"emailMailBox\": \"spam\"\n        },\n        {\n            \"contactPointType\": [\n                \"ContactPointAddress\"\n            ],\n            \"id\": null,\n            \"activeFromDate\": \"2020-03-05\",\n            \"geoLongitude\": {{$randomLongitude}},\n            \"geoLatitude\": {{$randomLatitude}},\n            \"cityName\": \"{{$randomCity}}\",\n            \"addressLine1\": \"{{$randomStreetName}}\",\n            \"stateProvinceName\": \"TX\",\n            \"addressLine4\": \"{{$randomCity}}\",\n            \"countryName\": \"USA\"\n        }\n    ],\n    \"externalIds\": [\n        {\n            \"id\": null,\n            \"externalId\": \"{{$randomUUID}}\",\n            \"externalIdType\": [\n                \"MDM\"\n            ]\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{host_salesforce-customer_sys_api}}/api/contacts",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-customer_sys_api}}"
+							],
+							"path": [
+								"api",
+								"contacts"
+							]
+						},
+						"description": "Call ping operation with no parameters"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Contact  Without Contact Points- Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-correla",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": null,\n    \"partyType\": \"Individual\",\n    \"salutation\": \"{{$randomNamePrefix}}\",\n    \"personName\": \"{{$randomFirstName}}\",\n    \"firstName\": \"{{$randomFirstName}}\",\n    \"birthDate\": \"1988-01-12\",\n    \"lastName\": \"{{$randomLastName}}\",\n    \"externalIds\": [\n        {\n            \"id\": null,\n            \"externalId\": \"{{$randomUUID}}\",\n            \"externalIdType\": [\n                \"MDM\"\n            ]\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{host_salesforce-customer_sys_api}}/api/contacts",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-customer_sys_api}}"
+							],
+							"path": [
+								"api",
+								"contacts"
+							]
+						},
+						"description": "Call ping operation with no parameters"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Contact By Id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-customer_sys_api}}/api/contacts/:contactId",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-customer_sys_api}}"
+							],
+							"path": [
+								"api",
+								"contacts",
+								":contactId"
+							],
+							"variable": [
+								{
+									"key": "contactId",
+									"value": "0034x00000ZwAQIAA3"
+								}
+							]
+						},
+						"description": "Call ping operation with no parameters"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Contact By Id - Incorrect Id Returns Error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-customer_sys_api}}/api/contacts/:contactId",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-customer_sys_api}}"
+							],
+							"path": [
+								"api",
+								"contacts",
+								":contactId"
+							],
+							"variable": [
+								{
+									"key": "contactId",
+									"value": ""
+								}
+							]
+						},
+						"description": "Call ping operation with no parameters"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Contact By Id - Invalid Id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-customer_sys_api}}/api/contacts/:contactId",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-customer_sys_api}}"
+							],
+							"path": [
+								"api",
+								"contacts",
+								":contactId"
+							],
+							"variable": [
+								{
+									"key": "contactId",
+									"value": "invalid"
+								}
+							]
+						},
+						"description": "Call ping operation with no parameters"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Contacts by ContactId - Returns Records",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-customer_sys_api}}/api/contacts?contactId=0034x00000ZwAQIAA3",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-customer_sys_api}}"
+							],
+							"path": [
+								"api",
+								"contacts"
+							],
+							"query": [
+								{
+									"key": "contactId",
+									"value": "0034x00000ZwAQIAA3"
+								}
+							]
+						},
+						"description": "Call ping operation with no parameters"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Contact by Incorrect ContactId - Returns Empty List Of Records",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-customer_sys_api}}/api/contacts?contactId=0014x00000H6T8OAAC",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-customer_sys_api}}"
+							],
+							"path": [
+								"api",
+								"contacts"
+							],
+							"query": [
+								{
+									"key": "contactId",
+									"value": "0014x00000H6T8OAAC"
+								}
+							]
+						},
+						"description": "Call ping operation with no parameters"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Contacts by External Id - Returns Records",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-customer_sys_api}}/api/contacts?externalId=58094856-16c8-4c83-9c54-8be9a2141ce4",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-customer_sys_api}}"
+							],
+							"path": [
+								"api",
+								"contacts"
+							],
+							"query": [
+								{
+									"key": "externalId",
+									"value": "58094856-16c8-4c83-9c54-8be9a2141ce4"
+								},
+								{
+									"key": "offset",
+									"value": "0",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Call ping operation with no parameters"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Contacts by Email Id- Returns Records",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-customer_sys_api}}/api/contacts?emailAddress=testuser1626186317@gmail.com",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-customer_sys_api}}"
+							],
+							"path": [
+								"api",
+								"contacts"
+							],
+							"query": [
+								{
+									"key": "emailAddress",
+									"value": "testuser1626186317@gmail.com"
+								}
+							]
+						},
+						"description": "Call ping operation with no parameters"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Contacts by EmailId,ContactId and External Id- Returns Records matching Customer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-customer_sys_api}}/api/contacts?emailAddress=testuser1626186317@gmail.com&contactId=0034x00000ZwCegAAF&externalId=58094856-16c8-4c83-9c54-8be9a2141ce4",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-customer_sys_api}}"
+							],
+							"path": [
+								"api",
+								"contacts"
+							],
+							"query": [
+								{
+									"key": "emailAddress",
+									"value": "testuser1626186317@gmail.com"
+								},
+								{
+									"key": "contactId",
+									"value": "0034x00000ZwCegAAF"
+								},
+								{
+									"key": "externalId",
+									"value": "58094856-16c8-4c83-9c54-8be9a2141ce4"
+								}
+							]
+						},
+						"description": "Call ping operation with no parameters"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Contacts by EmailId and External Id- Returns Records matching externalId",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-customer_sys_api}}/api/contacts?emailAddress=testuser1626186317@gmail.com&externalId=58094856-16c8-4c83-9c54-8be9a2141ce4",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-customer_sys_api}}"
+							],
+							"path": [
+								"api",
+								"contacts"
+							],
+							"query": [
+								{
+									"key": "emailAddress",
+									"value": "testuser1626186317@gmail.com"
+								},
+								{
+									"key": "externalId",
+									"value": "58094856-16c8-4c83-9c54-8be9a2141ce4"
+								}
+							]
+						},
+						"description": "Call ping operation with no parameters"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "{{accelerator_app_client_secret}}",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "{{accelerator_app_client_id}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host_salesforce-customer_sys_api",
+			"value": "fins-salesforce-customers-sys-api-v2-dev.ca-c1.cloudhub.io"
+		}
+	]
+}

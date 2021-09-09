@@ -1,0 +1,120 @@
+{
+  "partyRelationshipType": [
+    {
+      "id": "id",
+      "partyRole": {
+        "id": "tempor",
+        "partyRoleType": "tempor pariatur aliqua",
+        "externalIds": [
+          "occaecat in officia proident mollit"
+        ],
+        "auditInfo": {
+          "isDeleted": false,
+          "createdBy": "magna ex amet consequat proident",
+          "updatedBy": "enim velit eu",
+          "updatedDate": null,
+          "createdDate": null
+        },
+        "party": [
+          {
+            "id": null,
+            "partyType": "tempor",
+            "auditInfo": {
+              "isDeleted": null,
+              "createdBy": "sed non fugiat occaecat cupidatat",
+              "updatedBy": "aliquip",
+              "updatedDate": null,
+              "createdDate": "1981-11-03T13:50:06.231Z"
+            },
+            "noMergeReason": "enim eiusmod",
+            "externalIds": [
+              "in"
+            ],
+            "globalParty": "est amet proident",
+            "primaryAccount": [
+              "cillum culpa ullamco"
+            ],
+            "contactPoints": [
+              "mollit"
+            ]
+          }
+        ]
+      },
+      "relatedPartyRole": "sed ex",
+      "isBidirectional": null,
+      "auditInfo": {
+        "isDeleted": null,
+        "createdBy": "consectetur anim sit",
+        "updatedBy": "fugiat ad voluptate",
+        "updatedDate": "1943-09-11T15:22:45.63Z",
+        "createdDate": null
+      }
+    }
+  ],
+  "id": "occaecat",
+  "relatedFromDate": "1944-12-13",
+  "relatedParty": [
+    {
+      "id": null,
+      "partyType": "cillum",
+      "noMergeReason": "culpa nostrud aliquip ut commodo",
+      "primaryAccount": [
+        "commodo irure culpa cupidatat"
+      ],
+      "globalParty": "cupidatat laborum ex dolor",
+      "auditInfo": {
+        "isDeleted": null,
+        "createdBy": "fugiat",
+        "updatedBy": "pariatur non in",
+        "updatedDate": null,
+        "createdDate": null
+      },
+      "externalIds": [
+        {
+          "externalIdType": [
+            "aute"
+          ],
+          "externalId": "Lorem reprehenderit irure",
+          "id": null,
+          "statusLastChangedDate": "1984-01-26T00:45:14.98Z",
+          "status": "INVALID"
+        }
+      ],
+      "contactPoints": [
+        "magna incididunt amet commodo"
+      ]
+    }
+  ],
+  "party": [
+    {
+      "id": "sint irure laborum",
+      "partyType": "Duis exercitation laborum culpa",
+      "noMergeReason": "sunt labore quis aute sint",
+      "contactPoints": [
+        "laborum"
+      ],
+      "globalParty": "cillum",
+      "externalIds": [
+        "quis dolore ea"
+      ],
+      "auditInfo": {
+        "isDeleted": null,
+        "createdBy": "et",
+        "updatedBy": "dolor nisi",
+        "updatedDate": "1978-12-31T07:52:09.718Z",
+        "createdDate": "1994-03-16T01:36:38.794Z"
+      },
+      "primaryAccount": [
+        "ad sint magna"
+      ]
+    }
+  ],
+  "auditInfo": {
+    "isDeleted": null,
+    "createdBy": "sed anim sit",
+    "updatedBy": "velit amet mollit deserunt",
+    "updatedDate": null,
+    "createdDate": "1997-05-05T22:00:39.865Z"
+  },
+  "relatedToDate": "1984-08-20"
+}

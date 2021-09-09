@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="ping-test-suite.xml" />
+	<munit:test name="ping-test-suite_getHealthTest" doc:id="a0f95f01-bc3e-46e2-bdee-d60d54026022" description="Get Health Test">
+		<munit:execution >
+			<flow-ref doc:name="get:\ping:bank-accounts-prc-api-config" doc:id="4a5d95fd-fa67-468d-b639-8ce06dbd6a10" name="get:\ping:bank-accounts-prc-api-config"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert 200 Response" doc:id="6cb895c8-599a-4c80-b7e9-52ba70a66d75" actual="#[vars.httpStatus]" expected="200" message="Expected success response"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="ping-test-suite_getHealthWithDependenciesTest" doc:id="d27c8d59-d0e4-41c2-a65d-09061185acc7" description="Get Health With Dependencies Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Salesforce" doc:id="ee1dbd27-c382-4a74-b6c9-d8114e1f6386" processor="salesforce:query">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Product" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Query Param" doc:id="185ce156-1d41-428e-98a6-ce0593ea54c8" >
+				<munit:attributes value='#[{ queryParams: { checkDependencies: "true" }}]' />
+			</munit:set-event>
+			<flow-ref doc:name="get:\ping:bank-accounts-prc-api-config" doc:id="45b88ead-ac33-49d9-aea7-14818197f1ed" name="get:\ping:bank-accounts-prc-api-config"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert 200 Response" doc:id="c3e4635c-c655-45eb-9981-a7f83fd8de21" actual="#[vars.httpStatus]" expected="200" message="Expected success response"/>
+			<munit-tools:assert-that doc:name="Assert Has Dependencies" doc:id="7c8939c7-5d6d-45f6-9b0d-4a58b8bd789c" expression="#[payload.dependencies]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="ping-test-suite_getHealthBadParamTest" doc:id="da048577-3b94-45d3-ad63-d8afec6a2e05" description="Get Health Bad Param Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Salesforce" doc:id="031ffa9d-6c65-45ed-aa00-ea1455373bca" processor="salesforce:query">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Product" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Query Param" doc:id="c4c8a3f4-4ce7-427c-b3a4-c1f24f243e80" >
+				<munit:attributes value='#[{ queryParams: { checkDependencies: "true-ish" }}]' />
+			</munit:set-event>
+			<flow-ref doc:name="get:\ping:bank-accounts-prc-api-config" doc:id="11bb01f1-11eb-43dc-8946-b87db348a2c2" name="get:\ping:bank-accounts-prc-api-config"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert 200 Response" doc:id="de0c5a73-6fb7-4592-a108-99f33dfc94b0" actual="#[vars.httpStatus]" expected="200" message="Expected success response"/>
+			<munit-tools:assert-that doc:name="Assert No Dependencies" doc:id="af62506a-9cc1-47bb-b670-1d42faf7e094" expression="#[payload.dependencies]" is="#[MunitTools::nullValue()]"/>
+		</munit:validation>
+	</munit:test>
+
+</mule>

@@ -1,0 +1,7 @@
+#%RAML 1.0 Trait
+usage: Apply this to a GET method that supports sorting.
+queryParameters:
+  sort?:
+    type: string
+    description: A comma-separated list of properties to sort on, in the given order; negate a property to sort in descending order instead of ascending order (default)
+    example: name,-age

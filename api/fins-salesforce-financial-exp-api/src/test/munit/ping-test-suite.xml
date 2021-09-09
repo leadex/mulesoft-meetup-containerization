@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="ping-test-suite.xml" />
+	<munit:test name="ping-test-suite_getHealthTest" doc:id="e5855e40-527b-40b5-8ddf-93b8e1adcc0a" description="Get Health Test">
+		<munit:execution >
+			<flow-ref doc:name="get:\ping:salesforce-financial-exp-api-config" doc:id="6e4d3592-51b9-47ad-a5c9-a6a1571c19fb" name="get:\ping:salesforce-financial-exp-api-config"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert 200 Response" doc:id="aae8ef2f-5210-41c1-a8e5-1a4f72fba685" actual="#[vars.httpStatus]" expected="200" message="Expected success response"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="ping-test-suite_getHealthWithDependenciesTest" doc:id="cb16ede9-af48-4978-b6c1-ae75cf295d1a" description="Get Health With Dependencies Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock HTTP GET for System API" doc:id="a9632e55-248b-43ec-af83-1f1deb84f0de" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="GET" attributeName="method" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Query Param" doc:id="b2f742d8-b73c-4e02-a4d4-3de7796e624a" >
+				<munit:attributes value='#[{ queryParams: { checkDependencies: "true" }}]' />
+			</munit:set-event>
+			<flow-ref doc:name="get:\ping:salesforce-financial-exp-api-config" doc:id="6aa37635-ea54-4350-b0a1-b6c9e2ead0d2" name="get:\ping:salesforce-financial-exp-api-config"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert 200 Response" doc:id="68db3022-8e92-4782-9c3d-2f65de8699db" actual="#[vars.httpStatus]" expected="200" message="Expected success response"/>
+			<munit-tools:assert-that doc:name="Assert Has Dependencies" doc:id="5ab268b4-8d67-45ca-9743-776a47c8c1db" expression="#[payload.dependencies]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="ping-test-suite_getHealthBadParamTest" doc:id="a8b6341a-a6de-4fb0-b67b-e460c3bab374" description="Get Health Bad Param Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock HTTP GET for System API" doc:id="81d4b15c-9727-4c92-87cb-d21228348b4f" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="GET" attributeName="method" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Query Param" doc:id="12a9310f-0603-47a1-84a7-8748b7d375d7" >
+				<munit:attributes value='#[{ queryParams: { checkDependencies: "true-ish" }}]' />
+			</munit:set-event>
+			<flow-ref doc:name="get:\ping:salesforce-financial-exp-api-config" doc:id="c38b8548-3a7b-4b37-a7f1-0432499640d2" name="get:\ping:salesforce-financial-exp-api-config"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert 200 Response" doc:id="08d19284-95b0-4e1a-b476-81bd02b3319b" actual="#[vars.httpStatus]" expected="200" message="Expected success response"/>
+			<munit-tools:assert-that doc:name="Assert No Dependencies" doc:id="151d8619-18fd-4307-b194-3bf25889f0f5" expression="#[payload.dependencies]" is="#[MunitTools::nullValue()]"/>
+		</munit:validation>
+	</munit:test>
+</mule>

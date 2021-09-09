@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+	xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<munit:config name="salesforce-customers-sys-api-test-suite.xml" />
+<munit:test name="get:\customers\(customerId):salesforce-customers-sys-api-get-person-account-by-id-success-test" doc:id="ee67b69c-87bf-4c3b-8db4-5f74b1ebef5f" description="Get person account by Id success">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Salesforce Get Customers" doc:id="a739923a-7b95-4b4b-891e-91b4deed56ef" processor="salesforce:query">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Account" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="customer" value="#[MunitTools::getResourceAsString('sample_data/customers/get-customer-sf-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Customer Id" doc:id="bccfc873-6cac-4db9-8565-64422ab95051" >
+				<munit:attributes value='#[{"uriParams": {"customerId":"0014x00000H6TRgAAN"}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="get:\customers\(customerId):salesforce-customers-sys-api-config" doc:id="0ca913c6-2747-44a4-961f-fc2490308aca" name="get:\customers\(customerId):salesforce-customers-sys-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert Lastname" doc:id="62f792ec-722c-4dab-a5cb-0ad6ca6f89c5" actual="#[payload.party[0].lastName]" expected='#["Jacob"]' message="Incorrect LastName"/>
+			<munit-tools:assert-equals doc:name="Assert customer Global PartyRole Id" doc:id="1da306bb-ca68-48fe-9773-2b7decb1df87" actual='#[payload.externalIds[0]."externalId"]' expected='#["fdddf723"]' message="Incorrect Global Party Id" />
+			<munit-tools:assert-equals doc:name="Assert Email Id" doc:id="15706a91-72a5-4f7f-9ab5-0b6777c67100" actual='#[(payload.party[0].contactPoints filter ($.contactPointType  contains "ContactPointEmail"))[0].emailAddress]' expected='#["elisa.lockman@gmail.com"]' message="Incorrect Email Id" />
+			<munit-tools:assert-equals doc:name="Assert Telephone" doc:id="0b9d44b5-3825-4757-90d3-f05cc8728207" actual='#[(payload.party[0].contactPoints filter ($.contactPointType  contains "ContactPointPhone"))[0].telephoneNumber]' expected='#["703-850-3754"]' message="Incorrect Email Id" />
+			<munit-tools:assert-equals doc:name="Assert AddressLine1" doc:id="7584154a-8026-4302-9723-27dc420716d5" actual='#[(payload.party[0].contactPoints filter ($.contactPointType contains "ContactPointAddress"))[0].addressLine1]' expected='#["Julianne Prairie"]' message="Incorrect Address" />
+			<munit-tools:assert-equals doc:name="Assert Party Type" doc:id="d5f98603-d56a-4d0e-99fa-ce4fd14de37a" actual='#[payload.party[0].partyType]' expected='#["Individual"]' message="Incorrect party type" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="get:\customers\(customerId):salesforce-customers-sys-api-get-organization-account-by-id-success-test" doc:id="2f69e4e5-8ba5-405f-897e-42e464ec8d7a" description="Get organization account by Id success" ignore="true">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Salesforce Get Customers" doc:id="5e9c9bd5-9170-4408-bc86-dfcf59e12d2c" processor="salesforce:query">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Account" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="customer" value="#[MunitTools::getResourceAsString('sample_data/customers/get-customer-org-account-sf-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Customer Id" doc:id="bf752de4-83d9-4152-8413-70edd7835b50" >
+				<munit:attributes value='#[{"uriParams": {"customerId":"0014x00000H6TRgAAN"}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="get:\customers\(customerId):salesforce-customers-sys-api-config" doc:id="9c5ee740-32d7-4c71-8381-41ac2c45c62c" name="get:\customers\(customerId):salesforce-customers-sys-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert Lastname" doc:id="5e0d7b83-de25-4333-852f-6eb206c23c8b" actual="#[payload.party[0].name]" expected='#["Sahana Inc"]' message="Incorrect name"/>
+			<munit-tools:assert-equals doc:name="Assert customer Global PartyRole Id" doc:id="da056a92-d5eb-4b82-a5c9-c9ed53d9f662" actual='#[payload.externalIds[0]."externalId"]' expected='#["123456789"]' message="Incorrect Global Party Id" />
+			<munit-tools:assert-equals doc:name="Assert Telephone" doc:id="6fc5e914-8a94-46e3-9cbc-ef1529e35a06" actual='#[(payload.party[0].contactPoints filter ($.contactPointType  contains "ContactPointPhone"))[0].telephoneNumber]' expected='#["567-850-3754"]' message="Incorrect Email Id" />
+			<munit-tools:assert-equals doc:name="Assert AddressLine1" doc:id="a90835fb-c414-40fd-bc1f-5f5f8d260a7d" actual='#[(payload.party[0].contactPoints filter ($.contactPointType contains "ContactPointAddress"))[0].addressLine1]' expected='#["Mill Street Lane 2"]' message="Incorrect Address" />
+			<munit-tools:assert-equals doc:name="Assert Party Type" doc:id="74869387-af18-4697-9fda-9e182d37cd77" actual='#[payload.party[0].partyType]' expected='#["Organization"]' message="Incorrect party type" />
+		</munit:validation>
+	</munit:test>
+<munit:test name="get:\customers\(customerId):salesforce-customers-sys-api-get-customer-by-id-fails-with-404-for-non-existing-customer-test" doc:id="0411d0f2-d9d8-4ab9-8c66-9ba109b01527" description="Get customer by Id fails for non existing customer id" ignore="true">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Salesforce Get Customers" doc:id="b835c0b0-9195-489c-8e9a-4e26972a465e" processor="salesforce:query">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Account" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="customer" value="#[MunitTools::getResourceAsString('sample_data/customers/get-customer-empty-records-sf-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Customer Id" doc:id="87247c97-c54c-4f57-8d5b-88d67a9b8903" >
+				<munit:attributes value='#[{"uriParams": {"customerId":"0014x00000H6TRgAAN"}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="get:\customers\(customerId):salesforce-customers-sys-api-config" doc:id="357ff862-d052-4b39-b5ac-f635a0c5da93" name="get:\customers\(customerId):salesforce-customers-sys-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert Http Status" doc:id="6ea3ca95-1924-4eff-8ebc-848e6570d9d1" actual="#[vars.httpStatus]" expected='#["404"]' message="Invalid Status code"/>
+			<munit-tools:assert-that doc:name="Assert error message" doc:id="ca14e2fe-733e-4732-b035-5e8037858bc7" expression='#[payload.errorMessage contains "Customer Not Found"]' is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+<munit:test name="post:\customers:salesforce-customers-sys-api-create-person-account-success-test" doc:id="7d76c10d-c218-4277-8264-216c2ba04bad" description="create person account success" ignore="true">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Salesforce create customer" doc:id="2846b7e7-c1f9-45c2-b4f0-df8d4c95fbc3" processor="salesforce:create" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Account" attributeName="type" />
+					<munit-tools:with-attribute whereValue="Create Person Account" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="createdCustomer" value="#[MunitTools::getResourceAsString('sample_data/customers/create-customer-sf-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Salesforce Get Record Type" doc:id="87509052-ceaa-4040-80e0-b87fea5fa360" processor="salesforce:query" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Record Type Id" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="recordTypeId" value='#["123456789"]' mediaType="application/java" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set payload" doc:id="b9fed300-531e-4e3f-a7c6-fcda69d6e170" >
+				<munit:payload value="#[MunitTools::getResourceAsString('sample_data/customers/create-customer-request-payload')]" mediaType="application/json" />
+				<munit:attributes value='#[{"uriParams": {"customerId":"0014x00000H6TRgAAN"}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="post:\customers:application\json:salesforce-customers-sys-api-config" doc:id="b001592d-f94c-4d52-99a5-9b4f53d80a89" name="post:\customers:application\json:salesforce-customers-sys-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert http status" doc:id="28bab6a7-e24f-42a9-a71a-4b51f963be92" actual="#[vars.httpStatus]" expected='#[201]' message="Customer creation failed"/>
+			<munit-tools:assert-equals doc:name="Assert Response message" doc:id="ef7ba75f-018a-4c09-904c-3be84e1aae2c" actual='#[payload.responseStatus]' expected='#["SUCCESS"]' message="Incorrect response" />
+			<munit-tools:verify-call doc:name="Verify PersonAccount is created" doc:id="de1be600-3a52-43ea-a4d4-2c54a1982619" processor="salesforce:create" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Account" attributeName="type" />
+					<munit-tools:with-attribute whereValue="Create Person Account" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+<munit:test name="post:\customers:salesforce-customers-sys-api-create-person-account-bad-request-fail-test" doc:id="6d47dacf-3ac9-4ed3-ab45-ddd30a784e23" description="create person account failure">
+		<munit:execution>
+			<munit:set-event doc:name="Set payload" doc:id="e0007bea-3107-4b8c-af52-3b41fb6e02fc" >
+				<munit:payload value="#[MunitTools::getResourceAsString('sample_data/customers/create-customer-invalid-request-payload')]" mediaType="application/json" />
+				<munit:attributes value='#[{"uriParams": {"customerId":"0014x00000H6TRgAAN"}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="post:\customers:application\json:salesforce-customers-sys-api-config" doc:id="1317d8cf-6422-4014-a529-fae4c208831b" name="post:\customers:application\json:salesforce-customers-sys-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert http status" doc:id="b71232ab-93e6-4d65-8019-25c8e0eccffd" actual="#[vars.httpStatus]" expected='#["400"]' message="Customer creation failed"/>
+			<munit-tools:assert-that doc:name="Assert error message" doc:id="ecf58c00-f02f-4134-beae-05d2a42666f3" message='#["Test failed"]' expression='#[payload.errorMessage contains "Invalid Request payload. Cannot create a customer"]' is="#[MunitTools::notNullValue()]" />
+			<munit-tools:verify-call doc:name="Verify Create Salesforce Customers Is not called" doc:id="c71e249b-7562-45cd-962d-882ac8f30f30" processor="salesforce:create" times="#[0]" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Account" attributeName="type" />
+					<munit-tools:with-attribute whereValue="Create Person Account" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Get RecordType Is not called" doc:id="fb5b549e-2e59-4c55-b08e-ab20c249b66f" processor="salesforce:query" times="#[0]" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Record Type Id" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="post:\customers:salesforce-customers-sys-api-create-organization-account-success-test" doc:id="dcfc6b01-641a-4da1-9620-e69a9c84f7cf" description="create person account success" ignore="true">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Salesforce create org account" doc:id="dd5575f2-d9f0-47a9-9219-4e980493ebe3" processor="salesforce:create" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Account" attributeName="type" />
+					<munit-tools:with-attribute whereValue="Create Org Account" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="createdCustomer" value="#[MunitTools::getResourceAsString('sample_data/customers/create-customer-sf-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Salesforce Get Record Type" doc:id="574eebdf-2286-4978-9aa8-184fe1f46347" processor="salesforce:query" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Record Type Id" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="recordTypeId" attributeName="target" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="recordTypeId" value='#["123456789"]' mediaType="application/java" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set payload" doc:id="7a23979a-5a63-457d-9040-5905b226b848" >
+				<munit:payload value="#[MunitTools::getResourceAsString('sample_data/customers/create-customer-org-account-request-payload')]" mediaType="application/json" />
+				<munit:attributes value='#[{"uriParams": {"customerId":"0014x00000H6TRgAAN"}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="post:\customers:application\json:salesforce-customers-sys-api-config" doc:id="0d39ece6-7b56-4f86-8ce7-c6eaa021bfc8" name="post:\customers:application\json:salesforce-customers-sys-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert http status" doc:id="911f5f11-801f-4fb6-b93e-541fa018cc6b" actual="#[vars.httpStatus]" expected='#[201]' message="Customer creation failed"/>
+			<munit-tools:assert-equals doc:name="Assert Response message" doc:id="4043a7dc-09a0-4d10-8014-d61d567949ff" actual='#[payload.responseStatus]' expected='#["SUCCESS"]' message="Incorrect response" />
+			<munit-tools:verify-call doc:name="Verify Oganization account is created" doc:id="8fe8706c-a528-49b1-9079-1f96e7320813" processor="salesforce:create" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Account" attributeName="type" />
+					<munit-tools:with-attribute whereValue="Create Org Account" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="patch:\customers\(customerId):salesforce-customers-sys-api-update-person-account-with-contactpoints-success-test" doc:id="c8f93c26-9378-4edf-bc2a-f088996b0ea0" description="Update person account with contactpoints success" ignore="true">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Salesforce update customer" doc:id="89d51a31-399e-4324-bdc6-60d70ac1407f" processor="salesforce:update" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Update Person Account" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="updatedCustomer" value="#[MunitTools::getResourceAsString('sample_data/customers/create-customer-sf-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Salesforce Get Customers" doc:id="a0a43806-d798-4b1c-86c5-f9f8cae32143" processor="salesforce:query" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Account" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="customer" value="#[MunitTools::getResourceAsString('sample_data/customers/get-customer-sf-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set payload" doc:id="5cf3402a-6a7b-4435-aba4-f1c8ab0f1161" >
+				<munit:payload value="#[MunitTools::getResourceAsString('sample_data/customers/update-customer-with-contact-points-request')]" mediaType="application/json" />
+				<munit:attributes value='#[{"uriParams": {"customerId":"0014x00000H6TRgAAN"}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="patch:\customers\(customerId):application\json:salesforce-customers-sys-api-config" doc:id="2a20159b-e718-4d1f-9eda-a5bec3065716" name="patch:\customers\(customerId):application\json:salesforce-customers-sys-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert Lastname" doc:id="ccb2d09d-e23a-46cc-8ef8-813c903ef4ed" actual="#[payload.party[0].lastName]" expected='#["Jacob"]' message="Incorrect LastName" />
+			<munit-tools:assert-equals doc:name="Assert customer Global PartyRole Id" doc:id="6e7f474b-d024-4601-aae4-49761e62f3ab" actual='#[payload.externalIds[0]."externalId"]' expected='#["fdddf723"]' message="Incorrect Global Party Id" />
+			<munit-tools:verify-call doc:name="Verify update person account is called" doc:id="5ebafb31-ed97-49e9-a313-98e7ba48b4be" processor="salesforce:update" times="#[1]" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Update Person Account" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="patch:\customers\(customerId):salesforce-customers-sys-api-update-organization-account-with-contactpoints-success-test" doc:id="32ebc70d-b6f9-49a5-afa3-92d3a4428066" description="Update org account with contactpoints success" ignore="true">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Salesforce update customer" doc:id="ad7bc33a-990b-4eeb-84c7-1cf2bfad9add" processor="salesforce:update" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Update Org Account" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Account" attributeName="type" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="updatedCustomer" value="#[MunitTools::getResourceAsString('sample_data/customers/create-customer-sf-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Salesforce Get Customers" doc:id="3b1957b5-1e94-4b7c-a291-1077594dc8e6" processor="salesforce:query" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Account" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="customer" value="#[MunitTools::getResourceAsString('sample_data/customers/get-customer-org-account-sf-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set payload" doc:id="0f6351bf-78c1-4c0c-ad27-fefc68758f0a" >
+				<munit:payload value="#[MunitTools::getResourceAsString('sample_data/customers/update-customer-org-account-request')]" mediaType="application/json" />
+				<munit:attributes value='#[{"uriParams": {"customerId":"0014x00000H6TRgAAN"}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="patch:\customers\(customerId):application\json:salesforce-customers-sys-api-config" doc:id="1fec6d96-9f6b-4421-b6e0-8397f51f21ea" name="patch:\customers\(customerId):application\json:salesforce-customers-sys-api-config"/>
+		</munit:execution>
+		<munit:validation >
+				<munit-tools:assert-equals doc:name="Assert name" doc:id="fd2e5fa4-dd98-434c-88cf-89d40c46d089" actual="#[payload.party[0].name]" expected='#["Sahana Inc"]' message="Incorrect name"/>
+			<munit-tools:assert-equals doc:name="Assert customer Global PartyRole Id" doc:id="9a3a9a4d-8fe6-474b-b752-f07dabc8fa68" actual='#[payload.externalIds[0]."externalId"]' expected='#["123456789"]' message="Incorrect Global Party Id" />
+			<munit-tools:assert-equals doc:name="Assert Telephone" doc:id="73d6241c-4f5f-4311-87f3-442eb1ec3c02" actual='#[(payload.party[0].contactPoints filter ($.contactPointType  contains "ContactPointPhone"))[0].telephoneNumber]' expected='#["567-850-3754"]' message="Incorrect Email Id" />
+			<munit-tools:assert-equals doc:name="Assert AddressLine1" doc:id="0a0f6378-319a-44df-8a22-e24dc69ba185" actual='#[(payload.party[0].contactPoints filter ($.contactPointType contains "ContactPointAddress"))[0].addressLine1]' expected='#["Mill Street Lane 2"]' message="Incorrect Address" />
+			<munit-tools:assert-equals doc:name="Assert Party Type" doc:id="183ff993-188f-43b1-9ceb-8b20f3888078" actual='#[payload.party[0].partyType]' expected='#["Organization"]' message="Incorrect party type" />
+			<munit-tools:verify-call doc:name="Verify update person account is called" doc:id="0b131f53-5c1c-4c10-828a-769d09fae412" processor="salesforce:update" times="#[1]" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Update Org Account" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Account" attributeName="type" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+<munit:test name="patch:\customers\(customerId):salesforce-customers-sys-api-update-person-account-bad-request-fail-put" doc:id="ecf6afa1-6f5a-4584-9baa-990c43f54393" description="update customer failure">
+		<munit:execution>
+			<munit:set-event doc:name="Set payload" doc:id="7a3015f4-eb8a-4ad1-b407-5818c537023b" >
+				<munit:payload value="#[MunitTools::getResourceAsString('sample_data/customers/update-customer-invalid-request-payload')]" mediaType="application/json" />
+				<munit:attributes value='#[{"uriParams": {"customerId":"0014x00000H6TRgAAN"}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="patch:\customers\(customerId):application\json:salesforce-customers-sys-api-config" doc:id="2d52cb96-6716-4134-9ff7-524c96d22cac" name="patch:\customers\(customerId):application\json:salesforce-customers-sys-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert http status" doc:id="c5062258-e747-4b21-a1c7-f100ee5e965b" actual="#[vars.httpStatus]" expected='#["400"]' message="Customer creation failed"/>
+			<munit-tools:assert-that doc:name="Assert error message" doc:id="ce1c7982-986c-4806-9d91-4a8bcd1f7429" message='#["Test failed"]' expression='#[payload.errorMessage contains "Invalid Request payload. Cannot update a customer"]' is="#[MunitTools::notNullValue()]" />
+			<munit-tools:verify-call doc:name="Verify Update Salesforce Customers Is not called" doc:id="d6e3d856-9310-41b0-ae02-9f5817ff7c18" processor="salesforce:update" times="#[0]" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Update Person Account" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Account" attributeName="type" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Get Customer Is not called" doc:id="d2d3e5e3-658d-43f4-aba8-24cce805c0fd" processor="salesforce:query" times="#[0]" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Customer" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="get:\customers:salesforce-customers-sys-api-lookup-customers-by-customerId-success-test" doc:id="b0d10c9d-8cae-4724-9b27-6411a99a7eee" description="lookup customers by customerId success" ignore="true">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Salesforce Get Account by Id" doc:id="ad765023-4277-4ede-8368-b3baff4499fe" processor="salesforce:query" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Account by Id" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="customersReturned" value="#[MunitTools::getResourceAsString('sample_data/customers/lookup-customer-by-id-sf-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Customer Id" doc:id="e90483bd-785e-4556-b384-9842045ecf63" >
+				<munit:attributes value='#[{"queryParams": {"customerId":"0014x00000HwZFdAAN", "limit": 20, "offset":0}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="get:\customers:salesforce-customers-sys-api-config" doc:id="ac5045f1-f6a5-4c8a-9af9-dab5db05f3df" name="get:\customers:salesforce-customers-sys-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert Lastname" doc:id="bb283bdd-958e-42d9-9144-b538509bb3d4" actual="#[payload[0].party[0].lastName]" expected='#["Jacob"]' message="Incorrect LastName"/>
+			<munit-tools:assert-equals doc:name="Assert customer Global PartyRole Id" doc:id="462311c1-030c-41b9-ae17-0e9b7a14d84a" actual='#[payload[0].externalIds[0]."externalId"]' expected='#["fdddf723"]' message="Incorrect Global Party Id" />
+			<munit-tools:verify-call doc:name="Verify Get Account by External id Call" doc:id="da8aebe7-998f-4f8f-b54d-811f9bda4fc8" processor="salesforce:query" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Account by External id" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Get Account by Email Address Call" doc:id="e0f912e0-e205-4939-8509-3f3f204e0093" processor="salesforce:query" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Account by Email Address" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Get Accounts by Limit Call" doc:id="6263ef17-0205-4890-b62f-22c5eda49917" processor="salesforce:query" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Accounts by Limit" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Get Accounts by Date Range Call" doc:id="2dfccf02-9264-40d9-acdb-d3cbcfa51c4c" processor="salesforce:query" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Accounts by Date Range" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="get:\customers:salesforce-customers-sys-api-lookup-customers-by-externalId-success-test" doc:id="4fcacf29-f910-4805-8930-35c7e83c2c47" description="lookup customers by globalId success">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Salesforce Query Customers" doc:id="edeb73d8-bcf5-438f-9a1b-918a63a77678" processor="salesforce:query" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Account by External id" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="customersReturned" value="#[MunitTools::getResourceAsString('sample_data/customers/lookup-customer-by-external-id-sf-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Customer Id" doc:id="cc60006f-84be-4216-95cd-17d07d291ace" >
+				<munit:attributes value='#[{"queryParams": {"externalId":"a7d21f74-bdd8-41d8-84d7-832ed1a6afa5", "limit": 20, "offset":0}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="get:\customers:salesforce-customers-sys-api-config" doc:id="4d7e40f1-d0a5-4a2c-805a-38bc758f9cf8" name="get:\customers:salesforce-customers-sys-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert Lastname" doc:id="bad306c9-95b1-492c-be44-e65f9e97f7c3" actual="#[payload[0].party[0].lastName]" expected='#["Fisher"]' message="Incorrect LastName"/>
+			<munit-tools:assert-equals doc:name="Assert customer Global PartyRole Id" doc:id="744c523d-b1fe-4b9c-95d2-53c65c63d04d" actual='#[payload[0].externalIds[0]."externalId"]' expected='#["a7d21f74-bdd8-41d8-84d7-832ed1a6afa5"]' message="Incorrect Global Party Id" />
+    		<munit-tools:verify-call doc:name="Verify Get Account by Email Address Call" doc:id="36b85116-7af6-49bb-afd7-655e800c465f" processor="salesforce:query" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Account by Email Address" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Get Accounts by Limit Call" doc:id="704e37f4-7ee0-421c-93dd-8b2ad562e66b" processor="salesforce:query" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Accounts by Limit" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Get Accounts by Date Range Call" doc:id="a1d5e33d-6546-4919-a915-6f83da846f34" processor="salesforce:query" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Accounts by Date Range" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Get Account by Id Call" doc:id="3513bd31-4963-491b-beae-47fa53a76542" processor="salesforce:query" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Account by Id" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="get:\customers:salesforce-customers-sys-api-lookup-customers-by-emailAddress-success-test" doc:id="20afa979-d01e-4de7-9c6e-c99cbab31c1d" description="lookup customers by emailAddress success">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Salesforce Query Customers" doc:id="b0ca8bc0-5eca-42b7-9f87-dc0b018fe96b" processor="salesforce:query" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Account by Email Address" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="customersReturned" value="#[MunitTools::getResourceAsString('sample_data/customers/lookup-customer-by-email-id-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Customer Id" doc:id="defc3e36-6b02-4228-9ead-207830c06327" >
+				<munit:attributes value='#[{"queryParams": {"emailAddress":"sandy.silian@gmail.com", "limit": 20, "offset":0}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="get:\customers:salesforce-customers-sys-api-config" doc:id="e7cc71a4-c13d-49b7-8310-c898d3e257be" name="get:\customers:salesforce-customers-sys-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert Lastname" doc:id="be142253-74de-4e67-b103-99d5193314e6" actual="#[payload[0].party[0].lastName]" expected='#["Silian"]' message="Incorrect LastName"/>
+			<munit-tools:assert-equals doc:name="Assert customer Global PartyRole Id" doc:id="dec170c6-03aa-4d9e-94ea-70e0bdcc97a0" actual='#[payload[0].externalIds[0]."externalId"]' expected='#["test123"]' message="Incorrect Global Party Id" />
+<munit-tools:verify-call doc:name="Verify Get Account by External Id Call" doc:id="f83cdcf4-27bf-4591-9840-deafb521bee6" processor="salesforce:query" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Account by External id" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Get Accounts by Limit Call" doc:id="533feb54-746e-45cc-b352-cb818b1852b8" processor="salesforce:query" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Accounts by Limit" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Get Accounts by Date Range Call" doc:id="930efda9-023b-4e67-afd5-f927782d58d4" processor="salesforce:query" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Accounts by Date Range" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Get Account by Id Call" doc:id="3dd58eef-6a28-4510-97a6-0019e67fc918" processor="salesforce:query" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Account by Id" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>		</munit:validation>
+	</munit:test>
+	<munit:test name="get:\customers:salesforce-customers-sys-api-lookup-customers-org-accounts-by-customerId-success-test" doc:id="72e97320-bf1f-4d5c-b93d-1443606463c7" description="lookup customers by customerId success">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Salesforce Get Account by Id" doc:id="8c90e7f8-5ce4-42dc-a3aa-2716dd6b87c7" processor="salesforce:query" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Account by Id" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="customersReturned" value="#[MunitTools::getResourceAsString('sample_data/customers/lookup-org-account-by-id-sf-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Customer Id" doc:id="39ab7bf7-c512-47ae-8fcf-e2188b3d195c" >
+				<munit:attributes value='#[{"queryParams": {"customerId":"0014x00000HwZFdWER", "limit": 20, "offset":0}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="get:\customers:salesforce-customers-sys-api-config" doc:id="fb92e761-3998-4e18-9052-513933414159" name="get:\customers:salesforce-customers-sys-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert name" doc:id="c629351f-23b8-41e0-ab40-d0ae453537e2" actual="#[payload[0].party[0].name]" expected='#["Pojo Inc"]' message="Incorrect LastName"/>
+			<munit-tools:assert-equals doc:name="Assert customer Global PartyRole Id" doc:id="546ba57d-e2af-4d35-99c5-64e7174187af" actual='#[payload[0].externalIds[0]."externalId"]' expected='#["123456789"]' message="Incorrect Global Party Id" />
+<munit-tools:verify-call doc:name="Verify Get Account by External id Call" doc:id="93717969-138e-44e3-95b2-2c53af98bab9" processor="salesforce:query" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Account by External id" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Get Account by Email Address Call" doc:id="17d835ba-84cc-414d-8800-946bb6e730a1" processor="salesforce:query" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Account by Email Address" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Get Accounts by Limit Call" doc:id="15898820-1eb2-48a3-9496-56fbc51476b7" processor="salesforce:query" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Accounts by Limit" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Get Accounts by Date Range Call" doc:id="dda7f9d7-b5fc-4c83-b292-d794df147fda" processor="salesforce:query" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Accounts by Date Range" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>		</munit:validation>
+	</munit:test>
+</mule>

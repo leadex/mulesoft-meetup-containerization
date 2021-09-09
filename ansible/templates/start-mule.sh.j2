@@ -1,0 +1,154 @@
+#!/bin/bash
+
+# Trap and redirect process signal to Mule
+signal_handling () {
+    local signal=$1
+    local process=$2
+
+    echo "Caught $signal, forwarding to Mule Runtime"
+
+    kill -${signal/SIG/} "$process" 2>/dev/null
+}
+
+init_access_token () {
+  echo "Getting access token from $acc_api_url/login..."
+  access_token=$(curl -s $acc_api_url/login \
+    -X POST -d "username=$username&password=$password" | \
+    jq --raw-output .access_token)
+  echo "Access Token: $access_token"
+}
+
+# Define Anypoint API URLs
+hybrid_api_url=https://anypoint.mulesoft.com/hybrid/api/v1
+acc_api_url=https://anypoint.mulesoft.com/accounts
+
+# Anypoint API user
+username=$1
+# Anypoint API user's password
+password=$2
+# Anypoint organization name
+org_name=$3
+# Anypoint environment with the organization
+env_name=$4
+# Name of the server to specify in Runtime Manager
+server_name=$5-$(hostname)
+
+# File name of the artifact
+artifact_filename=$(basename $(find /opt/tmp/mule-app -mindepth 1 -print -quit))
+# Name of the artifact (without the suffix and extension)
+artifact_name=${artifact_filename%-mule-application.jar}
+# Full path to the artifact within the container
+artifact_path="/opt/tmp/mule-app/$artifact_filename"
+
+cd /opt/mule/bin
+
+# Authenticate with user credentials
+init_access_token
+
+# Pull organzation ID from my profile info
+echo "Getting org ID from $acc_api_url/api/me..."
+jq_param=".user.contributorOfOrganizations[] | select(.name==\"$org_name\").id"
+org_id=$(curl -s $acc_api_url/api/me \
+  -H "Authorization:Bearer $access_token" | jq --raw-output "$jq_param")
+echo "Organization ID: $org_id"
+
+# Pull env ID from the matching env name
+echo "Getting env ID from $acc_api_url/api/organizations/$org_id/environments..."
+jq_param=".data[] | select(.name==\"$env_name\").id"
+env_id=$(curl -s $acc_api_url/api/organizations/$org_id/environments \
+  -H "Authorization:Bearer $access_token" | jq --raw-output "$jq_param")
+echo "Environment ID: $env_id"
+
+# Request amc token
+echo "Getting registrion token from $hybrid_api_url/servers/registrationToken..."
+amc_token=$(curl -s $hybrid_api_url/servers/registrationToken \
+  -H "X-ANYPNT-ENV-ID:$env_id" \
+  -H "X-ANYPNT-ORG-ID:$org_id" \
+  -H "Authorization:Bearer $access_token" | jq --raw-output .data)
+echo "AMC Token: $amc_token"
+
+# Register new mule
+echo "Registering $server_name to Anypoint Platform..."
+/opt/mule/bin/amc_setup -H "$amc_token" $server_name
+
+Configure server and install the API
+echo "Server name: $server_name"
+jq_param=".data[] | select(.name | contains(\"$server_name\")).id"
+server_id=$(curl -s -L $hybrid_api_url/servers \
+  -H "X-ANYPNT-ENV-ID:$env_id" \
+  -H "X-ANYPNT-ORG-ID:$org_id" \
+  -H "Authorization:Bearer $access_token" | jq --raw-output "$jq_param")
+echo "Server ID: $server_id"
+
+# Start Mule Runtime
+/opt/mule/bin/mule \
+  -M-Dmule.env=${env_name} \
+  -M-Duser.country=en \
+  -M-Duser.language=en \
+  -M-Dfile.encoding=UTF-8 &
+# And save its PID
+mule_pid=$!
+
+# Handling signals, so we can forward them to Mule Runtime
+trap "signal_handling SIGTERM $mule_pid" SIGTERM
+trap "signal_handling SIGTERM $mule_pid" SIGINT
+
+ready_to_deploy=false
+counter=1
+while [ $counter -le 12 ]
+do
+   jq_param=".data[] | select(.id==$server_id).status"
+   status=$(curl -s -L $hybrid_api_url/servers \
+     -H "X-ANYPNT-ENV-ID:$env_id" \
+     -H "X-ANYPNT-ORG-ID:$org_id" \
+     -H "Authorization:Bearer $access_token" | jq --raw-output "$jq_param")
+   echo "Server status $status"
+   if [ $status == "RUNNING" ]; then
+     ready_to_deploy=true
+     break
+   fi
+   sleep 5
+done
+
+if [ "$ready_to_deploy" = true ]; then
+  echo "Uploading application to Anypoint..."
+
+  app_status=$(curl -v -L $hybrid_api_url/applications -X POST \
+    -H "X-ANYPNT-ENV-ID:$env_id" \
+    -H "X-ANYPNT-ORG-ID:$org_id" \
+    -H "Authorization:Bearer $access_token" \
+    -F "file=@$artifact_path" \
+    -F "artifactName=$artifact_name" \
+    -F "targetId=$server_id" )
+
+  echo "Please be patient while the file arrives into /apps via Runtime Manager Agent..."
+else
+  echo "API could not be deployed !"
+fi
+
+# Waiting for Mule Runtime to finish
+wait $mule_pid
+
+# On shutdown
+echo "De-registering $server_name from Anypoint Platform..."
+
+# Refresh token
+init_access_token
+
+# Get Server ID from AMC
+echo "Getting server details from $hybrid_api_url/servers..."
+server_data=$(curl -s $hybrid_api_url/servers/ \
+  -H "X-ANYPNT-ENV-ID:$env_id" \
+  -H "X-ANYPNT-ORG-ID:$org_id" \
+  -H "Authorization:Bearer $access_token")
+
+jq_param=".data[] | select(.name==\"$server_name\").id"
+server_id=$(echo $server_data | jq --raw-output "$jq_param")
+echo "ServerId $server_name: $server_id"
+
+# Deregistering Mule Runtime from Runtime Manager
+echo "Deregistering Server at $hybrid_api_url/servers/$server_id..."
+curl -s -X "DELETE" "$hybrid_api_url/servers/$server_id" \
+  -H "X-ANYPNT-ENV-ID:$env_id" \
+  -H "X-ANYPNT-ORG-ID:$org_id" \
+  -H "Authorization:Bearer $access_token"

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="accounts-test-suite.xml" />
+	
+	<munit:test name="accounts-test-suite-accounts_get-account-by-customerId-success-test" doc:id="609c8256-a2b7-47f2-8adf-364d820374ec" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Get Access Token" doc:id="3a6cff5d-3165-4357-a22f-4310bfa4f00c" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="f6d41ae2-5315-4cfc-965e-7c5ea4b2f460" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('mock_data/get-access-token.json')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Get Account by Id" doc:id="6b38ac8c-13ed-450b-ac66-3dacfa566457" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="4530524f-e5df-4677-a663-b8e31db07052" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('mock_data/get-account-by-customerId.json')]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="4667ade3-7428-485b-9bd7-49ae598a83d7" >
+				<munit:attributes value='#[{"queryParams": {"customerId":"1234567890"}}]' />
+				<munit:variables >
+					<munit:variable key="customerId" value="1234567890" />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to accounts_get-accounts-by-customer-id" doc:id="14ec1e55-5ceb-430d-951f-ee1744a08a81" name="accounts_get-accounts-by-customer-id"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="4787a9e8-454d-4a8f-8cfa-39aced5a50ea" actual='#[payload map $ - "auditInfo" - "id"]' expected="#[readUrl('classpath://assert_payload/get-account-response.json', 'application/json')  map $ - &quot;auditInfo&quot; - &quot;id&quot;]" message="Payload doesn't match!"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="accounts-test-suite-accounts_get-account-by-customerId-error-test" doc:id="e54fdf07-0dbc-4cd4-a5a2-5e8e49e8c542" description="Test" ignore="true">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Get Access Token" doc:id="c3b7face-e02d-41f2-9478-07b175ed7b54" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="f6d41ae2-5315-4cfc-965e-7c5ea4b2f460" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('mock_data/get-access-token.json')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Get Account by Id" doc:id="2526d6e8-2281-4b9c-a81a-e3c2b6f33cff" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="4530524f-e5df-4677-a663-b8e31db07052" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('mock_data/get-account-by-customerId-error.json')]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="7d79ec59-86f2-4ed1-a2a1-55bae534567e" >
+				<munit:variables >
+					<munit:variable key="customerId" value="1234567890" />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to accounts_get-accounts-by-customer-id" doc:id="a1a518e5-c827-4532-988b-66279eca1963" name="accounts_get-accounts-by-customer-id"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="84bccfbc-dfe9-4380-9ab3-286b5b26c1ff" actual='#[payload.errorMessage]' expected='#["Account Not Found"]' message="Payload doesn't match!"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="accounts-test-suite-accounts_get-account-by-accountId-success-test" doc:id="f3e41e9d-ea1c-4fa8-b848-dc3276fe583c" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Get Access Token" doc:id="aa77b267-201b-4e63-a770-c2e4222eb8cc" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="f6d41ae2-5315-4cfc-965e-7c5ea4b2f460" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('mock_data/get-access-token.json')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Get Account by Id" doc:id="e6243fa9-7ff2-4dbc-959b-7b75a49562e3" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="2706bc2a-8494-4b88-8e84-1094e967bae8" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('mock_data/get-account-by-accountId.json')]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="5e735a57-4afa-4afa-b652-f563b42af744" >
+				<munit:attributes value='#[{"queryParams": {"customerId":"1234567890"}}]' />
+				<munit:variables >
+					<munit:variable key="customerId" value="1234567890" />
+					<munit:variable key="accountId" value="100000000278" />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="accounts_get-accounts-by-account-id" doc:id="6eac5bad-4202-4b78-968f-3a3d7b6d6017" name="accounts_get-accounts-by-account-id"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="8c852367-19d0-46e5-8ef2-6652fe670053" actual='#[payload - "auditInfo" - "id"]' expected="#[readUrl('classpath://assert_payload/get-account-by-id-response.json', 'application/json') - &quot;auditInfo&quot; - &quot;id&quot;]" message="Payload doesn't match!"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="accounts-test-suite-accounts_get-account-by-accountId-error-test" doc:id="64b46d2b-aa40-42fa-a877-7fe9bd8f5200" description="Test" ignore="true">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Get Access Token" doc:id="ca79ea28-ff09-4fcd-9e72-72c7eeb3a348" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="f6d41ae2-5315-4cfc-965e-7c5ea4b2f460" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('mock_data/get-access-token.json')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Get Account by Id" doc:id="ce52d305-f09f-4d42-b5ff-c99333fd1d4a" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="2706bc2a-8494-4b88-8e84-1094e967bae8" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('mock_data/get-account-by-customerId-error.json')]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="7f3f8bb0-9e2a-40a6-8a63-763af2b80c38" >
+				<munit:variables >
+					<munit:variable key="customerId" value="1234567890" />
+					<munit:variable key="accountId" value="100000000278" />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="accounts_get-accounts-by-account-id" doc:id="e732684b-3d38-46d4-a709-3a43f0de148b" name="accounts_get-accounts-by-account-id"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="365d0dc0-6033-44ef-a6ae-9a9928db9270" actual='#[payload.errorMessage]' expected='#["Account Not Found"]' message="Payload doesn't match!"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="accounts-test-suite-accounts_get-transactions-by-accountId-error-test" doc:id="7204608f-6d2c-4bca-b326-81d41d42e36a" description="Test" ignore="true">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Get Access Token" doc:id="99da6c89-b7e5-47d8-a71d-df9a38527f5c" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="f6d41ae2-5315-4cfc-965e-7c5ea4b2f460" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('mock_data/get-access-token.json')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Get Account by Id" doc:id="0c4f96c7-be84-422f-8051-9c10140bacf7" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="d84dccc6-2c63-4b2c-ae8b-981114e0f696" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('mock_data/get-account-by-customerId-error.json')]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="4b4c8a93-a1e2-4b51-89cc-23211ef1d8df" >
+				<munit:variables >
+					<munit:variable key="customerId" value="1234567890" />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="accounts_get-transaction-by-account-id" doc:id="d2a4bfc3-124a-4257-8440-8264bcbc6327" name="accounts_get-transaction-by-account-id"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="3fbb39ed-bcd0-4429-b91e-2564d8e7b1fb" actual='#[payload.errorMessage]' expected='#["Account Not Found"]' message="Payload doesn't match!"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="accounts-test-suite-accounts_get-transactions-by-accountId-success-test" doc:id="93c92ab4-23b1-4c7f-b838-6bdecbdc7eb8" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Get Access Token" doc:id="9f92364d-f5f9-451c-8280-4d2c9774c955" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="f6d41ae2-5315-4cfc-965e-7c5ea4b2f460" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('mock_data/get-access-token.json')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Get Account by Id" doc:id="2ecad7aa-e7a5-4609-a0dc-d657ef023dcf" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="d84dccc6-2c63-4b2c-ae8b-981114e0f696" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('mock_data/get-transaction-by-accountId.json')]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="cdbbb5f9-8aed-480a-98ee-ae80b0ad9b90" >
+				<munit:attributes value='#[{"queryParams": {"customerId":"1234567890"}}]' />
+				<munit:variables >
+					<munit:variable key="customerId" value="1234567890" />
+					<munit:variable key="accountId" value="100000000278" />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="accounts_get-transaction-by-account-id" doc:id="c97a452f-88ea-4249-89b0-9e09d963adb3" name="accounts_get-transaction-by-account-id"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="a95bfdf3-a2e1-4997-9aa8-35e57b12515e" actual='#[payload map $ - "auditInfo" - "id" - "postedDate" - "transactionDate"]' expected="#[readUrl('classpath://assert_payload/get-transactions-by-accountId-response.json', 'application/json') map $ - &quot;auditInfo&quot; - &quot;id&quot; -  &quot;postedDate&quot; - &quot;transactionDate&quot;]" message="Payload doesn't match!"/>
+		</munit:validation>
+	</munit:test>
+	
+</mule>

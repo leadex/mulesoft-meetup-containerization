@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+		<sub-flow name="organization-accounts_update-org-account" doc:id="5e54cb2d-dc51-4a74-a84b-5ae40b702c06" >
+		<ee:transform doc:name="Update Customer Request" doc:id="8f7df3ff-8d56-416f-b8be-31bd6bcf9971">
+			<ee:message>
+			</ee:message>
+			<ee:variables>
+				<ee:set-variable resource="dwl/customers/update-organization-account-request-for-sf.dwl" variableName="customerToUpdate" />
+			</ee:variables>
+		</ee:transform>
+		<ee:transform doc:name="Mock Update Org Account" doc:id="5b5bc058-7781-4d54-a469-dd85c26a71a7">
+				<ee:message>
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="updatedCustomer"><![CDATA[%dw 2.0
+output application/java
+---
+{
+  "id": null,
+  "items": [
+    {
+      "exception": null,
+      "message": null,
+      "payload": {
+        "created": false,
+        "success": true,
+        "id": "01t4x000000MgrzAAC",
+        "errors": [
+          
+        ]
+      },
+      "id": "01t4x000000MgrzAAC",
+      "successful": true,
+      "statusCode": null
+    }
+  ],
+  "successful": true
+}]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		<logger level="DEBUG" doc:name="Log Person Update Result" doc:id="90ac821b-a5f2-4887-98b5-466e6275dc23" message="#[%dw 2.0
+output application/json
+---
+vars.updatedCustomer]" />
+		<validation:is-not-null doc:name="Customer Id updated Is not null" doc:id="a20b3dc2-d940-4c02-8b9f-748fdc007e1f" value="#[vars.updatedCustomer.items[0].id]" message='#["Customer update failed"]' config-ref="Validation_Config" />
+		<set-variable value="#[vars.updatedCustomer.items[0].id]" doc:name="Set CustomerId" doc:id="49d570be-988e-4a93-9ae6-b113f162c5dc" variableName="customerId" />
+		<flow-ref doc:name="customers-common_get-account-by-id" doc:id="e8a43a6a-d3af-4a8f-93e9-b491f1e05260" name="customers-common_get-account-by-id" />
+	</sub-flow>
+	<sub-flow name="organization-accounts_create-org-account" doc:id="943c85e5-25e8-4331-8b76-bf2fb61c1e14">
+		<!--
+		<salesforce:query doc:name="Get Record Type Id" doc:id="025a02a1-3afd-4504-832d-25e0b9617b17" config-ref="Salesforce_Config" target="recordTypeId" targetValue="#[payload[0].Id]">
+			<salesforce:salesforce-query><![CDATA[SELECT Id FROM RecordType WHERE SobjectType='Account' AND Name='Account' LIMIT 1]]></salesforce:salesforce-query>
+		</salesforce:query>
+		-->
+		<set-variable value="123456789" doc:name="Mock Get Record Type Id" doc:id="acef9bd1-5373-48af-9caa-8c0994513dfe" variableName="recordTypeId"/>
+		<ee:transform doc:name="Create Person Account Request" doc:id="41200e13-bf31-4786-8c51-5dbbed6b2458">
+			<ee:message>
+			</ee:message>
+			<ee:variables>
+				<ee:set-variable resource="dwl/customers/create-organization-account-request.dwl" variableName="vCustomer" />
+			</ee:variables>
+		</ee:transform>
+		<ee:transform doc:name="Mock Create Org Account" doc:id="69adfe00-f0ab-499d-80f0-aaa9c33eb762">
+				<ee:message>
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="createdCustomer"><![CDATA[%dw 2.0
+output application/java
+---
+{
+  "id": null,
+  "items": [
+    {
+      "exception": null,
+      "message": null,
+      "payload": {
+        "created": false,
+        "success": true,
+        "id": "01t4x000000MgrzAAC",
+        "errors": [
+          
+        ]
+      },
+      "id": "01t4x000000MgrzAAC",
+      "successful": true,
+      "statusCode": null
+    }
+  ],
+  "successful": true
+}]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		<logger level="DEBUG" doc:name="Log Customer Create Result" doc:id="85081da2-d443-4130-929f-9c60259b49a4" message="#[%dw 2.0
+output application/json
+---
+vars.createdCustomer]" />
+		<validation:is-not-null doc:name="Customer Id is not Null" doc:id="08e3e7b1-5655-49af-87a6-67d2b6025829" config-ref="Validation_Config" value="#[vars.createdCustomer.items[0].id]" message='#["An error occurred while creating the customer record"]' />
+		<ee:transform doc:name="Map Response" doc:id="ea827453-7cc5-4a5c-bd1b-4597a284251a" >
+			<ee:message >
+				<ee:set-payload resource="dwl/customers/customers-create-success.dwl" />
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="httpStatus" ><![CDATA[%dw 2.0
+output application/java
+---
+201]]></ee:set-variable>
+				<ee:set-variable resource="dwl/customers/customers-create-response-headers.dwl" variableName="outboundHeaders" />
+			</ee:variables>
+		</ee:transform>
+	</sub-flow>
+	</mule>

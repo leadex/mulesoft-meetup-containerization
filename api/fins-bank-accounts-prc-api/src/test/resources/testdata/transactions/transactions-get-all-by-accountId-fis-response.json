@@ -1,0 +1,24 @@
+[
+  {
+    "id": "GT01",
+    "name": "SERVICE CHARGE",
+    "description": "SERVICE CHARGE",
+    "amount": 10,
+    "transactionDate": "2018-03-07T05:57:46Z",
+    "transactionType": "DebitTransaction",
+    "transactionSubType": "CHECK",
+    "transactionStatus": "POSTED",
+    "postedDate": "2018-03-07T05:57:46Z",
+    "vendorName": "",
+    "isDisputed": false,
+    "disputedReason": "",
+    "notes": "",
+    "auditInfo": {
+      "createdDate": "2020-03-15T15:03:01Z",
+      "createdBy": "system",
+      "updatedDate": "2021-08-03T05:57:46Z",
+      "updatedBy": "system",
+      "isDeleted": false
+    }
+  }
+]

@@ -1,0 +1,1165 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/definitions/Individual",
+  "definitions": {
+    "Individual": {
+      "type": "object",
+      "example": {
+        "partyType": "velit voluptate cillum adipisicing deserunt",
+        "personName": "sit ex quis",
+        "id": "Lorem dolor nulla in",
+        "primaryHousehold": [
+          "ea culpa elit nulla"
+        ],
+        "contactPoints": [
+          {
+            "id": null,
+            "activeFromDate": "1948-10-29",
+            "contactPointType": [
+              "voluptate anim sint aute"
+            ],
+            "profileLastUpdatedDate": null,
+            "primaryFlag": true,
+            "bestTimeToContactStartTime": null,
+            "bestTimeToContactEndTime": null,
+            "name": "nostrud",
+            "profileOccurrenceCount": -34931456,
+            "partyRole": [
+              "dolore cillum ex nisi voluptate"
+            ],
+            "forPersonalUse": false,
+            "auditInfo": {
+              "isDeleted": null,
+              "createdBy": "magna anim",
+              "updatedBy": "Excepteur deserunt minim quis sit",
+              "updatedDate": null,
+              "createdDate": null
+            },
+            "forBusinessUse": null,
+            "activeToDate": null,
+            "profileFirstCreatedDate": null,
+            "party": [
+              "laborum"
+            ]
+          }
+        ],
+        "overAgeNumber": -34368830,
+        "primaryAccount": [
+          "et proident"
+        ],
+        "doExtractMyDataUpdateDate": null,
+        "shouldForget": true,
+        "birthPlace": "dolore",
+        "personLifeStage": "esse nostrud minim irure cupidatat",
+        "webSiteURL": "in Duis amet laborum tempor",
+        "salutation": "veniam aliqua",
+        "militaryService": "dolore",
+        "externalIds": [
+          {
+            "externalIdType": [
+              {
+                "id": null,
+                "name": "do anim consectetur esse id"
+              }
+            ],
+            "externalId": "eu non nostrud",
+            "id": null
+          }
+        ],
+        "mailingName": "consequat dolor",
+        "personWeightUnitOfMeasure": "aliquip laboris exercitation est",
+        "mainLifeStyleType": "ullamco nisi in ipsum quis",
+        "isAlcoholConsumer": false,
+        "currentEmployerName": "cillum",
+        "isHighRiskHobby": null,
+        "isTobaccoConsume": null,
+        "hospitalizationsLast5YearsCount": -51997934,
+        "primaryHobby": "quis fugiat ullamco enim sed",
+        "doNotProfileFromUpdateDate": "2005-03-14",
+        "doForgetMeFromUpdateDate": null,
+        "isGoodDriver": false,
+        "personWeight": -77741046,
+        "isGoodStudent": null,
+        "isHomeOwner": true,
+        "mainLifeAttitudeType": "in dolore",
+        "photoURL": "ad cillum",
+        "yearlyIncome": null,
+        "surgeriesLast5YearsCount": null,
+        "deathPlace": "aliqua",
+        "hasDrugAbuseHistory": false,
+        "mainPersonalityType": "enim non aliquip tempor",
+        "mainDietaryHabitType": "in enim consectetur nostrud ea",
+        "doNotProcessFromUpdateDate": "1982-05-13",
+        "militaryStatus": "minim cillum",
+        "doNotTrackLocationUpdateDate": "1970-05-02",
+        "doNotTrackUpdateDate": null,
+        "taxBracketRange": "enim",
+        "globalParty": "consequat incididunt nostrud est ut",
+        "netWorth": 4886841,
+        "isHighRiskOccupation": null,
+        "majorCitationCount": null,
+        "mainPersonalValueType": "ullamco nostrud irure pariatur",
+        "mothersMaidenName": "Lorem",
+        "religion": "enim",
+        "gender": "consequat",
+        "maritalStatus": "mollit eiusmod in",
+        "secondLastName": "ut consequat laboris",
+        "dependentCount": 48418188,
+        "influencerRating": -3164179,
+        "sendIndividualData": false,
+        "doNotMarketFromUpdateDate": "1971-06-22",
+        "firstName": "dolore aliqua dolor",
+        "officialName": "velit sunt",
+        "highestEducationLevel": "in pariatur deserunt non ad",
+        "weddingAnniversaryDate": null,
+        "personHeightUnitOfMeasure": "Ut sit",
+        "doNotProcessReason": "esse deserunt fugiat nulla",
+        "yearlyIncomeRange": "in adipisicing eiusmod enim",
+        "noMergeReason": "ea qui mollit nulla ut",
+        "auditInfo": {
+          "isDeleted": false,
+          "createdBy": "dolore Excepteur eu",
+          "updatedBy": "laboris veniam fugiat",
+          "updatedDate": "2012-03-25T05:31:53.088Z",
+          "createdDate": null
+        },
+        "preferredName": "est",
+        "consumerCreditScoreProviderName": "id quis minim sunt",
+        "convictionsCount": 40866716,
+        "ethnicity": "anim laboris voluptate quis pariatur",
+        "personHeight": null,
+        "birthDate": null,
+        "employedSinceDate": "1983-02-20"
+      },
+      "additionalProperties": true,
+      "required": [
+        "partyType",
+        "personName",
+        "id"
+      ],
+      "properties": {
+        "hasAlcoholAbuseHistory": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "highestEducationLevel": {
+          "type": "string"
+        },
+        "personHeight": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "mailingName": {
+          "type": "string"
+        },
+        "surgeriesLast5YearsCount": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "doNotTrackUpdateDate": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "weddingAnniversaryDate": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "minorCitationCount": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "mainDietaryHabitType": {
+          "type": "string"
+        },
+        "personHeightUnitOfMeasure": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "personName": {
+          "type": "string"
+        },
+        "photoURL": {
+          "type": "string"
+        },
+        "isHighRiskHobby": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "doNotProcessFromUpdateDate": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "militaryService": {
+          "type": "string"
+        },
+        "maritalStatus": {
+          "type": "string"
+        },
+        "doNotMarketFromUpdateDate": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "shouldForget": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "mainDisabilityType": {
+          "type": "string"
+        },
+        "consumerCreditScoreProviderName": {
+          "type": "string"
+        },
+        "isTobaccoConsume": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "webSiteURL": {
+          "type": "string"
+        },
+        "secondLastName": {
+          "type": "string"
+        },
+        "primaryHousehold": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "orderingName": {
+          "type": "string"
+        },
+        "hospitalizationsLast5YearsCount": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dependentCount": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "convictionsCount": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "isGoodDriver": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "primaryHobby": {
+          "type": "string"
+        },
+        "mainPersonalValueType": {
+          "type": "string"
+        },
+        "isAlcoholConsumer": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "taxBracketRange": {
+          "type": "string"
+        },
+        "childrenCount": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "isGoodStudent": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "mainLifeAttitudeType": {
+          "type": "string"
+        },
+        "netWorth": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "personWeight": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "birthDate": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "religion": {
+          "type": "string"
+        },
+        "sendIndividualData": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "deathDate": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "doExtractMyDataUpdateDate": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "birthPlace": {
+          "type": "string"
+        },
+        "overAgeNumber": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "doForgetMeFromUpdateDate": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "personWeightUnitOfMeasure": {
+          "type": "string"
+        },
+        "mainLifeStyleType": {
+          "type": "string"
+        },
+        "gender": {
+          "type": "string"
+        },
+        "hasDrugAbuseHistory": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "salutation": {
+          "type": "string"
+        },
+        "mothersMaidenName": {
+          "type": "string"
+        },
+        "doNotTrackLocationUpdateDate": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ethnicity": {
+          "type": "string"
+        },
+        "mainPersonalityType": {
+          "type": "string"
+        },
+        "employedSinceDate": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "officialName": {
+          "type": "string"
+        },
+        "isHighRiskOccupation": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "residenceCaptureMethod": {
+          "type": "string"
+        },
+        "doNotProfileFromUpdateDate": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "nameSuffix": {
+          "type": "string"
+        },
+        "isDrugConsumer": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "isHomeOwner": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "doNotProcessReason": {
+          "type": "string"
+        },
+        "occupationType": {
+          "type": "string"
+        },
+        "deathPlace": {
+          "type": "string"
+        },
+        "influencerRating": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "militaryStatus": {
+          "type": "string"
+        },
+        "consumerCreditScore": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "yearlyIncome": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "preferredName": {
+          "type": "string"
+        },
+        "personLifeStage": {
+          "type": "string"
+        },
+        "yearlyIncomeRange": {
+          "type": "string"
+        },
+        "majorCitationCount": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "middleName": {
+          "type": "string"
+        },
+        "residenceCountryName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "occupation": {
+          "type": "string"
+        },
+        "currentEmployerName": {
+          "type": "string"
+        },
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "partyType": {
+          "type": "string"
+        },
+        "globalParty": {
+          "type": "string"
+        },
+        "noMergeReason": {
+          "type": "string"
+        },
+        "primaryAccount": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "contactPoints": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object",
+                "additionalProperties": true,
+                "required": [
+                  "id",
+                  "activeFromDate",
+                  "contactPointType"
+                ],
+                "properties": {
+                  "id": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "primaryFlag": {
+                    "anyOf": [
+                      {
+                        "type": "boolean"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "bestTimeToContactStartTime": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "time"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "profileLastUpdatedDate": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "time"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "partyRole": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "activeFromDate": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "activeToDate": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "date"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "profileOccurrenceCount": {
+                    "anyOf": [
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "profileFirstCreatedDate": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "time"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "bestTimeToContactEndTime": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "time"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "party": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "contactPointType": {
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": true,
+                          "required": [
+                            "id",
+                            "name"
+                          ],
+                          "properties": {
+                            "id": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "optInPriority": {
+                              "anyOf": [
+                                {
+                                  "type": "integer"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "auditInfo": {
+                              "description": "Defines standard system audit fields available for most types",
+                              "type": "object",
+                              "example": {
+                                "isDeleted": true,
+                                "createdBy": "commodo minim dolore est",
+                                "updatedBy": "dolor quis nulla",
+                                "updatedDate": "1950-01-23T19:52:29.659Z",
+                                "createdDate": "1950-01-23T19:52:29.659Z"
+                              },
+                              "additionalProperties": true,
+                              "required": [
+                                "isDeleted",
+                                "createdBy",
+                                "updatedBy",
+                                "updatedDate",
+                                "createdDate"
+                              ],
+                              "properties": {
+                                "createdDate": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ],
+                                  "description": "Timestamp of when the entity was created"
+                                },
+                                "createdBy": {
+                                  "type": "string",
+                                  "description": "Identifies the system or user which created the entity"
+                                },
+                                "updatedDate": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ],
+                                  "description": "Timestamp of when the entity was last updated"
+                                },
+                                "updatedBy": {
+                                  "type": "string",
+                                  "description": "Identifies the system or user which last updated the entity"
+                                },
+                                "isDeleted": {
+                                  "anyOf": [
+                                    {
+                                      "type": "boolean"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ],
+                                  "description": "Indicates whether or not the entity has been soft-deleted"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "forBusinessUse": {
+                    "anyOf": [
+                      {
+                        "type": "boolean"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "forPersonalUse": {
+                    "anyOf": [
+                      {
+                        "type": "boolean"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "auditInfo": {
+                    "description": "Defines standard system audit fields available for most types",
+                    "type": "object",
+                    "example": {
+                      "isDeleted": true,
+                      "createdBy": "commodo minim dolore est",
+                      "updatedBy": "dolor quis nulla",
+                      "updatedDate": "1950-01-23T19:52:29.659Z",
+                      "createdDate": "1950-01-23T19:52:29.659Z"
+                    },
+                    "additionalProperties": true,
+                    "required": [
+                      "isDeleted",
+                      "createdBy",
+                      "updatedBy",
+                      "updatedDate",
+                      "createdDate"
+                    ],
+                    "properties": {
+                      "createdDate": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "Timestamp of when the entity was created"
+                      },
+                      "createdBy": {
+                        "type": "string",
+                        "description": "Identifies the system or user which created the entity"
+                      },
+                      "updatedDate": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "Timestamp of when the entity was last updated"
+                      },
+                      "updatedBy": {
+                        "type": "string",
+                        "description": "Identifies the system or user which last updated the entity"
+                      },
+                      "isDeleted": {
+                        "anyOf": [
+                          {
+                            "type": "boolean"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "Indicates whether or not the entity has been soft-deleted"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "externalIds": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object",
+                "example": {
+                  "externalIdType": [
+                    {
+                      "id": "id1",
+                      "name": "adipisicing labore Duis in anim"
+                    }
+                  ],
+                  "externalId": "Ut",
+                  "id": "irure proident cillum deserunt dolor",
+                  "status": "INVALID",
+                  "statusLastChangedDate": "1999-11-26T02:28:11.661Z"
+                },
+                "description": "Defines a structure for referencing an entity in external systems",
+                "additionalProperties": true,
+                "required": [
+                  "externalIdType",
+                  "externalId",
+                  "id"
+                ],
+                "properties": {
+                  "id": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "externalId": {
+                    "type": "string",
+                    "description": "A unique identifier assigned to an entity in another system"
+                  },
+                  "externalIdType": {
+                    "description": "Identifies the system that owns or otherwise recognizes this unique identifier",
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "description": "Identifies the external system that owns or otherwise recognizes a particular identifier",
+                          "type": "object",
+                          "additionalProperties": true,
+                          "required": [
+                            "id",
+                            "name"
+                          ],
+                          "properties": {
+                            "id": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "name": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "status": {
+                    "enum": [
+                      "VALID",
+                      "INVALID"
+                    ],
+                    "description": "Indicates whether this identifier is currently valid or not",
+                    "type": "string"
+                  },
+                  "statusLastChangedDate": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Date and time of the last change in status"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "auditInfo": {
+          "description": "Defines standard system audit fields available for most types",
+          "type": "object",
+          "example": {
+            "isDeleted": true,
+            "createdBy": "commodo minim dolore est",
+            "updatedBy": "dolor quis nulla",
+            "updatedDate": "1950-01-23T19:52:29.659Z",
+            "createdDate": "1950-01-23T19:52:29.659Z"
+          },
+          "additionalProperties": true,
+          "required": [
+            "isDeleted",
+            "createdBy",
+            "updatedBy",
+            "updatedDate",
+            "createdDate"
+          ],
+          "properties": {
+            "createdDate": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Timestamp of when the entity was created"
+            },
+            "createdBy": {
+              "type": "string",
+              "description": "Identifies the system or user which created the entity"
+            },
+            "updatedDate": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Timestamp of when the entity was last updated"
+            },
+            "updatedBy": {
+              "type": "string",
+              "description": "Identifies the system or user which last updated the entity"
+            },
+            "isDeleted": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Indicates whether or not the entity has been soft-deleted"
+            }
+          }
+        }
+      }
+    }
+  }
+}

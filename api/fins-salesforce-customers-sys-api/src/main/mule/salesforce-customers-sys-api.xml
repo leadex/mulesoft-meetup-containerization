@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+    <flow name="salesforce-customers-sys-api-main">
+        <http:listener config-ref="salesforce-customer-api-httpListenerConfig" path="${salesforce-customer-sys-api.http-listener.path}">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="salesforce-customers-sys-api-config" />
+    </flow>
+    <flow name="salesforce-customers-sys-api-console">
+        <http:listener config-ref="salesforce-customer-api-httpListenerConfig" path="/console/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:console config-ref="salesforce-customers-sys-api-config" />
+    </flow>
+    <flow name="get:\ping:salesforce-customers-sys-api-config">
+        <flow-ref doc:name="ping_get-health" doc:id="867316bb-b354-4723-a713-d4ca68d65b42" name="ping_get-health" />
+    </flow>
+    <flow name="get:\customers:salesforce-customers-sys-api-config">
+        <flow-ref doc:name="customers-common_lookup-accounts" doc:id="9728179d-62dc-41b7-ac3d-447272b8dc2c" name="customers-common_lookup-accounts" />
+    </flow>
+    <flow name="post:\customers:application\json:salesforce-customers-sys-api-config">
+        <logger level="DEBUG" doc:name="Log Request" doc:id="e8a6fa9c-9e4d-4bc0-a0f9-10b635c32807" message="#[%dw 2.0 output application/json --- payload]" />
+        <flow-ref doc:name="customers-common_create-account" doc:id="477d0425-5da9-4b23-aa8e-ad04033cacf2" name="customers-common_create-account" />
+    </flow>
+    <flow name="get:\customers\(customerId):salesforce-customers-sys-api-config">
+        <set-variable value="#[attributes.uriParams.customerId]" doc:name="Set Customer Id" doc:id="3029c7bb-3b5c-407a-b899-f3177a839ef8" variableName="customerId" />
+        <flow-ref doc:name="customers-common_get-account-by-id" doc:id="ac158ac2-8ccd-40ad-8c0a-d98639d55440" name="customers-common_get-account-by-id" />
+    </flow>
+    <flow name="patch:\customers\(customerId):application\json:salesforce-customers-sys-api-config">
+        <logger level="DEBUG" doc:name="Log Request" doc:id="450d08b3-4678-41e4-8fb1-64e468eb5aa7" message="#[%dw 2.0 output application/json --- payload]" />
+        <set-variable value="#[attributes.uriParams.customerId]" doc:name="Set Customer Id" doc:id="5fcda154-d4c0-4f10-a740-13cb3de3d5b3" variableName="customerId" />
+        <flow-ref doc:name="customers-common_update-account" doc:id="b840b89e-b521-4ead-8c35-06cd0be6e7ac" name="customers-common_update-account" />
+    </flow>
+    <flow name="put:\customers\(customerId)\relatedContacts:application\json:salesforce-customers-sys-api-config">
+		<set-variable value="#[attributes.uriParams.customerId]" doc:name="Set Customer Id" doc:id="82b37760-f095-4cc1-9343-7618d3b2d005" variableName="customerId" />
+		<flow-ref doc:name="related-contacts_update-relationship-type" doc:id="2ce76e57-4ede-4b10-97f0-0cfb7f508c88" name="related-contacts_update-relationship-type"/>
+    </flow>
+    <flow name="patch:\contacts\(contactId):application\json:salesforce-customers-sys-api-config">
+        <set-variable value="#[attributes.uriParams.contactId]" doc:name="Set Contact Id" doc:id="bafdb12e-9434-4c93-af41-8fb7efd19899" variableName="contactId" />
+		<flow-ref doc:name="account-contacts_update-contact" doc:id="df56a6d7-18bf-42b0-ab0d-d3d8a182a6b3" name="account-contacts_update-contact"/>
+    </flow>
+    <flow name="get:\contacts:salesforce-customers-sys-api-config">
+		<flow-ref doc:name="account-contacts_lookup-contacts" doc:id="7eff4647-dd73-4642-8b3c-38df1715bdac" name="account-contacts_lookup-contacts"/>
+    </flow>
+    <flow name="get:\customers\(customerId)\relatedContacts:salesforce-customers-sys-api-config">
+		<set-variable value="#[attributes.uriParams.customerId]" doc:name="Set Customer Id" doc:id="5791372f-74a6-49c5-b6c7-b8c948c178d6" variableName="customerId" />
+		<flow-ref doc:name="related-contacts_get-releated-contacts-by-customer-id" doc:id="be74b5ed-d9ed-48be-9dd2-d920964a8392" name="related-contacts_get-releated-contacts-by-customer-id"/>
+    </flow>
+    <flow name="get:\contacts\(contactId):salesforce-customers-sys-api-config">
+        <set-variable value="#[attributes.uriParams.contactId]" doc:name="Set Contact Id" doc:id="b6581122-c2b5-435e-8ef1-87d8ae5d0874" variableName="contactId" />
+		<flow-ref doc:name="account-contacts_get-contact-by-id" doc:id="405986ca-bc27-49b2-af1e-d65af2f239e3" name="account-contacts_get-contact-by-id"/>
+    </flow>
+    <flow name="post:\contacts:application\json:salesforce-customers-sys-api-config">
+		<flow-ref doc:name="account-contacts_create-contact" doc:id="d9a55601-1fb6-4428-93fc-51035c1ce3f2" name="account-contacts_create-contact"/>
+    </flow>
+</mule>

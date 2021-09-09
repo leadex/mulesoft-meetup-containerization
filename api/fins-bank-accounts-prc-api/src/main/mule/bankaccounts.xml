@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="get-bankaccounts-from-fis" doc:id="a6b13980-8c99-4e19-8341-0259606c17bf" >
+		<http:request method="GET" doc:name="sys-fis GET /customers/{customerId}/accounts" doc:id="1179c679-b86f-439b-9b46-5f81c66ac3d8" config-ref="sys-fis_HTTP_Request_configuration" path="/customers/{customerId}/accounts">
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"customerId" : vars.fisCustomerId
+}]]]></http:uri-params>
+		</http:request>
+	</flow>
+	<flow name="search-bankaccounts-from-salesforce-financial" doc:id="0ba506e6-4eab-455a-9eae-81d9cddd1bae" >
+		<http:request method="GET" doc:name="sys-salesforce-financial GET /accounts" doc:id="dcf6d451-fd31-4b71-8ce5-ba358d0a4405" config-ref="sys-salesforce-financial_HTTP_Request_configuration" path="/accounts">
+			<http:query-params><![CDATA[#[vars.fscQueryParams default {}]]]></http:query-params>
+		</http:request>
+	</flow>
+	<flow name="get-bankaccount-from-salesforce-financial" doc:id="c22bbe5a-2dfe-4dae-afbf-7a7f7db75f4f">
+		<http:request method="GET" doc:name="sys-salesforce-financial GET /accounts/{accountId}" doc:id="2ab54fb1-90ec-4df3-b077-4f4b140bb154" config-ref="sys-salesforce-financial_HTTP_Request_configuration" path="/accounts/{accountId}">
+			<http:uri-params><![CDATA[#[output application/java
+---
+{
+	"accountId" : vars.fscAccountId
+}]]]></http:uri-params>
+		</http:request>
+	</flow>
+	<flow name="post-bankaccount-to-salesforce-financial" doc:id="4fd7dc6c-8723-4baf-b459-cf584e60066b" >
+		<http:request method="POST" doc:name="sys-salesforce-financial POST /accounts" doc:id="6e45316d-97a6-47ee-9c56-65be724ddbc8" config-ref="sys-salesforce-financial_HTTP_Request_configuration" path="/accounts"/>
+	</flow>
+	<flow name="patch-bankaccount-to-salesforce-financial" doc:id="a0748c6c-8b96-4e7c-9800-d11b5ecf820e">
+		<http:request method="PATCH" doc:name="sys-salesforce-financial PATCH /accounts/{accountId}" doc:id="2c0a1bdf-9ca1-419b-889a-760113e00a7c" config-ref="sys-salesforce-financial_HTTP_Request_configuration" path="/accounts/{accountId}" >
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"accountId" : vars.fscAccountId
+}]]]></http:uri-params>
+		</http:request>
+	</flow>
+	<flow name="sync-bankaccounts" doc:id="d1c1c7f2-b73e-4a8d-bbaa-5d04c30d36fe" >
+		<scheduler doc:name="Scheduler" doc:id="e9f6e425-44c8-4b64-bf3f-c4717b42a5cd" >
+			<scheduling-strategy >
+				<cron expression="${process.scheduler.bankaccounts.cron}" />
+			</scheduling-strategy>
+		</scheduler>
+		<flow-ref doc:name="get-customers-from-fis" doc:id="3a8949da-71c3-43ba-a524-6030dcad111a" name="get-customers-from-fis" target="fisCustomers"/>
+		<foreach doc:name="For Each FIS Customer" doc:id="906eb2fd-1de4-45c2-af1f-d04820788788" collection="#[vars.fisCustomers]">
+			<try doc:name="Try" doc:id="5070d3a6-087f-4c07-9c57-7d55e1a6ffa6" >
+				<flow-ref doc:name="sync-bankaccounts-for-customer" doc:id="94d10583-e2ef-4722-8a36-0ef3346b0806" name="sync-bankaccounts-for-customer" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="20757c06-464b-4f61-9692-29a0d07ad8e7">
+									<logger level="ERROR" doc:name="Logger" doc:id="fc68fa65-32bc-4fdd-8dc6-2ea2242c4f67" message="Error occurred in sync-bankaccounts-for-customer. Continuing to process next customer." />
+								</on-error-continue>
+				</error-handler>
+			</try>
+			
+		</foreach>
+	</flow>
+	<flow name="sync-bankaccounts-for-customer" doc:id="1f301a87-82c0-4635-85ca-c633ab9796b1" ><set-variable value="#[payload.id]" doc:name="fisCustomerId" doc:id="3cc85f9c-a2f6-44bc-8a73-7019f7b8a614" variableName="fisCustomerId" />
+		<flow-ref doc:name="get-bankaccounts-from-fis" doc:id="b86c0326-90ed-4d25-a96f-223aef8d50bf" name="get-bankaccounts-from-fis" />
+		<foreach doc:name="For Each FIS Account" doc:id="f0e7fcdc-17a2-47b8-a04c-72dd3fdeebd6">
+				<set-variable value="#[payload]" doc:name="fisAccount" doc:id="0b1e5108-8bf6-4ee3-829e-363eb132da50" variableName="fisAccount" />
+				<set-variable value="#[{ externalId: vars.fisAccount.primaryAccountOwner }]" doc:name="fscQueryParams" doc:id="c5f7addd-a97a-4a12-897f-9e6c7d38b52a" variableName="fscQueryParams" />
+				<flow-ref doc:name="search-customers-from-salesforce-customers" doc:id="77912a9a-fe5f-4443-af24-2b98723d6195" name="search-customers-from-salesforce-customers" target="sfPrimaryAccountOwner" />
+				<validation:is-true doc:name="returned one SF customer" doc:id="e16358b9-6ddb-4be8-aee5-c2c5a4721947" expression="#[sizeOf(vars.sfPrimaryAccountOwner) == 1]" message="salesforce-customers returned more than one customer for this external ID"/>
+			<set-variable value="#[{ externalId: vars.fisAccount.id, customerId: vars.sfPrimaryAccountOwner[0].id }]" doc:name="fscQueryParams" doc:id="43b01b4c-b217-4665-a7ce-091b754a327f" variableName="fscQueryParams" />
+				<flow-ref doc:name="search-bankaccounts-from-salesforce-financial" doc:id="5aa5a0b1-90ff-42ae-ac11-ab388771d579" name="search-bankaccounts-from-salesforce-financial" target="fscAccount" />
+				<choice doc:name="doesn't exist in FSC?" doc:id="cdc60472-1958-42d2-be09-f9efae1ba380">
+					<when expression="sizeOf(vars.fscAccount) == 0">
+						<ee:transform doc:name="filter out nulls. Move FIS ID to externalIds" doc:id="6cfc6254-0c00-4b35-bfbd-23111319723b">
+							<ee:message>
+							<ee:set-payload resource="dwl/bankaccount-post.dwl" />
+							</ee:message>
+						</ee:transform>
+						<flow-ref doc:name="post-bankaccount-to-salesforce-financial" doc:id="0fe4339a-fe41-438c-988d-b0bf2779cc94" name="post-bankaccount-to-salesforce-financial" />
+					<logger level="DEBUG" doc:name="Debug logger" doc:id="06c35646-35d3-4923-8c00-12a5e2764035" message="Finished POST bankaccount with FIS id: #[vars.fisAccount.id]" category="fins" />
+					</when>
+					<when expression="#[sizeOf(vars.fscAccount) == 1]">
+						<set-variable value="#[vars.fscAccount[0].id]" doc:name="fscAccountId" doc:id="98b1c871-477b-4b22-a55e-5990c9171336" variableName="fscAccountId" />
+						<ee:transform doc:name="enrich fisAccount with FSC ID" doc:id="2867b640-eb24-4de6-a3a1-e46ecc70ce79">
+							<ee:message>
+							<ee:set-payload resource="dwl/bankaccount-patch.dwl" />
+							</ee:message>
+						</ee:transform>
+						<flow-ref doc:name="patch-bankaccount-to-salesforce-financial" doc:id="efc1a1e3-5e5f-4799-a739-40dfd8554fb7" name="patch-bankaccount-to-salesforce-financial" />
+					<logger level="DEBUG" doc:name="Debug logger" doc:id="88d627c4-2d83-44f5-a269-d0b28b1bc495" message="Finished PATCH bankaccount with FIS id: #[vars.fisAccount.id]" category="fins" />
+					</when>
+				</choice>
+			</foreach>
+	</flow>
+</mule>

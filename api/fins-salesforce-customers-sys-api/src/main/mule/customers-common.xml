@@ -1,0 +1,530 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	<sub-flow name="customers-common_get-account-by-id" doc:id="154a4fe0-c74c-4bc2-b49c-42dcf7717e0f" doc:description="This subflow retrieves the Customer using CustomerId from Salesforce Account Object and tra">
+		<try doc:name="Try" doc:id="0e4ef42f-f116-4503-8d69-4f3808b90f3d">
+			<!--
+			<salesforce:query doc:name="Get Account" doc:id="5d7679f2-2100-4735-a85f-87b42ae861fc" config-ref="Salesforce_Config" target="customer" targetValue="#[payload[0]]">
+				<salesforce:salesforce-query><![CDATA[SELECT Id,Salutation,IsPersonAccount,Name,FirstName,LastName,PersonBirthDate,AccountNumber,Global_Customer_Id__c,
+PersonContactId,PersonEmail,Phone,
+PersonMailingStreet,PersonMailingCity,PersonMailingPostalCode,PersonMailingState,PersonMailingCountry,PersonMailingLatitude,PersonMailingLongitude,PersonMailingGeocodeAccuracy,
+BillingStreet,BillingCity,BillingPostalCode,BillingState,BillingCountry,BillingLatitude,BillingLongitude,BillingGeocodeAccuracy,
+IsDeleted,CreatedDate,CreatedBy.Name,LastModifiedDate,LastModifiedBy.Name
+FROM Account
+WHERE Id=':Id' AND (IsPersonAccount=true or (IsPersonAccount=false and IsPartner=false))]]></salesforce:salesforce-query>
+				<salesforce:parameters><![CDATA[#[output application/java
+-&#45;&#45;
+{
+	"Id" : vars.customerId
+}]]]></salesforce:parameters>
+			</salesforce:query>
+			-->
+			<ee:transform doc:name="Transform Message" doc:id="8589aaa7-5ba9-4eb7-b727-80863c832be0" >
+				<ee:message >
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="customer" ><![CDATA[%dw 2.0
+output application/java
+---
+{
+  "PersonMailingStreet": "Julianne Prairie",
+  "LastModifiedDate": "2021-04-14T19:45:47.000Z",
+  "LastModifiedBy": {
+    "Id": null,
+    "type": "User",
+    "Name": "Admin Accelerator"
+  },
+  "IsDeleted": "false",
+  "IsPersonAccount": "true",
+  "Global_Customer_Id__c": "fdddf723",
+  "CreatedBy": {
+    "Id": null,
+    "type": "User",
+    "Name": "Admin Accelerator"
+  },
+  "FirstName": "Mandy",
+  "PersonContactId": "0034x00000GCkxGAAT",
+  "PersonMailingLatitude": "14.997",
+  "PersonBirthdate": "1984-03-17",
+  "type": "Account",
+  "Salutation": "Mr.",
+  "AccountNumber": "ZYDUSYP1",
+  "Phone": "703-850-3754",
+  "PersonMailingLongitude": "164.6381",
+  "CreatedDate": "2021-04-14T19:44:00.000Z",
+  "PersonMailingPostalCode": null,
+  "Id": "0014x00000HwZFdAAN",
+  "LastName": "Jacob",
+  "PersonMailingCity": "East Osbaldo",
+  "PersonMailingState": "TX",
+  "PersonMailingCountry": "USA",
+  "PersonMailingGeocodeAccuracy": null,
+  "PersonEmail": "elisa.lockman@gmail.com"
+}]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<validation:is-not-null doc:name="Customer Id Is not null" doc:id="d55361ec-6aeb-4d70-86a8-c31ec38cb0cb" config-ref="Validation_Config" value="#[vars.customer.Id]" message='#["Customer Not Found"]' />
+			<error-handler>
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="485635ab-f206-4ee6-b27d-972d8076b867" type="ANY" when='#[error.detailedDescription contains "invalid ID field"]'>
+					<set-variable value="404" doc:name="Set httpStatus to 404" doc:id="d760b096-57ff-4c8b-8cde-c56a05e0c1b6" variableName="httpStatus"/>
+					<flow-ref doc:name="common-error-handler_connector-exception" doc:id="6af67b74-a9e9-4622-9be2-2a3f0a5caf33" name="common-error-handler_connector-exception"/>
+				</on-error-continue>
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="9689c19a-e76d-4201-8238-9aef6f53d3c2" type="VALIDATION:NULL">
+					<set-variable value="404" doc:name="Set httpStatus to 404" doc:id="576545bb-142e-4ff5-8b16-1380a3c9b68f" variableName="httpStatus" />
+					<flow-ref doc:name="common-error-handler_connector-exception" doc:id="a24b66e0-37b0-4ea4-b30b-571575ce40cb" name="common-error-handler_connector-exception" />
+				</on-error-continue>
+			</error-handler>
+		</try>
+		<choice doc:name="Check for http response" doc:id="e3932414-d33f-41bf-93a1-e0ebbaf5828a" >
+			<when expression="#[vars.httpStatus != null]" >
+				<ee:transform doc:name="Error Response" doc:id="078a21bf-a33e-4a86-94be-7bb7742051b0">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+vars.exceptionResponse]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+					</ee:variables>
+				</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Map Contact Points" doc:id="c836e172-f8b5-4445-8c6a-c8275849acf6">
+					<ee:message>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable resource="dwl/customers/map-contactpoints-for-customer.dwl" variableName="contactPoints" />
+					</ee:variables>
+				</ee:transform>
+				<ee:transform doc:name="Map Response" doc:id="c0cb02ad-7445-412f-b8f5-682fc8aace9a">
+					<ee:message>
+						<ee:set-payload resource="dwl/customers/retrieve-customer-by-id-response.dwl" />
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+	</sub-flow>
+	<sub-flow name="customers-common_create-account" doc:id="0a456577-938a-4ec3-992e-435102f23605" >
+		<ee:transform doc:name="Extract Account Type" doc:id="bc9882f4-767f-41b3-9913-efacdcbe8700">
+					<ee:message>
+					</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="isOrgAccount" ><![CDATA[%dw 2.0
+output application/java
+var partyOrgList = payload.party filter((lower($.partyType)) == p('customer.party-type-organization'))
+---
+!isEmpty(partyOrgList)
+]]></ee:set-variable>
+			</ee:variables>
+				</ee:transform>
+		<choice doc:name="Is Organization Account?" doc:id="f9e9071c-4c2e-4fef-8475-a81cd026c861" >
+			<when expression="#[vars.isOrgAccount]">
+				<flow-ref doc:name="organization-accounts_create-org-account" doc:id="9178c651-a3de-483d-b8b0-a715ded2eb40" name="organization-accounts_create-org-account"/>
+			</when>
+			<otherwise>
+				<flow-ref doc:name="person-accounts_validate-request-create-person-account" doc:id="7fe2aecb-cb18-40a9-ae6c-d978fe112a34" name="person-accounts_validate-request-create-person-account" />
+			</otherwise>
+		</choice>
+	</sub-flow>
+	<sub-flow name="customers-common_update-account" doc:id="4fbc94ec-19c3-40a2-8604-e0f0441bb108" >
+	<ee:transform doc:name="Extract Account Type" doc:id="1f546666-0a01-4b6d-a4c9-1bb89f2cc4ac">
+					<ee:message>
+					</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="isOrgAccount" ><![CDATA[%dw 2.0
+output application/java
+---
+!isEmpty(payload.party filter((lower($.partyType)) == "organization"))
+]]></ee:set-variable>
+			</ee:variables>
+				</ee:transform>
+		<choice doc:name="Is Organization Account?" doc:id="4dc5a1a6-c6b0-4363-b14d-c5eba3176bd5" >
+			<when expression="#[vars.isOrgAccount]">
+				<flow-ref doc:name="organization-accounts_update-org-account" doc:id="578a24a2-b516-4b9d-bebd-15d1261954d1" name="organization-accounts_update-org-account"/>
+			</when>
+			<otherwise>
+				<flow-ref doc:name="person-accounts_validate-request-create-person-account" doc:id="e3c6fef8-758c-4cb8-8677-588049614558" name="person-accounts_validate-request-update-person-account" />
+			</otherwise>
+		</choice>
+	</sub-flow>
+    <sub-flow name="customers-common_lookup-accounts" doc:id="25f9366f-ca41-4fb6-8114-573adc55a7e7" >
+		<ee:transform doc:name="Extract Query Params" doc:id="e4c5e222-bd3c-4366-a0a0-6739ea3c6681">
+					<ee:message>
+					</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="queryParams" ><![CDATA[attributes.queryParams mapObject (value, key, index) -> { (lower(key)): (value)}]]></ee:set-variable>
+			</ee:variables>
+				</ee:transform>
+		<choice doc:name="Is Look Up By Customer Id?" doc:id="ba780d26-6f25-441d-a383-bde92e513359" >
+			<when expression='#[!isEmpty(vars.queryParams.customerid)]'>
+<try doc:name="Try" doc:id="49163c0c-fa83-4393-94eb-4a5eba634b1e">
+			<!--
+			<salesforce:query doc:name="Get Account by Id" doc:id="360c5d87-5db8-4648-af30-1490bd6eb733" config-ref="Salesforce_Config" target="customersReturned">
+						<salesforce:salesforce-query ><![CDATA[SELECT Id,Salutation,IsPersonAccount,Name,FirstName,LastName,PersonBirthDate,AccountNumber,Global_Customer_Id__c,
+PersonContactId,PersonEmail,Phone,
+PersonMailingStreet,PersonMailingCity,PersonMailingPostalCode,PersonMailingState,PersonMailingCountry,PersonMailingLatitude,PersonMailingLongitude,PersonMailingGeocodeAccuracy,
+BillingStreet,BillingCity,BillingPostalCode,BillingState,BillingCountry,BillingLatitude,BillingLongitude,BillingGeocodeAccuracy,
+IsDeleted,CreatedDate,CreatedBy.Name,LastModifiedDate,LastModifiedBy.Name
+FROM Account
+WHERE Id=':Id' AND (IsPersonAccount=true or (IsPersonAccount=false and IsPartner=false)) LIMIT :limit OFFSET :offset]]></salesforce:salesforce-query>
+						<salesforce:parameters ><![CDATA[#[output application/java
+-&#45;&#45;
+{
+	"offset" : vars.queryParams.offset,
+	"limit" : vars.queryParams.limit,
+	"Id" : vars.queryParams.customerid
+}]]]></salesforce:parameters>
+					</salesforce:query>
+			-->
+					<ee:transform doc:name="Mock Get Account by Id" doc:id="ca5d41d8-d74b-48b5-af9d-fe7319629bfc" >
+						<ee:message >
+						</ee:message>
+						<ee:variables >
+							<ee:set-variable variableName="customersReturned" ><![CDATA[%dw 2.0
+output application/java
+---
+[
+{
+  "BillingStreet": "Mill Street Lane 2",
+  "LastModifiedDate": "2021-04-14T19:45:47.000Z",
+  "LastModifiedBy": {
+    "Id": null,
+    "type": "User",
+    "Name": "Admin Accelerator"
+  },
+  "IsDeleted": "false",
+  "Global_Customer_Id__c": "123456789",
+  "CreatedBy": {
+    "Id": null,
+    "type": "User",
+    "Name": "Admin Accelerator"
+  },
+  "IsPersonAccount":false,
+  "Name": "Pojo Inc",
+  "BillingLatitude": "14.997",
+  "type": "Account",
+  "AccountNumber": "ZYDUSYP1",
+  "Phone": "567-850-3754",
+  "BillingLongitude": "164.6381",
+  "CreatedDate": "2021-04-14T19:44:00.000Z",
+  "BillingPostalCode": "1233",
+  "Id": "0014x00000HwZFdWER",
+  "BillinggCity": "East Osbaldo",
+  "BillingState": "TX",
+  "BillingCountry": "USA",
+  "BillingGeocodeAccuracy": null
+}
+]]]></ee:set-variable>
+						</ee:variables>
+					</ee:transform>
+					<error-handler>
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="07b907a9-41bf-4991-984c-50c5805ea81f" type="ANY" when='#[error.detailedDescription contains "invalid ID field"]'>
+					<set-variable value="#[[]]" doc:name="Set customers Returned" doc:id="7bcb3ac3-5ab5-4ce0-92a5-b1ab8799e09f" variableName="customersReturned"/>
+				</on-error-continue>
+			</error-handler>
+		</try>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Log message" doc:id="8e1721cd-8131-44fd-b9f9-3f57c06b4930" message='#["No look up by Contact Id"]'/>
+			</otherwise>
+		</choice>
+		<choice doc:name="Is Look up By External Id" doc:id="e8e229c2-33a0-44d4-8101-1ec68758c8d5" >
+			<when expression="#[!isEmpty(vars.queryParams.externalid) and isEmpty(vars.customersReturned[0].Id)]">
+				<until-successful maxRetries="${retry.sfdc.maxretries}" doc:name="Retry" doc:id="02fb41cb-4f15-4595-83d5-bd521a9ff4b4" millisBetweenRetries="${retry.sfdc.timebetween}">
+					<!--
+					<salesforce:query doc:name="Get Account by External id" doc:id="96a981f6-1e7f-4935-ade0-f80d3b7a84c9" config-ref="Salesforce_Config" target="customersReturned" >
+						<salesforce:salesforce-query ><![CDATA[SELECT Id,Salutation,IsPersonAccount,Name,FirstName,LastName,PersonBirthDate,AccountNumber,Global_Customer_Id__c,
+PersonContactId,PersonEmail,Phone,
+PersonMailingStreet,PersonMailingCity,PersonMailingPostalCode,PersonMailingState,PersonMailingCountry,PersonMailingLatitude,PersonMailingLongitude,PersonMailingGeocodeAccuracy,
+BillingStreet,BillingCity,BillingPostalCode,BillingState,BillingCountry,BillingLatitude,BillingLongitude,BillingGeocodeAccuracy,
+IsDeleted,CreatedDate,CreatedBy.Name,LastModifiedDate,LastModifiedBy.Name
+FROM Account
+WHERE Global_Customer_Id__c=':externalId' AND (IsPersonAccount=true or (IsPersonAccount=false and IsPartner=false)) LIMIT :limit OFFSET :offset]]></salesforce:salesforce-query>
+						<salesforce:parameters ><![CDATA[#[output application/java
+-&#45;&#45;
+{
+	"externalId" : vars.queryParams.externalid,
+	"offset" : vars.queryParams.offset,
+    "limit" : vars.queryParams.limit
+}]]]></salesforce:parameters>
+					</salesforce:query>
+					-->
+					<ee:transform doc:name="Mock Get Account by External id" doc:id="ff0ec477-5490-424f-a52c-31db4b12459a" >
+						<ee:message >
+						</ee:message>
+						<ee:variables >
+							<ee:set-variable variableName="customersReturned" ><![CDATA[%dw 2.0
+output application/java
+---
+[
+{
+  "PersonMailingStreet": "Mill Street",
+  "LastModifiedDate": "2021-04-14T19:45:47.000Z",
+  "LastModifiedBy": {
+    "Id": null,
+    "type": "User",
+    "Name": "Admin Accelerator"
+  },
+  "IsDeleted": "false",
+  "IsPersonAccount":"true",
+  "Global_Customer_Id__c": "a7d21f74-bdd8-41d8-84d7-832ed1a6afa5",
+  "CreatedBy": {
+    "Id": null,
+    "type": "User",
+    "Name": "Admin Accelerator"
+  },
+  "FirstName": "Brad",
+  "PersonMailingLatitude": "14.997",
+  "PersonBirthdate": "1984-03-17",
+  "type": "Account",
+  "Salutation": "Mr.",
+  "AccountNumber": "ZYDUSYP1",
+  "Phone": "703-850-3754",
+  "PersonMailingLongitude": "164.6381",
+  "CreatedDate": "2021-04-14T19:44:00.000Z",
+  "PersonMailingPostalCode": null,
+  "Id": "0014x00000HwZFdASF",
+  "LastName": "Fisher",
+  "PersonEmail": "sandy.siliantest@gmail.com"
+}
+]]]></ee:set-variable>
+						</ee:variables>
+					</ee:transform>
+				</until-successful>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Log message" doc:id="652539fd-db76-4f54-9695-ba883e40ccb5" message='#["No look up by External Id"]'/>
+			</otherwise>
+		</choice>
+		<choice doc:name="Is Look up by Email Address?" doc:id="22518b90-f3ae-4acf-97cc-a09e7e5b17b9" >
+			<when expression='#[!isEmpty(vars.queryParams.emailaddress) and isEmpty(vars.customersReturned[0].Id)]'>
+				<until-successful maxRetries="${retry.sfdc.maxretries}" doc:name="Retry" doc:id="efab47c0-b614-4e38-afc4-5fe5af7e9e0c" millisBetweenRetries="${retry.sfdc.timebetween}">
+					<!--
+					<salesforce:query doc:name="Get Account by Email Address" doc:id="8b931cdb-a0b7-4fa6-99aa-89c30f5b9c22" config-ref="Salesforce_Config" target="customersReturned" >
+						<salesforce:salesforce-query ><![CDATA[SELECT Id,Salutation,IsPersonAccount,Name,FirstName,LastName,PersonBirthDate,AccountNumber,Global_Customer_Id__c,
+PersonContactId,PersonEmail,Phone,
+PersonMailingStreet,PersonMailingCity,PersonMailingPostalCode,PersonMailingState,PersonMailingCountry,PersonMailingLatitude,PersonMailingLongitude,PersonMailingGeocodeAccuracy,
+BillingStreet,BillingCity,BillingPostalCode,BillingState,BillingCountry,BillingLatitude,BillingLongitude,BillingGeocodeAccuracy,
+IsDeleted,CreatedDate,CreatedBy.Name,LastModifiedDate,LastModifiedBy.Name
+FROM Account
+WHERE PersonEmail=':emailId' AND (IsPersonAccount=true or (IsPersonAccount=false and IsPartner=false)) LIMIT :limit OFFSET :offset]]></salesforce:salesforce-query>
+						<salesforce:parameters ><![CDATA[#[output application/java
+-&#45;&#45;
+{
+	"emailId" : vars.queryParams.emailaddress,
+	"offset" : vars.queryParams.offset,
+    "limit" : vars.queryParams.limit
+}]]]></salesforce:parameters>
+					</salesforce:query>
+					-->
+					<ee:transform doc:name="Mock Get Account by Email Address" doc:id="524a5997-5032-47cf-9858-c80eb0b554a1" >
+						<ee:message >
+						</ee:message>
+						<ee:variables >
+							<ee:set-variable variableName="customersReturned" ><![CDATA[%dw 2.0
+output application/java
+---
+[
+{
+  "PersonMailingStreet": "Mill Street",
+  "LastModifiedDate": "2021-04-14T19:45:47.000Z",
+  "LastModifiedBy": {
+    "Id": null,
+    "type": "User",
+    "Name": "Admin Accelerator"
+  },
+  "IsDeleted": "false",
+  "Global_Customer_Id__c": "test123",
+  "CreatedBy": {
+    "Id": null,
+    "type": "User",
+    "Name": "Admin Accelerator"
+  },
+  "IsPersonAccount":"true",
+  "FirstName": "Sandy",
+  "PersonMailingLatitude": "14.997",
+  "PersonBirthdate": "1984-03-17",
+  "type": "Account",
+  "Salutation": "Mr.",
+  "AccountNumber": "ZYDUSYP1",
+  "Phone": "703-850-3754",
+  "PersonMailingLongitude": "164.6381",
+  "CreatedDate": "2021-04-14T19:44:00.000Z",
+  "PersonMailingPostalCode": null,
+  "Id": "0014x00000HwZFdASD",
+  "LastName": "Silian",
+  "PersonEmail": "sandy.silian@gmail.com"
+}
+]]]></ee:set-variable>
+						</ee:variables>
+					</ee:transform>
+				</until-successful>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Log message" doc:id="0c80e061-3961-499c-aee8-b4cae89f8a1d" message='#["No look up by Email Address"]' />
+			</otherwise>
+		</choice>
+		<choice doc:name="Is Look up by Date Range?" doc:id="936afa5a-776d-4a66-8feb-02ee1cbc8444">
+			<when expression="#[(!isEmpty(vars.queryParams.begintime) and !isEmpty(vars.queryParams.endtime))  and isEmpty(vars.customersReturned[0].Id)]">
+				<until-successful maxRetries="${retry.sfdc.maxretries}" doc:name="Retry" doc:id="a66d36db-a1b8-469c-8c12-024fed5c0493" millisBetweenRetries="${retry.sfdc.timebetween}">
+					<!--
+					<salesforce:query doc:name="Get Accounts by Date Range" doc:id="cb84634e-c329-48b6-949b-1d36afa3e1fd" config-ref="Salesforce_Config" target="customersReturned">
+						<salesforce:salesforce-query><![CDATA[SELECT Id,Salutation,IsPersonAccount,Name,FirstName,LastName,PersonBirthDate,AccountNumber,Global_Customer_Id__c,
+PersonContactId,PersonEmail,Phone,
+PersonMailingStreet,PersonMailingCity,PersonMailingPostalCode,PersonMailingState,PersonMailingCountry,PersonMailingLatitude,PersonMailingLongitude,PersonMailingGeocodeAccuracy,
+BillingStreet,BillingCity,BillingPostalCode,BillingState,BillingCountry,BillingLatitude,BillingLongitude,BillingGeocodeAccuracy,
+IsDeleted,CreatedDate,CreatedBy.Name,LastModifiedDate,LastModifiedBy.Name
+FROM Account
+WHERE (LastModifiedDate >= :beginTime AND LastModifiedDate <= :endTime)  AND (IsPersonAccount=true or (IsPersonAccount=false and IsPartner=false)) LIMIT :limit OFFSET :offset]]></salesforce:salesforce-query>
+						<salesforce:parameters><![CDATA[#[output application/java
+-&#45;&#45;
+{
+	offset : vars.queryParams.offset,
+	limit : vars.queryParams.limit,
+	beginTime : vars.queryParams.begintime,
+	endTime : vars.queryParams.endtime
+}]]]></salesforce:parameters>
+					</salesforce:query>
+					-->
+					<ee:transform doc:name="Mock Get Accounts by Date Range" doc:id="8b0538f3-60ac-41d9-ae00-606511376809" >
+						<ee:message >
+						</ee:message>
+						<ee:variables >
+							<ee:set-variable variableName="customersReturned" ><![CDATA[%dw 2.0
+output application/java
+---
+[
+{
+  "PersonMailingStreet": "Mill Street",
+  "LastModifiedDate": "2021-04-14T19:45:47.000Z",
+  "LastModifiedBy": {
+    "Id": null,
+    "type": "User",
+    "Name": "Admin Accelerator"
+  },
+  "IsDeleted": "false",
+  "Global_Customer_Id__c": "test123",
+  "CreatedBy": {
+    "Id": null,
+    "type": "User",
+    "Name": "Admin Accelerator"
+  },
+  "IsPersonAccount":"true",
+  "FirstName": "Sandy",
+  "PersonMailingLatitude": "14.997",
+  "PersonBirthdate": "1984-03-17",
+  "type": "Account",
+  "Salutation": "Mr.",
+  "AccountNumber": "ZYDUSYP1",
+  "Phone": "703-850-3754",
+  "PersonMailingLongitude": "164.6381",
+  "CreatedDate": "2021-04-14T19:44:00.000Z",
+  "PersonMailingPostalCode": null,
+  "Id": "0014x00000HwZFdASD",
+  "LastName": "Silian",
+  "PersonEmail": "sandy.silian@gmail.com"
+}
+]]]></ee:set-variable>
+						</ee:variables>
+					</ee:transform>
+				</until-successful>
+			</when>
+			<otherwise>
+				<logger level="INFO" doc:name="Log message" doc:id="8dd57023-fe8d-4785-8d77-993e13911b51" message='#["No look up by Email Address"]' />
+			</otherwise>
+		</choice>
+		<choice doc:name="Is Look up by Limit?" doc:id="00eff852-4b8b-44fa-a05f-e68b52110d47">
+			<when expression='#[sizeOf((vars.queryParams - "limit" - "offset")) == 0]'>
+				<until-successful maxRetries="${retry.sfdc.maxretries}" doc:name="Retry" doc:id="a9d18370-5442-4dd3-aa30-c8795515a66a" millisBetweenRetries="${retry.sfdc.timebetween}">
+					<!--
+					<salesforce:query doc:name="Get Accounts by Limit" doc:id="4851bb1d-37af-4524-a2fd-5974df900e6b" config-ref="Salesforce_Config" target="customersReturned">
+						<salesforce:salesforce-query><![CDATA[SELECT Id,Salutation,IsPersonAccount,Name,FirstName,LastName,PersonBirthDate,AccountNumber,Global_Customer_Id__c,
+PersonContactId,PersonEmail,Phone,
+PersonMailingStreet,PersonMailingCity,PersonMailingPostalCode,PersonMailingState,PersonMailingCountry,PersonMailingLatitude,PersonMailingLongitude,PersonMailingGeocodeAccuracy,
+BillingStreet,BillingCity,BillingPostalCode,BillingState,BillingCountry,BillingLatitude,BillingLongitude,BillingGeocodeAccuracy,
+IsDeleted,CreatedDate,CreatedBy.Name,LastModifiedDate,LastModifiedBy.Name
+FROM Account
+WHERE (IsPersonAccount=true or (IsPersonAccount=false and IsPartner=false)) LIMIT :limit OFFSET :offset]]></salesforce:salesforce-query>
+						<salesforce:parameters><![CDATA[#[output application/java
+-&#45;&#45;
+{
+	offset : vars.queryParams.offset,
+	limit : vars.queryParams.limit
+}]]]></salesforce:parameters>
+					</salesforce:query>
+					-->
+					<ee:transform doc:name="Mock Get Accounts by Limit" doc:id="774be5f0-84ae-4420-9426-00b1cede17ba" >
+						<ee:message >
+						</ee:message>
+						<ee:variables >
+							<ee:set-variable variableName="customersReturned" ><![CDATA[%dw 2.0
+output application/java
+---
+[
+{
+  "PersonMailingStreet": "Mill Street",
+  "LastModifiedDate": "2021-04-14T19:45:47.000Z",
+  "LastModifiedBy": {
+    "Id": null,
+    "type": "User",
+    "Name": "Admin Accelerator"
+  },
+  "IsDeleted": "false",
+  "Global_Customer_Id__c": "test123",
+  "CreatedBy": {
+    "Id": null,
+    "type": "User",
+    "Name": "Admin Accelerator"
+  },
+  "IsPersonAccount":"true",
+  "FirstName": "Sandy",
+  "PersonMailingLatitude": "14.997",
+  "PersonBirthdate": "1984-03-17",
+  "type": "Account",
+  "Salutation": "Mr.",
+  "AccountNumber": "ZYDUSYP1",
+  "Phone": "703-850-3754",
+  "PersonMailingLongitude": "164.6381",
+  "CreatedDate": "2021-04-14T19:44:00.000Z",
+  "PersonMailingPostalCode": null,
+  "Id": "0014x00000HwZFdASD",
+  "LastName": "Silian",
+  "PersonEmail": "sandy.silian@gmail.com"
+}
+]]]></ee:set-variable>
+						</ee:variables>
+					</ee:transform>
+				</until-successful>
+			</when>
+			<otherwise>
+				<logger level="INFO" doc:name="Log message" doc:id="d9923a33-e8cf-4796-b731-6cb700a0f611" message='#["No look up by Email Address"]' />
+			</otherwise>
+		</choice>
+		<choice doc:name="Is Lookup returned Customers?" doc:id="e2fc5ba6-ec2b-4d64-8886-21f7bea8955e" >
+			<when expression="#[!isEmpty(vars.customersReturned[0].Id)]">
+				<ee:transform doc:name="Get Customers Search Response" doc:id="91bffe59-ea4c-4cda-b368-c36e76bb29ff" >
+					<ee:message >
+						<ee:set-payload resource="dwl/customers/search-customers-response.dwl" />
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Map Empty Response" doc:id="da3daa62-8f77-4699-ba57-c3899a8b3e44" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+[]]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+	</sub-flow>
+</mule>

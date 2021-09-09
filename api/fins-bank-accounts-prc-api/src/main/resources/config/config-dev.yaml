@@ -1,0 +1,39 @@
+api:
+  autodiscoveryID: "000000"
+  
+https:
+  host: "0.0.0.0"
+  port: "8080"
+  
+until:
+  successful:
+    maxretries: "3"
+    timebetween: "3000"
+    
+sys:
+  fis:
+    host: "fins-fis-sys-api"
+    port: "8080"
+    basepath: "/api"
+    responseTimeout: "60000"
+  salesforce-financial:
+    host: "fins-salesforce-financial-sys-api"
+    port: "8080"
+    basepath: "/api"
+    responseTimeout: "60000"
+  salesforce-customers:
+    host: "fins-salesforce-customers-sys-api"
+    port: "8080"
+    basepath: "/api"
+    responseTimeout: "60000"
+
+process:
+  scheduler:
+    all:
+      cron: "* * * * * ? 2099"
+    bankaccounts:
+      cron: "* * * * * ? 2099"
+    customers:
+      cron: "* * * * * ? 2099"
+    transactions:
+      cron: "* * * * * ? 2099"

@@ -1,0 +1,1 @@
+attributes.queryParams mapObject (value, key, index) -> { (key): (value)}

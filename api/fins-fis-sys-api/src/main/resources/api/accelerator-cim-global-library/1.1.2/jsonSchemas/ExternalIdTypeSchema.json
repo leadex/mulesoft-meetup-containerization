@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/definitions/ExternalIdType",
+  "definitions": {
+    "ExternalIdType": {
+      "type": "object",
+      "example": {
+        "id": null,
+        "name": "SAP"
+      },
+      "description": "Identifies the external system that owns or otherwise recognizes a particular identifier",
+      "additionalProperties": true,
+      "required": [
+        "name",
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

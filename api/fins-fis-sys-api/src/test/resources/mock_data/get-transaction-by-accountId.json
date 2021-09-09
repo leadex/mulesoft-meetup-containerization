@@ -1,0 +1,34 @@
+{
+    "metaData": {
+        "status": {
+            "code": 0,
+            "message": "PROCESS COMPLETE"
+        }
+    },
+    "acctTranList": [
+        {
+            "accountNumber": 100000000278,
+            "datePosted": "2018-03-07",
+            "amount": 10,
+            "isDebit": true,
+            "isCredit": false,
+            "status": "Active",
+            "tranCode": "GT01",
+            "tranType": "DDA DEBIT",
+            "checkNumber": "0000000000",
+            "description": "SERVICE CHARGE"
+        },
+        {
+            "accountNumber": 100000000278,
+            "datePosted": "2018-03-07",
+            "amount": 7.97,
+            "isDebit": false,
+            "isCredit": true,
+            "status": "Active",
+            "tranCode": "GT20",
+            "tranType": "DDA CREDIT",
+            "checkNumber": "0000000000",
+            "description": "IOD INTEREST PAID"
+        }
+    ]
+}

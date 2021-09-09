@@ -1,0 +1,16 @@
+{
+  "partyRoleStatus": "in",
+  "startDateTime": "00:00:01",
+  "id": "sunt culpa",
+  "partyRole": [
+    "nulla"
+  ],
+  "endDateTIme": null,
+  "auditInfo": {
+    "isDeleted": null,
+    "createdBy": "ut ipsum eu amet",
+    "updatedBy": "minim id non sunt nisi",
+    "updatedDate": "1993-01-28T09:14:08.433Z",
+    "createdDate": null
+  }
+}

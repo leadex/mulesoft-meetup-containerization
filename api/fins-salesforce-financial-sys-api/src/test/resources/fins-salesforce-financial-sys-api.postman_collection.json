@@ -1,0 +1,477 @@
+{
+	"info": {
+		"_postman_id": "2aa0e414-9274-4996-aa52-5f63b1286fed",
+		"name": "fins-salesforce-financial-sys-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Accounts",
+			"item": [
+				{
+					"name": "Create Account",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": null,\r\n  \"name\": \"Test Savings Account\",\r\n  \"accountNumber\": \"12345\",\r\n  \"accountType\": \"SavingsAccount\",\r\n  \"primaryAccountOwner\": \"0015e00000Fn8vFAAR\",\r\n  \"accountStatus\": \"OPEN\",\r\n  \"accountBalance\": 0,\r\n  \"availableBalance\": 0,\r\n  \"accountCurrency\": \"USD\",\r\n  \"accountLabel\": \"Rainy Day\",\r\n  \"interestRate\": 0.25,\r\n  \"taxIdentificationNumber\": \"012345678\",\r\n  \"openedDate\": \"2020-03-15\",\r\n  \"externalIds\": [ {\r\n    \"id\": null,\r\n    \"externalId\": \"12345\",\r\n    \"externalIdType\": [ \"FIS\" ],\r\n    \"status\": \"VALID\",\r\n    \"statusLastChangedDate\": \"2020-03-15T15:03:01Z\"\r\n\r\n  } ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{host_salesforce-financial-sys-api}}/api/accounts",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-financial-sys-api}}"
+							],
+							"path": [
+								"api",
+								"accounts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Accounts by no criteria",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-financial-sys-api}}/api/accounts",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-financial-sys-api}}"
+							],
+							"path": [
+								"api",
+								"accounts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Accounts by customerId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-financial-sys-api}}/api/accounts?customerId=0015e00000Fn8vFAAR",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-financial-sys-api}}"
+							],
+							"path": [
+								"api",
+								"accounts"
+							],
+							"query": [
+								{
+									"key": "customerId",
+									"value": "0015e00000Fn8vFAAR"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Accounts by externalId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-financial-sys-api}}/api/accounts?externalId=12345",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-financial-sys-api}}"
+							],
+							"path": [
+								"api",
+								"accounts"
+							],
+							"query": [
+								{
+									"key": "externalId",
+									"value": "12345"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Account by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-financial-sys-api}}/api/accounts/:accountId",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-financial-sys-api}}"
+							],
+							"path": [
+								"api",
+								"accounts",
+								":accountId"
+							],
+							"variable": [
+								{
+									"key": "accountId",
+									"value": "a4l5e0000003JEEAA2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Account",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"a4l5e0000003JEEAA2\",\r\n  \"name\": \"Updated Savings Account\",\r\n  \"accountNumber\": \"12345\",\r\n  \"accountType\": \"SavingsAccount\",\r\n  \"primaryAccountOwner\": \"0015e00000Fn8vFAAR\",\r\n  \"accountStatus\": \"OPEN\",\r\n  \"accountBalance\": 8400.00,\r\n  \"availableBalance\": 8400.00,\r\n  \"accountCurrency\": \"USD\",\r\n  \"accountLabel\": \"Rainy Day Savings\",\r\n  \"interestRate\": 0.25,\r\n  \"taxIdentificationNumber\": \"012345678\",\r\n  \"openedDate\": \"2020-03-15\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{host_salesforce-financial-sys-api}}/api/accounts/:accountId",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-financial-sys-api}}"
+							],
+							"path": [
+								"api",
+								"accounts",
+								":accountId"
+							],
+							"variable": [
+								{
+									"key": "accountId",
+									"value": "a4l5e0000003JEEAA2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transactions",
+			"item": [
+				{
+					"name": "Create Transaction for Account",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\r\n{\r\n  \"id\": null,\r\n  \"name\": \"T-000000000\",\r\n  \"transactionDate\": \"2020-07-01T19:00:00.000Z\",\r\n  \"transactionType\": \"DebitTransaction\",\r\n  \"transactionStatus\": \"POSTED\",\r\n  \"postedDate\": \"2020-07-01\",\r\n  \"amount\": 2000.0,\r\n  \"isDisputed\": false,\r\n  \"externalIds\": [ {\r\n    \"id\": null,\r\n    \"externalId\": \"123456\",\r\n    \"externalIdType\": [ \"FIS\" ],\r\n    \"status\": \"VALID\",\r\n    \"statusLastChangedDate\": \"2020-03-15T15:03:01Z\"\r\n  } ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{host_salesforce-financial-sys-api}}/api/accounts/:accountId/transactions",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-financial-sys-api}}"
+							],
+							"path": [
+								"api",
+								"accounts",
+								":accountId",
+								"transactions"
+							],
+							"variable": [
+								{
+									"key": "accountId",
+									"value": "a4l5e0000003JEEAA2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Transactions for Account",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-financial-sys-api}}/api/accounts/:accountId/transactions",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-financial-sys-api}}"
+							],
+							"path": [
+								"api",
+								"accounts",
+								":accountId",
+								"transactions"
+							],
+							"variable": [
+								{
+									"key": "accountId",
+									"value": "a4l5e0000003J17AAE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Transactions for Account - By Transaction Type",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-financial-sys-api}}/api/accounts/:accountId/transactions?transactionType=CreditTransaction",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-financial-sys-api}}"
+							],
+							"path": [
+								"api",
+								"accounts",
+								":accountId",
+								"transactions"
+							],
+							"query": [
+								{
+									"key": "transactionType",
+									"value": "CreditTransaction"
+								}
+							],
+							"variable": [
+								{
+									"key": "accountId",
+									"value": "a4l5e0000003JEEAA2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Transactions for Account - By Transaction SubType",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-financial-sys-api}}/api/accounts/:accountId/transactions?transactionSubType=Misc. Credit",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-financial-sys-api}}"
+							],
+							"path": [
+								"api",
+								"accounts",
+								":accountId",
+								"transactions"
+							],
+							"query": [
+								{
+									"key": "transactionSubType",
+									"value": "Misc. Credit"
+								}
+							],
+							"variable": [
+								{
+									"key": "accountId",
+									"value": "a4l5e0000003JEEAA2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Transactions for Account - By Posted Date",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-financial-sys-api}}/api/accounts/:accountId/transactions?fromDate=2021-07-28T19:32:57.000Z",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-financial-sys-api}}"
+							],
+							"path": [
+								"api",
+								"accounts",
+								":accountId",
+								"transactions"
+							],
+							"query": [
+								{
+									"key": "fromDate",
+									"value": "2021-07-28T19:32:57.000Z"
+								}
+							],
+							"variable": [
+								{
+									"key": "accountId",
+									"value": "a4l5e0000003JEEAA2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Transactions for Account - By To Date",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-financial-sys-api}}/api/accounts/:accountId/transactions?toDate=2021-07-28T19:32:57.000Z",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-financial-sys-api}}"
+							],
+							"path": [
+								"api",
+								"accounts",
+								":accountId",
+								"transactions"
+							],
+							"query": [
+								{
+									"key": "toDate",
+									"value": "2021-07-28T19:32:57.000Z"
+								}
+							],
+							"variable": [
+								{
+									"key": "accountId",
+									"value": "a4l5e0000003JEEAA2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Transactions for Account - By From Date Copy",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{host_salesforce-financial-sys-api}}/api/accounts/:accountId/transactions?postedDate=2018-03-07",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-financial-sys-api}}"
+							],
+							"path": [
+								"api",
+								"accounts",
+								":accountId",
+								"transactions"
+							],
+							"query": [
+								{
+									"key": "postedDate",
+									"value": "2018-03-07"
+								}
+							],
+							"variable": [
+								{
+									"key": "accountId",
+									"value": "a4l5e0000003JEEAA2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Transaction for Account",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\r\n{\r\n  \"id\": \"a4k5e00000015fGAAQ\",\r\n  \"name\": \"T-000000000\",\r\n  \"transactionDate\": \"2020-07-01T19:00:00.000Z\",\r\n  \"transactionType\": \"DebitTransaction\",\r\n  \"transactionStatus\": \"POSTED\",\r\n  \"postedDate\": \"2020-07-01\",\r\n  \"amount\": 20000.0,\r\n  \"isDisputed\": true,\r\n  \"disputedReason\": \"DUPLICATE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{host_salesforce-financial-sys-api}}/api/accounts/:accountId/transactions/:transactionId",
+							"protocol": "https",
+							"host": [
+								"{{host_salesforce-financial-sys-api}}"
+							],
+							"path": [
+								"api",
+								"accounts",
+								":accountId",
+								"transactions",
+								":transactionId"
+							],
+							"variable": [
+								{
+									"key": "accountId",
+									"value": "a4l5e0000003JEEAA2"
+								},
+								{
+									"key": "transactionId",
+									"value": "a4k5e00000015fGAAQ"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host_salesforce-financial-sys-api",
+			"value": "fins-salesforce-financial-sys-api-v1-dev.ca-c1.cloudhub.io"
+		},
+		{
+			"key": "host_salesforce-financial-sys-api",
+			"value": "localhost:8082",
+			"disabled": true
+		}
+	]
+}

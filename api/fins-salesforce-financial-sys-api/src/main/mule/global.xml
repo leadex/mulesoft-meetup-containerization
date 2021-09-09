@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:accelerator-banking="http://www.mulesoft.org/schema/mule/accelerator-banking" xmlns:anypoint-mq="http://www.mulesoft.org/schema/mule/anypoint-mq" xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd  http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd  http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/anypoint-mq http://www.mulesoft.org/schema/mule/anypoint-mq/current/mule-anypoint-mq.xsd http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd  http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd  http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd http://www.mulesoft.org/schema/mule/accelerator-banking http://www.mulesoft.org/schema/mule/accelerator-banking/current/mule-accelerator-banking.xsd">
+    <global-property doc:name="global-property-mule.env" doc:id="5c2b8274-6ce1-448e-911c-c1cb9380cc74" name="mule.env" value="local" />
+    <global-property doc:name="global-property-mule.key" doc:id="632b3e28-0a3e-41b6-880e-c39997aafdde" name="mule.key" value="Salesforce123456" />
+    <configuration-properties doc:name="configuration-properties" doc:id="f73ca0e3-eec6-46f2-9f5c-78a963e29050" file="config/config.yaml" />
+    <configuration-properties doc:name="configuration-properties-env" doc:id="4c53451b-2aa3-4b30-8419-213d042cec64" file="config/config-${mule.env}.yaml" />
+    <secure-properties:config name="configuration-properties-secured-env" doc:name="configuration-properties-secured-env" doc:id="d76480d5-e974-413d-be42-3a2871214a49" file="config/config-secured-${mule.env}.yaml" key="${mule.key}" />
+    <import doc:name="import-global-common.xml" doc:id="834c1759-365c-4bd0-80ac-49d2e4d99741" file="global-common.xml" />
+    <import doc:name="import-common-error-handler.xml" doc:id="26c5e93d-5bf0-4f6d-b39f-79c4b04b3792" file="common-error-handler.xml" />
+    <configuration doc:name="Configuration Global Error Handler" doc:id="dba3aedc-b3bf-4e1f-8607-6237ec875078" defaultErrorHandler-ref="error-handler_common" />
+    <apikit:config name="salesforce-financial-sys-api-config" api="api/fins-salesforce-financial-sys-api-spec.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <http:listener-config name="salesforce-financial-sys-api-httpListenerConfig">
+        <http:listener-connection host="${https.host}" port="${https.port}" tlsContext="common-selfsigned_tlsContext" protocol="HTTPS"/>
+    </http:listener-config>
+    <!--  
+    <salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="c6cf9b5a-f208-4475-b122-8f5098db0993">
+        <salesforce:basic-connection username="${sfdc.fsc.username}" password="${sfdc.fsc.password}" securityToken="${sfdc.fsc.token}" />
+    </salesforce:sfdc-config>
+    -->
+    <accelerator-banking:config name="accelerator-banking-config" doc:name="Accelerator Banking Config" doc:id="0e6a2bd0-7837-43f4-842e-226e7ad24a15" apiName="${api.name}" apiVersion="${api.version}" />
+    <!-- <api-gateway:autodiscovery apiId="${api.autodiscoveryID}" ignoreBasePath="true" 
+		doc:name="API Autodiscovery" doc:id="99974e38-99ca-4e39-8a14-f8451597b96d" 
+		flowRef="mainflow" /> -->
+</mule>

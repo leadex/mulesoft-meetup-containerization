@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="related-contacts-test-suite.xml" />
+	<munit:test name="related-contacts-test-suite-related-contacts_get-releated-contacts-by-customer-id-success-test" doc:id="b7854551-4fc8-4cd6-8fb9-1ed4dac8f725" description="get related contacts by customer Id success test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Get Related Contacts for an Account" doc:id="a988204c-8c49-4ba4-9e8d-69fee9e2b57c" processor="salesforce:query">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Related Contacts for an Account" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+					<munit-tools:variable key="relatedContacts" value="#[MunitTools::getResourceAsString('sample_data/customers/get-related-contacts-sf-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Customer Id" doc:id="4e9a3017-15ba-47a9-83d3-92f27ccdc3b7">
+				<munit:attributes value='#[{"uriParams": {"customerId":"0014x00000H6TRgAAN"}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="get:\customers\(customerId)\relatedContacts:salesforce-customers-sys-api-config" doc:id="d6e7c213-6d22-4c82-bd1f-0704d03f00e7" name="get:\customers\(customerId)\relatedContacts:salesforce-customers-sys-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert Party Relationship Type" doc:id="74cce87d-897d-46bb-81e7-ccaebcb5cf2d" actual="#[payload[0].partyRelationshipType[0]]" expected='#["OTHER"]' message='"Incorrect Party Relationship Type"'/>
+			<munit-tools:assert-equals doc:name="Assert Party Relationship Type" doc:id="662747d2-86e4-45f7-8596-468b6ac265a9" actual="#[payload[1].partyRelationshipType[0]]" expected='#["SPONSOR"]' message='"Incorrect Party Relationship Type"'/>
+			<munit-tools:assert-equals doc:name="Assert Related Party Id" doc:id="ae93c729-28b2-45e6-a256-6e13f64ee49e" actual="#[payload[0].relatedParty[0].id]" expected='#["0034x0000074PPEAA2"]' message='"Incorrect related party Id"'/>
+			<munit-tools:assert-equals doc:name="Assert Party Id" doc:id="86f4f8ed-5279-4e63-b3b2-1e3fbb595d89" actual="#[payload[0].party[0].id]" expected='#["0014x000009EdamAAC"]' message='"Incorrect Party Id"'/>
+		</munit:validation>
+	</munit:test>
+    <munit:test name="related-contacts-test-suite-related-contacts_update-releated-contacts-customer-not-found-404-error-test" doc:id="0f6edacf-3cb2-4be8-b2c2-fb957e60e96e" description="Update related contacts customer not found test" ignore="true">
+		<munit:behavior >
+				<munit-tools:mock-when doc:name="Mock Salesforce Get Customers" doc:id="aeb21b7a-564c-4ebe-9083-e115de8e89c8" processor="salesforce:query">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Account" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="customer" value="#[MunitTools::getResourceAsString('sample_data/customers/get-customer-empty-records-sf-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set payload" doc:id="d9cb68e3-b59e-4a65-9e29-637f0cb59cbc" >
+				<munit:payload value="#[MunitTools::getResourceAsString('sample_data/customers/update-related-contacts-request-payload')]" mediaType="application/json" />
+				<munit:attributes value='#[{"uriParams": {"customerId":"0014x00000H6TRgAAN"}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="put:\customers\(customerId)\relatedContacts:application\json:salesforce-customers-sys-api-config" doc:id="85666381-7346-49c5-8386-a144fe6c85dc" name="put:\customers\(customerId)\relatedContacts:application\json:salesforce-customers-sys-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert Http Status" doc:id="71a08dd1-38eb-4fde-a0f0-960fc7c8ca31" actual="#[vars.httpStatus]" expected='#["404"]' message="Invalid Status code"/>
+			<munit-tools:assert-that doc:name="Assert error message" doc:id="c60250dc-54a7-403b-aa32-8931aacc17b0" expression='#[payload.errorMessage contains "Customer Not Found"]' is="#[MunitTools::notNullValue()]"/>
+			<munit-tools:verify-call doc:name="Verify call - Update Contact With Account" doc:id="9c4189d6-4478-46d3-81ff-813e92049c12" processor="salesforce:update" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Update Contact With Account" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify call - Get Contact" doc:id="678d28c7-042c-450e-85e3-74d66991b1a8" processor="salesforce:query" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Contact" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="related-contacts-test-suite-related-contacts_update-releated-contacts-private-contact-success-test" doc:id="5c613749-b16e-4b1d-8640-74a3445a2393" description="Update related contacts - private contact" ignore="true">
+		<munit:behavior >
+				<munit-tools:mock-when doc:name="Mock Salesforce Get Customers" doc:id="53e06016-e34f-4fa4-ade0-e098e666247e" processor="salesforce:query">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Account" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="customer" value="#[MunitTools::getResourceAsString('sample_data/customers/get-customer-sf-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Get Contact" doc:id="7bc6e7f8-e15c-4870-bb02-7dc5902122c5" processor="salesforce:query">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Contact" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:variables>
+						<munit-tools:variable key="contactReturned" value="#[MunitTools::getResourceAsString('sample_data/customers/get-private-contact-info-sf-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Update Contact with Account" doc:id="00263321-321b-40ae-bb79-8f9811ecf9ec" processor="salesforce:update">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Contact" attributeName="type" />
+					<munit-tools:with-attribute whereValue="Update Contact With Account" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="updatedContact" value="#[MunitTools::getResourceAsString('sample_data/customers/update-customer-sf-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Get AccountContactRelation Record" doc:id="bc39091c-4c61-4a61-afef-820762a25904" processor="salesforce:query">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get AccountContactRelation Record" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="accountContactRelation" value="#[MunitTools::getResourceAsString('sample_data/customers/get-account-contact-relation-sf-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Update Account Contact Relation" doc:id="899dcbac-e220-4dea-b58a-1d1dca84a53b" processor="salesforce:update">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Update Account Contact Relation" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="AccountContactRelation" attributeName="type" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('sample_data/customers/update-customer-sf-response')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set payload" doc:id="7f7163ad-8383-4846-9c9a-8cd26eab6464" >
+				<munit:payload value="#[MunitTools::getResourceAsString('sample_data/customers/update-related-contacts-request-payload')]" mediaType="application/json" />
+				<munit:attributes value='#[{"uriParams": {"customerId":"0014x00000H6TRgAAN"}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="put:\customers\(customerId)\relatedContacts:application\json:salesforce-customers-sys-api-config" doc:id="4ed9cd6d-f322-4e62-b5a6-48d1895d4acb" name="put:\customers\(customerId)\relatedContacts:application\json:salesforce-customers-sys-api-config"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert http status" doc:id="9a4d57af-1209-49d0-b7e0-e6a5da8a88d1" actual="#[vars.httpStatus]" expected='#[200]' message="Customer creation failed"/>
+			<munit-tools:assert-equals doc:name="Assert Response message" doc:id="3a75c516-6532-4db4-88fb-29df374bf2f2" actual='#[payload.responseStatus]' expected='#["SUCCESS"]' message="Incorrect response" />
+			<munit-tools:verify-call doc:name="Verify call - Update Contact With Account" doc:id="9c9c2d15-3403-40d0-9816-942197730dfc" processor="salesforce:update" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Update Contact With Account" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify call - Get Contact" doc:id="fb30bbcc-1d20-4941-afae-4d6092337203" processor="salesforce:query" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Contact" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify call - Create Account Contact Relation" doc:id="f3f48bd3-d79a-44cf-be2e-12e1e577f830" processor="ee:transform" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Create Account Contact Relation" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="related-contacts-test-suite-related-contacts_update-releated-contacts-non-private-contact-success-test" doc:id="8ee592b8-3ca8-4c17-9ec6-71c6018c90f0" description="Update related contacts - non private contact" ignore="true">
+		<munit:behavior >
+				<munit-tools:mock-when doc:name="Mock Salesforce Get Customers" doc:id="61fc1e27-a6b4-4c85-b29c-6071f6d67c41" processor="salesforce:query">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Account" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="customer" value="#[MunitTools::getResourceAsString('sample_data/customers/get-customer-sf-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Get Contact" doc:id="92e537ef-4853-413f-899e-e6a911f79014" processor="salesforce:query">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Contact" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="contactReturned" value="#[MunitTools::getResourceAsString('sample_data/customers/get-account-contact-info-sf-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Get AccountContactRelation Record" doc:id="3d828cb2-cd5c-43dc-b693-5ea802f83950" processor="salesforce:query">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get AccountContactRelation Record" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="accountContactRelation" value="#[MunitTools::getResourceAsString('sample_data/customers/get-customer-empty-records-sf-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Create Account Contact Relation" doc:id="5cd9de49-04bd-42ac-a059-26b1de6320eb" processor="salesforce:create">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Create Account Contact Relation" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('sample_data/customers/update-customer-sf-response')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set payload" doc:id="1e459549-4b94-4fa2-8ad3-a27b6fd439f8" >
+				<munit:payload value="#[MunitTools::getResourceAsString('sample_data/customers/update-related-contacts-request-payload')]" mediaType="application/json" />
+				<munit:attributes value='#[{"uriParams": {"customerId":"0014x00000H6TRgAAN"}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="put:\customers\(customerId)\relatedContacts:application\json:salesforce-customers-sys-api-config" doc:id="3132e1cd-d11c-4e4f-8d08-c38e4902af51" name="put:\customers\(customerId)\relatedContacts:application\json:salesforce-customers-sys-api-config"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert http status" doc:id="eb1b0d1b-52ef-4314-855c-688c36d3fdca" actual="#[vars.httpStatus]" expected='#[200]' message="Customer creation failed"/>
+			<munit-tools:assert-equals doc:name="Assert Response message" doc:id="d9ff464a-e69a-46a9-91ec-1e3eab891028" actual='#[payload.responseStatus]' expected='#["SUCCESS"]' message="Incorrect response" />
+			<munit-tools:verify-call doc:name="Verify call - Update Contact With Account" doc:id="65b58506-e964-4a65-b165-eaf0597c5706" processor="salesforce:update" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Update Contact With Account" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify call - Get Contact" doc:id="27d508df-5955-478d-94c3-b4e801a3732f" processor="salesforce:query" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Contact" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify call - Create Account Contact Relation" doc:id="0f8e42bf-884a-4fb5-98a9-7e97deaa55cc" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Create Account Contact Relation" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+</mule>

@@ -1,0 +1,34 @@
+{
+  "partyType": "aliquip",
+  "name": "labore fugiat",
+  "id": "nisi laborum Ut labore deserunt",
+  "businessUnitType": "cillum in",
+  "primaryAccount": [
+    "voluptate enim aute"
+  ],
+  "parentInternalBusinessUnit": [
+    "exercitation tempor deserunt occaecat adipisicing"
+  ],
+  "externalIds": [
+    {
+      "externalIdType": [
+        {
+          "id": "consequat officia nostrud veniam occaecat",
+          "name": "anim"
+        }
+      ],
+      "externalId": "ea aute est",
+      "id": "deserunt anim",
+      "statusLastChangedDate": "1979-03-03T10:41:22.844Z",
+      "status": "INVALID"
+    }
+  ],
+  "auditInfo": {
+    "isDeleted": null,
+    "createdBy": "adipisicing occaecat eu quis",
+    "updatedBy": "anim labore pariatur consectetur cupidatat",
+    "updatedDate": null,
+    "createdDate": null
+  },
+  "globalParty": "dolore aliquip in non consectetur"
+}

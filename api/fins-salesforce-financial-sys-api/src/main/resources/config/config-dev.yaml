@@ -1,0 +1,17 @@
+api:
+  autodiscoveryID: ""
+  
+https:
+  host: "0.0.0.0"
+  port: "8080"
+  
+until:
+  successful:
+    maxretries: "3"
+    timebetween: "3000"
+    
+sfdc:
+  fsc:
+    username: "REPLACE_WITH_VALUE"
+    password: "REPLACE_WITH_VALUE"
+    token: "REPLACE_WITH_VALUE"

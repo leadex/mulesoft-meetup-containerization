@@ -1,0 +1,50 @@
+[
+    {
+        "id": "100000000278",
+        "name": "Demand Deposit",
+        "accountNumber": "100000000278",
+        "accountType": "CheckingAccount",
+        "primaryAccountOwner": "1234567890",
+        "secondaryAccountOwners": "",
+        "accountStatus": "OPEN",
+        "accountBalance": 500,
+        "availableBalance": 500,
+        "accountCurrency": "USD",
+        "accountLabel": "Demand Deposit",
+        "interestRate": null,
+        "taxIdentificationNumber": "",
+        "openedDate": "2017-02-04",
+        "closedDate": null,
+        "auditInfo": {
+            "createdDate": "2020-03-15T15:03:01Z",
+            "createdBy": "system",
+            "updatedDate": "2021-07-15T04:50:07Z",
+            "updatedBy": "system",
+            "isDeleted": false
+        }
+    },
+    {
+        "id": "400000000278",
+        "name": "Saving Business",
+        "accountNumber": "400000000278",
+        "accountType": "SavingsAccount",
+        "primaryAccountOwner": "1234567890",
+        "secondaryAccountOwners": "",
+        "accountStatus": "ON_HOLD",
+        "accountBalance": 900,
+        "availableBalance": 900,
+        "accountCurrency": "EUR",
+        "accountLabel": "Saving Business",
+        "interestRate": null,
+        "taxIdentificationNumber": "",
+        "openedDate": "2018-02-01",
+        "closedDate": null,
+        "auditInfo": {
+            "createdDate": "2020-03-15T15:03:01Z",
+            "createdBy": "system",
+            "updatedDate": "2021-07-15T04:50:07Z",
+            "updatedBy": "system",
+            "isDeleted": false
+        }
+    }
+]

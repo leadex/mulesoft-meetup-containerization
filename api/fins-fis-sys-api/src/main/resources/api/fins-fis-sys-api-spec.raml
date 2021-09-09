@@ -1,0 +1,100 @@
+#%RAML 1.0
+title: FINS FIS System API
+description: System API for working with FIS objects
+version: v1
+mediaType: application/json
+
+uses: 
+  GlobalResources: ./accelerator-global-resources/2.2.0/accelerator-global-resources.raml
+  BankingTypes: ./fins-banking-library/1.0.8/fins-banking-library.raml
+  MarketTypes: ./accelerator-cim-market-library/1.2.0/accelerator-cim-market-library.raml
+ 
+securedBy: [ GlobalResources.BasicAuth ]
+
+/ping:
+  get:
+    is: [ GlobalResources.PingResponse ]
+    description: Get the current health status of this API.
+
+/customers:
+  description: Base resource for managing customers
+  get:
+    is: [ GlobalResources.ErrorResponses, GlobalResources.Pageable, GlobalResources.Trackable ]
+    description: Find one or more customers by matching one of the criteria supplied. When multiple criteria are provided the precedence order is to match on FIS customer identifier, an external identifier, and finally email address. Results can be filtered to include customers created or modified during a given time period.
+    queryParameters:
+      customerId?:
+        type: string
+        description: Find a customer by its FIS identifier
+      externalId?:
+        type: string
+        description: Find a customer by an external identifier (e.g., universal ID)
+      emailAddress?:
+        type: string
+        description: Find a customer by their email address
+      fromDate?:
+        type: datetime
+        description: Include customers created or updated on or after this date and time
+      toDate?:
+        type: datetime
+        description: Include customers created or updated on or before this date and time
+    responses:
+      200:
+        body:
+          application/json:
+            type: MarketTypes.Customer[]
+
+  /{customerId}:
+    get:
+      is: [ GlobalResources.ErrorResponses, GlobalResources.Trackable ]
+      description: Return details for an existing customer.
+      responses:
+        200:
+          body:
+            application/json:
+              type: MarketTypes.Customer
+
+    /accounts:
+      get:
+        is: [ GlobalResources.ErrorResponses, GlobalResources.Trackable ]
+        description: List all accounts for a customer.
+        responses:
+          200:
+            body:
+              application/json:
+                type: BankingTypes.Account[]
+
+      /{accountId}:
+        get:
+          is: [ GlobalResources.ErrorResponses, GlobalResources.Trackable ]
+          description: Return details for a specific account for a customer.
+          responses:
+            200:
+              body:
+                application/json:
+                  type: BankingTypes.Account
+
+        /transactions:
+          get:
+            is: [ GlobalResources.ErrorResponses, GlobalResources.Pageable, GlobalResources.Trackable ]
+            description: Retrieve transactions for an account, optionally for a given transaction type and/or for a given time period. Actual transaction objects returned will be of specific types (e.g., DebitTransaction).
+            queryParameters:
+              transactionType?:
+                type: string
+                description: Filter by transaction type (e.g., DebitTransaction)
+              transactionSubType?: 
+                type: string
+                description: Filter by transaction sub-type (e.g., CASH)
+              postedDate?:
+                type: date-only
+                description: Get all transactions posted on a specific date
+              fromDate?:
+                type: datetime
+                description: Get transactions created or updated on or after this date and time
+              toDate?:
+                type: datetime
+                description: Get transactions created or updated on or before this date and time
+            responses:
+              200:
+                body:
+                  application/json:
+                    type: BankingTypes.Transaction[]

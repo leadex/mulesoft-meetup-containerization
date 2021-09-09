@@ -1,0 +1,21 @@
+[
+    {
+        "partyRelationshipType": [
+            "OTHER"
+        ],
+        "id": null,
+        "relatedParty": [{
+            "id":"0034x00000ZwALrAAN",
+            "partyType":"Individual"
+        }
+            
+        ],
+        "party": [{
+            "id": "0014x00000UaD2LAAV",
+            "partyType": "Individual"
+        }
+        ],
+        "relatedFromDate": "2021-07-02",
+        "relatedEndDate": "2025-08-02"
+    }
+]

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd  http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+    <flow name="fins-fis-sys-api-main">
+        <http:listener config-ref="fis-sys-api-httpListenerConfig" path="/api/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="fis-sys-api-config" />
+        
+    </flow>
+    <flow name="fis-sys-api-console" doc:id="3533e0d2-f70f-4669-9b32-c3f894540d7d" >
+    	<http:listener config-ref="fis-sys-api-httpListenerConfig" path="/console/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+		<apikit:console doc:name="APIkit Console" doc:id="d3df9acf-cc5c-4169-af4e-1225bce244a6" config-ref="fis-sys-api-config"/>
+	</flow>
+	<flow name="get:\customers\(customerId)\accounts:fis-sys-api-config">
+        <ee:transform doc:name="Get Customer Id">
+            <ee:variables>
+                <ee:set-variable resource="dwl/fetchCustomerId.dwl" variableName="customerId" />
+            </ee:variables>
+        </ee:transform>
+        <flow-ref doc:name="accounts_get-accounts-by-customer-id" doc:id="ea2430be-a323-4b92-ae11-0f9eb7b5d3f0" name="accounts_get-accounts-by-customer-id" />
+    </flow>
+    <flow name="get:\customers:fis-sys-api-config">
+        <flow-ref doc:name="customers_get-customers-using-lookup" doc:id="3276e740-b0e5-4c10-a4f0-fc7133b9e6b6" name="customers_get-customers-using-lookup" />
+    </flow>
+    <flow name="get:\ping:fis-sys-api-config">
+		<flow-ref doc:name="ping_get-health" doc:id="05b083fa-3187-49aa-866f-abb8476172d0" name="ping_get-health"/>
+    </flow>
+    <flow name="get:\customers\(customerId):fis-sys-api-config">
+        <ee:transform doc:name="Get Customer Id">
+            <ee:variables>
+                <ee:set-variable resource="dwl/fetchCustomerId.dwl" variableName="customerId" />
+            </ee:variables>
+        </ee:transform>
+        <flow-ref doc:name="Get Customer By Id" doc:id="0cab2915-950c-4ca0-8fab-82c7aef83f40" name="customers_get-customer-by-id" />
+    </flow>
+    <flow name="get:\customers\(customerId)\accounts\(accountId):fis-sys-api-config">
+        <ee:transform doc:name="Get URI Params">
+            <ee:variables>
+                <ee:set-variable resource="dwl/fetchCustomerId.dwl" variableName="customerId" />
+                <ee:set-variable resource="dwl/accountId.dwl" variableName="accountId" />
+            </ee:variables>
+        </ee:transform>
+        <flow-ref doc:name="Get Accounts By Id" doc:id="b26ed957-4ee5-47cb-a88c-802356976a97" name="accounts_get-accounts-by-account-id" />
+    </flow>
+    <flow name="get:\customers\(customerId)\accounts\(accountId)\transactions:fis-sys-api-config">
+        <ee:transform doc:name="Get URI Params">
+            <ee:variables>
+                <ee:set-variable resource="dwl/fetchCustomerId.dwl" variableName="customerId" />
+                <ee:set-variable resource="dwl/accountId.dwl" variableName="accountId" />
+            </ee:variables>
+        </ee:transform>
+        <flow-ref doc:name="Get Transactions By Id" doc:id="9865364f-9750-4a59-9e5f-c58d78df9646" name="accounts_get-transaction-by-account-id" />
+    </flow>
+</mule>

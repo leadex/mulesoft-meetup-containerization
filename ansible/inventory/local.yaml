@@ -1,0 +1,15 @@
+local:
+  hosts:
+    127.0.0.1
+  vars:
+    ansible_connection: local
+    ansible_python_interpreter: "{{ansible_playbook_python}}"
+  children:
+    swarm:
+      children:
+        swarm_manager:
+          children:
+            swarm_leader:
+              hosts:
+                127.0.0.1
+        swarm_worker:

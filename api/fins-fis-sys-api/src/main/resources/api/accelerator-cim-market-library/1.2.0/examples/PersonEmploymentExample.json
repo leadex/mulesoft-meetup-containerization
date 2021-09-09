@@ -1,0 +1,51 @@
+{
+  "occupationText": "consequat nulla minim",
+  "id": "Lorem adipisicing laborum ex sit",
+  "employerName": "in",
+  "employmentStatus": "eu pariatur quis",
+  "annualIncome": -44890748,
+  "employerAddressLine3": "fugiat",
+  "employerPostalCodeText": "incididunt id",
+  "auditInfo": {
+    "isDeleted": null,
+    "createdBy": "dolor pariatur tempor amet",
+    "updatedBy": "in",
+    "updatedDate": "1967-12-09T13:10:15.689Z",
+    "createdDate": null
+  },
+  "employerAddressLine1": "incididunt dolor non",
+  "endDate": "1959-06-03",
+  "employerAddressLine2": "Lorem consequat",
+  "employerContactPointAddress": [
+    {
+      "addressLine1": "laboris sed sint velit",
+      "contactPointType": [
+        "reprehenderit ut est elit"
+      ],
+      "id": null,
+      "activeFromDate": "1996-11-16",
+      "addressLine4": "Ut tempor aliquip consectetur eu",
+      "forBusinessUse": true,
+      "addressLine3": "Lorem cillum do occaecat",
+      "bestTimeToContactStartTime": null,
+      "isUsedForBilling": null,
+      "addressLine2": "id nulla aute sit Lorem",
+      "postalCodeText": "ullamco Duis",
+      "name": "deserunt dolore",
+      "bestTimeToContactEndTime": "00:00:01",
+      "forPersonalUse": null,
+      "countryName": "laboris sint cillum officia elit",
+      "contactPhone": [
+        "laborum adipisicing eiusmod in amet"
+      ]
+    }
+  ],
+  "positionText": "id nulla ad nisi",
+  "individual": [
+    "magna ad labore"
+  ],
+  "employerPhoneNumber": "ad Excepteur et anim",
+  "startDate": "1951-07-07",
+  "employerAddressLine4": "labore commodo nostrud occaecat",
+  "employerCityName": "proident amet nostrud"
+}

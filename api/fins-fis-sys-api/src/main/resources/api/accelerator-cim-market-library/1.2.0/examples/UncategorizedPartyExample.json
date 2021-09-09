@@ -1,0 +1,43 @@
+{
+  "partyType": "officia irure",
+  "uncategorizedPartyLabel": "nostrud eu proident aute",
+  "id": null,
+  "contactPoints": [
+    {
+      "id": null,
+      "activeFromDate": "1977-01-05",
+      "contactPointType": [
+        {
+          "id": "voluptate tempor commodo quis",
+          "name": "deserunt ullamco",
+          "optInPriority": null,
+          "auditInfo": {
+            "isDeleted": true,
+            "createdBy": "id nisi in ullamco",
+            "updatedBy": "dolore",
+            "updatedDate": "1967-09-07T20:31:19.787Z",
+            "createdDate": "1952-11-04T18:01:54.932Z"
+          }
+        }
+      ]
+    }
+  ],
+  "creationReason": "quis",
+  "globalParty": "proident et veniam",
+  "primaryAccount": [
+    "elit occaecat in reprehenderit ut"
+  ],
+  "externalIds": [
+    "amet qui"
+  ],
+  "auditInfo": {
+    "isDeleted": true,
+    "createdBy": "aliquip irure",
+    "updatedBy": "non",
+    "updatedDate": "1953-05-15T15:42:30.979Z",
+    "createdDate": "1973-04-03T09:11:20.326Z"
+  },
+  "originalSourceSystem": "labore non sed qui",
+  "originalSourceRecord": "Ut nostrud",
+  "noMergeReason": "deserunt ut ex"
+}

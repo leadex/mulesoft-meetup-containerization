@@ -1,0 +1,64 @@
+#%RAML 1.0 Library
+usage: Defines globally reusable types
+types:
+  # Accelerators: new type introduced
+  AuditInfo:
+    description: Defines standard system audit fields available for most types
+    properties:
+      createdDate:
+        type: datetime | nil
+        description: Timestamp of when the entity was created
+      createdBy:
+        type: string
+        description: Identifies the system or user which created the entity
+      updatedDate:
+        type: datetime | nil
+        description: Timestamp of when the entity was last updated
+      updatedBy:
+        type: string
+        description: Identifies the system or user which last updated the entity
+      isDeleted:
+        type: boolean | nil
+        description: Indicates whether or not the entity has been soft-deleted
+  # Accelerators: new type introduced
+  ExternalId:
+    description: Defines a structure for referencing an entity in external systems
+    properties:
+      id:
+        type: string | nil
+      externalId: 
+        type: string
+        description: A unique identifier assigned to an entity in another system
+      externalIdType: 
+        items: string | ExternalIdType
+        description: Identifies the system that owns or otherwise recognizes this unique identifier
+      status?:
+        enum: [VALID, INVALID]
+        description: Indicates whether this identifier is currently valid or not
+      statusLastChangedDate?:
+        type: datetime | nil
+        description: Date and time of the last change in status
+  # Accelerators: new type introduced
+  ExternalIdType:
+    description: Identifies the external system that owns or otherwise recognizes a particular identifier
+    properties:
+      id:
+        type: string | nil
+      name:
+        type: string
+  # Accelerators: renamed from ProductValidityTimePeriodUOM to make it reusable
+  UnitOfMeasure:
+    properties:
+      id:
+        type: string | nil
+      name:
+        type: string
+      pluralName:
+        type: string
+  # Accelerators: renamed from DeviceUserSession to make it reusable
+  UserSession:
+    properties:
+      id:
+        type: string | nil
+      name:
+        type: string

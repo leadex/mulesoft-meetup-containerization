@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce-composite="http://www.mulesoft.org/schema/mule/salesforce-composite" xmlns:xml-module="http://www.mulesoft.org/schema/mule/xml-module"
+	xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/xml-module http://www.mulesoft.org/schema/mule/xml-module/current/mule-xml-module.xsd
+http://www.mulesoft.org/schema/mule/salesforce-composite http://www.mulesoft.org/schema/mule/salesforce-composite/current/mule-salesforce-composite.xsd">
+	<sub-flow name="account-contacts_get-contact-by-id" doc:id="990a7227-a73a-42b5-880c-8a70be0fddb9" doc:description="This subflow retrieves the Customer using CustomerId from Salesforce Account Object and tra">
+		<try doc:name="Try" doc:id="53e7d572-cc95-43cf-9266-55b065ccb123">
+			<until-successful maxRetries="${retry.sfdc.maxretries}" doc:name="Retry" doc:id="9856efa2-e9c1-4544-8e6c-6bd03a3dbe8c" millisBetweenRetries="${retry.sfdc.timebetween}">
+				<!--
+				<salesforce:query doc:name="Get Contact" doc:id="e6108e17-e019-45a6-934c-85a581184809" config-ref="Salesforce_Config" target="contactReturned" targetValue="#[payload[0]]">
+				<salesforce:salesforce-query><![CDATA[SELECT Id,Salutation,RecordType.Name,Name,FirstName,LastName,BirthDate,Global_Individual_Id__c,Email,Phone,
+MailingStreet,MailingCity,MailingPostalCode,MailingState,MailingCountry,MailingLatitude,MailingLongitude,MailingGeocodeAccuracy,
+IsDeleted,CreatedDate,CreatedBy.Name,LastModifiedDate,LastModifiedBy.Name
+FROM Contact
+WHERE Id=':Id']]></salesforce:salesforce-query>
+				<salesforce:parameters><![CDATA[#[output application/java
+-&#45;&#45;
+{
+	"Id" : vars.contactId
+}]]]></salesforce:parameters>
+			</salesforce:query>
+			-->
+				<ee:transform doc:name="Mock Get Contact" doc:id="6392735f-32b2-48d3-b306-c07a5bedf8e5" >
+					<ee:message >
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="contactReturned" ><![CDATA[%dw 2.0
+output application/java
+---
+{
+    "LastModifiedDate": "2021-07-13T15:31:49.000Z",
+    "LastModifiedBy": {
+      "Id": null,
+      "type": "User",
+      "Name": "Admin Accelerator"
+    },
+    "IsDeleted": "false",
+    "Email": "testuser16@gmail.com",
+    "CreatedBy": {
+      "Id": null,
+      "type": "User",
+      "Name": "Admin Accelerator"
+    },
+    "FirstName": "Alden",
+    "MailingCountry": "USA",
+    "MailingCity": "Ullrichmouth",
+    "type": "Contact",
+    "Birthdate": "1988-01-12",
+    "Salutation": "Ms.",
+    "MailingState": "TX",
+    "Name": "Alden Monahan",
+    "RecordType": {
+      "Id": null,
+      "type": "RecordType",
+      "Name": "Contact"
+    },
+    "MailingLatitude": null,
+    "MailingLongitude": null,
+    "Phone": "534-318-0788",
+    "MailingPostalCode": null,
+    "CreatedDate": "2021-07-13T11:53:37.000Z",
+    "Global_Individual_Id__c": "f86eba80-7afe35ee5f17",
+    "MailingGeocodeAccuracy": null,
+    "Id": "0034x00000ZwAQIAA3",
+    "LastName": "Monahan",
+    "MailingStreet": "Gloria Port"
+  }]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</until-successful>
+			<validation:is-not-null doc:name="Contact Id Is not null" doc:id="c81b878a-39c7-43b2-bda9-472cad410e23" config-ref="Validation_Config" value="#[vars.contactReturned.Id]" message='#["Contact Not Found"]' />
+			<error-handler>
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="71ca4539-5c98-48ac-aa68-cf77c8596b4b" type="ANY" when='#[error.detailedDescription contains "invalid ID field"]'>
+					<set-variable value="404" doc:name="Set httpStatus to 404" doc:id="b50abfc7-57b4-4d98-9415-73b6f3c1de03" variableName="httpStatus"/>
+					<flow-ref doc:name="common-error-handler_connector-exception" doc:id="7264cf8b-c2d2-4868-bd23-38332acf5a5d" name="common-error-handler_connector-exception"/>
+				</on-error-continue>
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="7cc7c11e-ea7d-4857-b628-585cd784a6cc" type="VALIDATION:NULL">
+					<set-variable value="404" doc:name="Set httpStatus to 404" doc:id="357c2d9b-a725-49b3-9cad-971618e70fa7" variableName="httpStatus" />
+					<flow-ref doc:name="common-error-handler_connector-exception" doc:id="8c218aff-7f2e-493a-9d91-41f33249aa60" name="common-error-handler_connector-exception" />
+				</on-error-continue>
+			</error-handler>
+		</try>
+		<choice doc:name="Check for http response" doc:id="b9942051-8f84-4ce2-95fa-eb3c52fa04b0" >
+			<when expression="#[vars.httpStatus != null]" >
+				<ee:transform doc:name="Error Response" doc:id="71b366f2-0fb9-4997-9cb0-bf9b8346e766">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+vars.exceptionResponse]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+					</ee:variables>
+				</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Map Contact Points" doc:id="18965fae-acf0-44fe-9011-5bd8e71f2db2">
+					<ee:message>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable resource="dwl/contacts/map-contact-points-for-contact.dwl" variableName="contactPoints" />
+					</ee:variables>
+				</ee:transform>
+				<ee:transform doc:name="Map Response" doc:id="f499e295-ce51-4aed-b8ad-66e562de4585">
+					<ee:message>
+						<ee:set-payload resource="dwl/contacts/retrieve-contact-by-id-response.dwl" />
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+	</sub-flow>
+	<sub-flow name="account-contacts_create-contact" doc:id="b2e58dd8-cedb-4fc4-88a7-8740b1d82df7" >
+		<ee:transform doc:name="Create Contact Request" doc:id="c9ceee2f-c62e-42e4-9f91-3437521bae5d">
+			<ee:message>
+			</ee:message>
+			<ee:variables>
+				<ee:set-variable resource="dwl/contacts/create-contact-request.dwl" variableName="contactToCreate" />
+			</ee:variables>
+		</ee:transform>
+		<ee:transform doc:name="Mock Create Contact" doc:id="520d3718-ceeb-4cbc-9901-288c5a7dbfba">
+				<ee:message>
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="createdContact"><![CDATA[%dw 2.0
+output application/java
+---
+{
+  "id": null,
+  "items": [
+    {
+      "exception": null,
+      "message": null,
+      "payload": {
+        "created": false,
+        "success": true,
+        "id": "01t4x000000MgrzAAC",
+        "errors": [
+          
+        ]
+      },
+      "id": "01t4x000000MgrzAAC",
+      "successful": true,
+      "statusCode": null
+    }
+  ],
+  "successful": true
+}]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		<logger level="DEBUG" doc:name="Log Contact Create Result" doc:id="d86cb129-e383-4c94-b469-7154620db402" message="#[%dw 2.0&#10;output application/json&#10;---&#10;vars.createdContact]" />
+		<validation:is-not-null doc:name="Contact Id is not Null" doc:id="b0bafa17-7837-4bb8-9f79-e79c35d41ba8" config-ref="Validation_Config" value="#[vars.createdContact.items[0].id]" message='#["An error occurred while creating the contact record"]' />				<ee:transform doc:name="Map Response" doc:id="b197c3cc-8a32-4b2b-9cf1-90bf2e968467">
+			<ee:message>
+				<ee:set-payload resource="dwl/contacts/contact-create-success.dwl" />
+			</ee:message>
+			<ee:variables>
+				<ee:set-variable variableName="httpStatus"><![CDATA[%dw 2.0
+output application/java
+---
+201]]></ee:set-variable>
+				<ee:set-variable resource="dwl/contacts/contact-create-response-headers.dwl" variableName="outboundHeaders" />
+			</ee:variables>
+		</ee:transform>
+	</sub-flow>
+	<sub-flow name="account-contacts_update-contact" doc:id="f04494b5-1419-4d75-9ed2-4e2aca5f562f" >
+			<ee:transform doc:name="Update Contact Request" doc:id="b2c0eb79-45c0-4712-8a51-97e6d632d8a7">
+			<ee:message>
+			</ee:message>
+			<ee:variables>
+				<ee:set-variable resource="dwl/contacts/update-contact-request-for-sf.dwl" variableName="contactToUpdate" />
+			</ee:variables>
+		</ee:transform>
+		<ee:transform doc:name="Mock Update Contact" doc:id="dd0d1047-d739-4dfc-bb12-bbe4ecc5ea20">
+				<ee:message>
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="updatedContact"><![CDATA[%dw 2.0
+output application/java
+---
+{
+  "id": null,
+  "items": [
+    {
+      "exception": null,
+      "message": null,
+      "payload": {
+        "created": false,
+        "success": true,
+        "id": "01t4x000000MgrzAAC",
+        "errors": [
+          
+        ]
+      },
+      "id": "01t4x000000MgrzAAC",
+      "successful": true,
+      "statusCode": null
+    }
+  ],
+  "successful": true
+}]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		<logger level="DEBUG" doc:name="Log Update ContactResult" doc:id="f67f3c37-ade1-48f1-adca-0278985e5b26" message="#[%dw 2.0&#10;output application/json&#10;---&#10;vars.updatedContact]" />
+		<validation:is-not-null doc:name="Contact Id updated Is not null" doc:id="6ffb2c01-5f5b-4c78-b4a9-40c0e6188cd5" value="#[vars.updatedContact.items[0].id]" message='#["Contact update failed"]' config-ref="Validation_Config" />
+				<set-variable value="#[vars.updatedContact.items[0].id]" doc:name="Set Contact Id" doc:id="985e2213-4c5c-4d05-89c0-e8966fa64d55" variableName="contactId"/>
+				<flow-ref doc:name="account-contacts_get-contact-by-id" doc:id="8c6bf807-533b-42f3-aa65-6f07391815cf" name="account-contacts_get-contact-by-id" />
+	</sub-flow>
+	<sub-flow name="account-contacts_lookup-contacts" doc:id="02cbad38-dfb1-40d3-ace6-3098cb8eccd9" >
+		<ee:transform doc:name="Extract Query Params" doc:id="5772efc4-91f7-4624-9cfc-0e367632653e">
+					<ee:message>
+					</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="queryParams" ><![CDATA[attributes.queryParams mapObject (value, key, index) -> { (lower(key)): (value)}]]></ee:set-variable>
+			</ee:variables>
+				</ee:transform>
+		<choice doc:name="Is Look Up By Contact Id?" doc:id="5160688e-1661-4bf2-a765-d11334a64975" >
+			<when expression='#[!isEmpty(vars.queryParams.contactid)]'>
+<try doc:name="Try" doc:id="3fca4528-e7ff-4dc1-b04c-972ede9f1154">
+			<!--
+			<salesforce:query doc:name="Get Contacts by Contact Id" doc:id="34a2abcf-b899-4906-afe7-f0fb1cd9d179" config-ref="Salesforce_Config" target="contactsReturned">
+				<salesforce:salesforce-query><![CDATA[SELECT Id,Salutation,RecordType.Name,Name,FirstName,LastName,BirthDate,Global_Individual_Id__c,Email,Phone,
+MailingStreet,MailingCity,MailingPostalCode,MailingState,MailingCountry,MailingLatitude,MailingLongitude,MailingGeocodeAccuracy,
+IsDeleted,CreatedDate,CreatedBy.Name,LastModifiedDate,LastModifiedBy.Name
+FROM Contact
+WHERE Id=':Id']]></salesforce:salesforce-query>
+				<salesforce:parameters><![CDATA[#[output application/java
+-&#45;&#45;
+{
+	"Id" : vars.queryParams.contactid
+}]]]></salesforce:parameters>
+			</salesforce:query>
+			-->
+			<ee:transform doc:name="Mock Get Contacts by Contact Id" doc:id="b38f7509-444d-40d7-b8e5-779e269f4e4f" >
+						<ee:message >
+						</ee:message>
+						<ee:variables >
+							<ee:set-variable variableName="contactsReturned" ><![CDATA[%dw 2.0
+output application/java
+---
+[
+  {
+  "MailingStreet": "Julianne Prairie",
+  "LastModifiedDate": "2021-04-14T19:45:47.000Z",
+  "LastModifiedBy": {
+    "Id": null,
+    "type": "User",
+    "Name": "Admin Accelerator"
+  },
+  "IsDeleted": "false",
+  "Global_Individual_Id__c": "fdddf723",
+  "CreatedBy": {
+    "Id": null,
+    "type": "User",
+    "Name": "Admin Accelerator"
+  },
+  "FirstName": "Mandy",
+  "ContactId": "0034x00000GCkxGAAT",
+  "MailingLatitude": "14.997",
+  "Birthdate": "1984-03-17",
+  "type": "Account",
+  "Salutation": "Mr.",
+  "AccountNumber": "ZYDUSYP1",
+  "Phone": "703-850-3754",
+  "MailingLongitude": "164.6381",
+  "CreatedDate": "2021-04-14T19:44:00.000Z",
+  "MailingPostalCode": null,
+  "Id": "0014x00000HwZFdAAN",
+  "LastName": "Jacob",
+  "Email": "elisa.lockman@gmail.com"
+}
+]]]></ee:set-variable>
+						</ee:variables>
+					</ee:transform>
+					<error-handler>
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="6eac78ca-1189-4b06-93c4-4d06e0efdeb3" type="ANY" when='#[error.detailedDescription contains "invalid ID field"]'>
+					<set-variable value="#[[]]" doc:name="Set contacts Returned" doc:id="dc2d734b-883b-4b75-bc97-a4424f6ff9a4" variableName="contactsReturned"/>
+				</on-error-continue>
+			</error-handler>
+		</try>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Log message" doc:id="536a8e6b-b070-4ff1-9e0c-bbffdde0663c" message='#["No look up by Contact Id"]'/>
+			</otherwise>
+		</choice>
+		<choice doc:name="Is Look up By External Id" doc:id="7bc2e3bb-144f-461a-b4d9-8e02bb726390" >
+			<when expression="#[!isEmpty(vars.queryParams.externalid) and isEmpty(vars.contactsReturned[0].Id)]">
+				<until-successful maxRetries="${retry.sfdc.maxretries}" doc:name="Retry" doc:id="1cfba5dc-2434-410f-a415-f5859e67475a" millisBetweenRetries="${retry.sfdc.timebetween}">
+					<!--
+					<salesforce:query doc:name="Get Contacts by External Id" doc:id="99c34f32-1a21-4bb7-ad83-efa8bcc87790" config-ref="Salesforce_Config" target="contactsReturned">
+						<salesforce:salesforce-query><![CDATA[SELECT Id,Salutation,RecordType.Name,Name,FirstName,LastName,BirthDate,Global_Individual_Id__c,Email,Phone,
+MailingStreet,MailingCity,MailingPostalCode,MailingState,MailingCountry,MailingLatitude,MailingLongitude,MailingGeocodeAccuracy,
+IsDeleted,CreatedDate,CreatedBy.Name,LastModifiedDate,LastModifiedBy.Name
+FROM Contact
+WHERE Global_Individual_Id__c=':externalId']]></salesforce:salesforce-query>
+						<salesforce:parameters><![CDATA[#[output application/java
+-&#45;&#45;
+{
+	"externalId" : vars.queryParams.externalid
+}]]]></salesforce:parameters>
+					</salesforce:query>
+					-->
+					<ee:transform doc:name="Mock Get Contacts by External Id" doc:id="78c1422d-ac9d-4eb8-9430-8b85a32ab865" >
+						<ee:message >
+						</ee:message>
+						<ee:variables >
+							<ee:set-variable variableName="contactsReturned" ><![CDATA[%dw 2.0
+output application/java
+---
+[
+{
+  "MailingStreet": "Mill Street",
+  "LastModifiedDate": "2021-04-14T19:45:47.000Z",
+  "LastModifiedBy": {
+    "Id": null,
+    "type": "User",
+    "Name": "Admin Accelerator"
+  },
+  "IsDeleted": "false",
+  "Global_Individual_Id__c": "a7d21f74-bdd8-41d8-84d7-832ed1a6afa5",
+  "CreatedBy": {
+    "Id": null,
+    "type": "User",
+    "Name": "Admin Accelerator"
+  },
+  "FirstName": "Brad",
+  "MailingLatitude": "14.997",
+  "Birthdate": "1984-03-17",
+  "type": "Account",
+  "Salutation": "Mr.",
+  "AccountNumber": "ZYDUSYP1",
+  "Phone": "703-850-3754",
+  "MailingLongitude": "164.6381",
+  "CreatedDate": "2021-04-14T19:44:00.000Z",
+  "MailingPostalCode": null,
+  "Id": "0014x00000HwZFdASF",
+  "LastName": "Fisher",
+  "Email": "sandy.siliantest@gmail.com"
+}
+]]]></ee:set-variable>
+						</ee:variables>
+					</ee:transform>
+				</until-successful>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Log message" doc:id="53f5b5dd-5ed2-40bd-bea2-4ef734843e8b" message='#["No look up by External Id"]'/>
+			</otherwise>
+		</choice>
+		<choice doc:name="Is Look up by Email Address?" doc:id="172c87f4-05e8-4ef0-a4c7-bf6bd738e994" >
+			<when expression='#[!isEmpty(vars.queryParams.emailaddress) and isEmpty(vars.contactsReturned[0].Id)]'>
+				<until-successful maxRetries="${retry.sfdc.maxretries}" doc:name="Retry" doc:id="9b7cb643-4c6f-4bb2-8a9f-d75fe3c5b1dd" millisBetweenRetries="${retry.sfdc.timebetween}">
+					<!--
+					<salesforce:query doc:name="Get Contacts By Email Address" doc:id="ad667914-e2a6-431c-91da-40a0e3c74ccc" config-ref="Salesforce_Config" target="contactsReturned">
+						<salesforce:salesforce-query><![CDATA[SELECT Id,Salutation,RecordType.Name,Name,FirstName,LastName,BirthDate,Global_Individual_Id__c,Email,Phone,
+MailingStreet,MailingCity,MailingPostalCode,MailingState,MailingCountry,MailingLatitude,MailingLongitude,MailingGeocodeAccuracy,
+IsDeleted,CreatedDate,CreatedBy.Name,LastModifiedDate,LastModifiedBy.Name
+FROM Contact
+WHERE Email=':emailAddress']]></salesforce:salesforce-query>
+						<salesforce:parameters><![CDATA[#[output application/java
+-&#45;&#45;
+{
+	"emailAddress" : vars.queryParams.emailaddress
+}]]]></salesforce:parameters>
+					</salesforce:query>
+					-->
+					<ee:transform doc:name="Mock Get Contacts By Email Address" doc:id="7b3fec55-d7ba-4275-a3bb-ad87cfcd1996" >
+						<ee:message >
+						</ee:message>
+						<ee:variables >
+							<ee:set-variable variableName="contactsReturned" ><![CDATA[%dw 2.0
+output application/java
+---
+[
+{
+  "MailingStreet": "Mill Street",
+  "LastModifiedDate": "2021-04-14T19:45:47.000Z",
+  "LastModifiedBy": {
+    "Id": null,
+    "type": "User",
+    "Name": "Admin Accelerator"
+  },
+  "IsDeleted": "false",
+  "Global_Individual_Id__c": "test123",
+  "CreatedBy": {
+    "Id": null,
+    "type": "User",
+    "Name": "Admin Accelerator"
+  },
+  "FirstName": "Sandy",
+  "MailingLatitude": "14.997",
+  "Birthdate": "1984-03-17",
+  "type": "Account",
+  "Salutation": "Mr.",
+  "AccountNumber": "ZYDUSYP1",
+  "Phone": "703-850-3754",
+  "MailingLongitude": "164.6381",
+  "CreatedDate": "2021-04-14T19:44:00.000Z",
+  "MailingPostalCode": null,
+  "Id": "0014x00000HwZFdASD",
+  "LastName": "Silian",
+  "Email": "sandy.silian@gmail.com"
+}
+]]]></ee:set-variable>
+						</ee:variables>
+					</ee:transform>
+				</until-successful>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Log message" doc:id="b45064d3-f6c7-4da6-9bcd-e5163d7ac321" message='#["No look up by Email Address"]' />
+			</otherwise>
+		</choice>
+		<choice doc:name="Is Lookup returned Contacts?" doc:id="318520cb-0667-4251-9320-51223ac8b8dc" >
+			<when expression="#[!isEmpty(vars.contactsReturned[0].Id)]">
+				<ee:transform doc:name="Map Response" doc:id="2934cbb4-8424-464e-92e6-c161101ff8f2" >
+					<ee:message >
+						<ee:set-payload resource="dwl/contacts/lookup-contacts-response.dwl" />
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Map Empty Response" doc:id="87ffa269-790c-45a2-845e-5512da7b6bc4" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+[]]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+	</sub-flow>
+</mule>

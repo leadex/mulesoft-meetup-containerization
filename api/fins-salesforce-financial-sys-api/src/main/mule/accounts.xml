@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<flow name="accounts-search" doc:id="5cc5c1bc-c84b-4830-85eb-33497d647e79" >
+		<set-variable value="#[attributes.queryParams]" doc:name="queryParams" doc:id="f39a3c01-11bd-48d7-acb5-33ff55f7c072" variableName="queryParams"/>
+		<ee:transform doc:name="parameterized soqlWhereClause" doc:id="e0400cd4-e52d-423d-9110-ec22e2453f6c">
+			<ee:message>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable resource="dwl/accounts/accounts-search-sql-params.dwl" variableName="soqlWhereClause" />
+			</ee:variables>
+		</ee:transform>
+		<!--  
+		<salesforce:query doc:name="FinancialAccount" doc:id="a280fae1-982f-41db-b23a-ec96903062a5" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query><![CDATA[#[p("salesforce.soql.FinancialAccount.select") ++ (vars.soqlWhereClause default "")]]]></salesforce:salesforce-query>
+			<salesforce:parameters ><![CDATA[#[vars.queryParams]]]></salesforce:parameters>
+		</salesforce:query>
+		-->
+		<ee:transform doc:name="Mock Query FinancialAccount" doc:id="1eb6b11d-a65b-4457-9f9b-8a0686f6ce36" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+[
+  {
+    "FinServ__TaxID__c": null,
+    "FinServ__Balance__c": "84000.0",
+    "FinServ__Nickname__c": null,
+    "FinServ__CashBalance__c": null,
+    "External_ID__c": "fa.007",
+    "FinServ__OpenDate__c": "2007-12-29",
+    "FinServ__FinancialAccountNumber__c": null,
+    "type": "FinServ__FinancialAccount__c",
+    "CurrencyIsoCode": "USD",
+    "Name": "529-MORRIS-eTrade Education Plan",
+    "FinServ__FinancialAccountType__c": "Brokerage",
+    "FinServ__CloseDate__c": null,
+    "FinServ__Status__c": "Open",
+    "Id": "a4l5e000000RPylAAG"
+  },
+  {
+    "FinServ__TaxID__c": null,
+    "FinServ__Balance__c": "1589.37",
+    "FinServ__Nickname__c": null,
+    "FinServ__CashBalance__c": null,
+    "External_ID__c": null,
+    "FinServ__OpenDate__c": "1999-01-14",
+    "FinServ__FinancialAccountNumber__c": "723789981",
+    "type": "FinServ__FinancialAccount__c",
+    "CurrencyIsoCode": "USD",
+    "Name": "Everyday Checking Account",
+    "FinServ__FinancialAccountType__c": "Checking",
+    "FinServ__CloseDate__c": null,
+    "FinServ__Status__c": "Open",
+    "Id": "a4l5e000000RPypAAG"
+  },
+  {
+    "FinServ__TaxID__c": null,
+    "FinServ__Balance__c": "780000.0",
+    "FinServ__Nickname__c": null,
+    "FinServ__CashBalance__c": null,
+    "External_ID__c": null,
+    "FinServ__OpenDate__c": "1998-12-31",
+    "FinServ__FinancialAccountNumber__c": "83787823",
+    "type": "FinServ__FinancialAccount__c",
+    "CurrencyIsoCode": "USD",
+    "Name": "30 yr Fixed Mortgage",
+    "FinServ__FinancialAccountType__c": null,
+    "FinServ__CloseDate__c": null,
+    "FinServ__Status__c": null,
+    "Id": "a4l5e000000RPyqAAG"
+  },
+  {
+    "FinServ__TaxID__c": null,
+    "FinServ__Balance__c": "1300000.0",
+    "FinServ__Nickname__c": null,
+    "FinServ__CashBalance__c": null,
+    "External_ID__c": null,
+    "FinServ__OpenDate__c": "2018-12-31",
+    "FinServ__FinancialAccountNumber__c": "738239889",
+    "type": "FinServ__FinancialAccount__c",
+    "CurrencyIsoCode": "USD",
+    "Name": "Business Savings Account",
+    "FinServ__FinancialAccountType__c": "Cash Management Account",
+    "FinServ__CloseDate__c": null,
+    "FinServ__Status__c": "Open",
+    "Id": "a4l5e000000RPyrAAG"
+  },
+  {
+    "FinServ__TaxID__c": null,
+    "FinServ__Balance__c": "75000.0",
+    "FinServ__Nickname__c": null,
+    "FinServ__CashBalance__c": null,
+    "External_ID__c": null,
+    "FinServ__OpenDate__c": null,
+    "FinServ__FinancialAccountNumber__c": "7383288923",
+    "type": "FinServ__FinancialAccount__c",
+    "CurrencyIsoCode": "USD",
+    "Name": "High Yield Savings Account",
+    "FinServ__FinancialAccountType__c": null,
+    "FinServ__CloseDate__c": null,
+    "FinServ__Status__c": "Open",
+    "Id": "a4l5e000000RPytAAG"
+  },
+  {
+    "FinServ__TaxID__c": null,
+    "FinServ__Balance__c": "800000.0",
+    "FinServ__Nickname__c": null,
+    "FinServ__CashBalance__c": null,
+    "External_ID__c": null,
+    "FinServ__OpenDate__c": null,
+    "FinServ__FinancialAccountNumber__c": "2389893289",
+    "type": "FinServ__FinancialAccount__c",
+    "CurrencyIsoCode": "USD",
+    "Name": "High Yield Savings Account",
+    "FinServ__FinancialAccountType__c": null,
+    "FinServ__CloseDate__c": null,
+    "FinServ__Status__c": "Open",
+    "Id": "a4l5e000000RPyuAAG"
+  },
+  {
+    "FinServ__TaxID__c": null,
+    "FinServ__Balance__c": "4587.0",
+    "FinServ__Nickname__c": null,
+    "FinServ__CashBalance__c": null,
+    "External_ID__c": "fa.004",
+    "FinServ__OpenDate__c": "2000-12-30",
+    "FinServ__FinancialAccountNumber__c": "0797123456",
+    "type": "FinServ__FinancialAccount__c",
+    "CurrencyIsoCode": "USD",
+    "Name": "Julie Morris Credit Card",
+    "FinServ__FinancialAccountType__c": "Credit Card",
+    "FinServ__CloseDate__c": null,
+    "FinServ__Status__c": "Open",
+    "Id": "a4l5e000000RPyvAAG"
+  },
+  {
+    "FinServ__TaxID__c": null,
+    "FinServ__Balance__c": "5600.48",
+    "FinServ__Nickname__c": null,
+    "FinServ__CashBalance__c": null,
+    "External_ID__c": "fa.005",
+    "FinServ__OpenDate__c": "2008-12-22",
+    "FinServ__FinancialAccountNumber__c": "575875769",
+    "type": "FinServ__FinancialAccount__c",
+    "CurrencyIsoCode": "USD",
+    "Name": "Classic Savings Account",
+    "FinServ__FinancialAccountType__c": "Savings",
+    "FinServ__CloseDate__c": null,
+    "FinServ__Status__c": "Open",
+    "Id": "a4l5e000000RPz0AAG"
+  },
+  {
+    "FinServ__TaxID__c": null,
+    "FinServ__Balance__c": null,
+    "FinServ__Nickname__c": null,
+    "FinServ__CashBalance__c": null,
+    "External_ID__c": "fa.006",
+    "FinServ__OpenDate__c": "2007-12-31",
+    "FinServ__FinancialAccountNumber__c": "INS-3243432",
+    "type": "FinServ__FinancialAccount__c",
+    "CurrencyIsoCode": "USD",
+    "Name": "Morris-Life Insurance \$2M",
+    "FinServ__FinancialAccountType__c": "Individual Life",
+    "FinServ__CloseDate__c": "2008-01-14",
+    "FinServ__Status__c": "Open",
+    "Id": "a4l5e000000RPz1AAG"
+  },
+  {
+    "FinServ__TaxID__c": null,
+    "FinServ__Balance__c": null,
+    "FinServ__Nickname__c": null,
+    "FinServ__CashBalance__c": null,
+    "External_ID__c": null,
+    "FinServ__OpenDate__c": null,
+    "FinServ__FinancialAccountNumber__c": "M12319494",
+    "type": "FinServ__FinancialAccount__c",
+    "CurrencyIsoCode": "USD",
+    "Name": "Morris Family Mortgage",
+    "FinServ__FinancialAccountType__c": null,
+    "FinServ__CloseDate__c": null,
+    "FinServ__Status__c": null,
+    "Id": "a4l5e000000RPzEAAW"
+  },
+  {
+    "FinServ__TaxID__c": null,
+    "FinServ__Balance__c": "1150000.0",
+    "FinServ__Nickname__c": null,
+    "FinServ__CashBalance__c": null,
+    "External_ID__c": "fa.001",
+    "FinServ__OpenDate__c": "2009-12-22",
+    "FinServ__FinancialAccountNumber__c": null,
+    "type": "FinServ__FinancialAccount__c",
+    "CurrencyIsoCode": "USD",
+    "Name": "ROTH IRA-MORRIS",
+    "FinServ__FinancialAccountType__c": "Brokerage",
+    "FinServ__CloseDate__c": null,
+    "FinServ__Status__c": "Open",
+    "Id": "a4l5e000000RPzmAAG"
+  },
+  {
+    "FinServ__TaxID__c": null,
+    "FinServ__Balance__c": "1650000.0",
+    "FinServ__Nickname__c": null,
+    "FinServ__CashBalance__c": null,
+    "External_ID__c": "fa.002",
+    "FinServ__OpenDate__c": "1994-12-29",
+    "FinServ__FinancialAccountNumber__c": null,
+    "type": "FinServ__FinancialAccount__c",
+    "CurrencyIsoCode": "USD",
+    "Name": "401k-MORRIS Corporate-eTrade",
+    "FinServ__FinancialAccountType__c": "Brokerage",
+    "FinServ__CloseDate__c": null,
+    "FinServ__Status__c": "Open",
+    "Id": "a4l5e000000RPzpAAG"
+  },
+  {
+    "FinServ__TaxID__c": null,
+    "FinServ__Balance__c": "84000.0",
+    "FinServ__Nickname__c": null,
+    "FinServ__CashBalance__c": null,
+    "External_ID__c": null,
+    "FinServ__OpenDate__c": "2007-12-29",
+    "FinServ__FinancialAccountNumber__c": "12345",
+    "type": "FinServ__FinancialAccount__c",
+    "CurrencyIsoCode": "USD",
+    "Name": "529-MORRIS-eTrade Education Plan",
+    "FinServ__FinancialAccountType__c": "Brokerage",
+    "FinServ__CloseDate__c": "2021-01-01",
+    "FinServ__Status__c": "Open",
+    "Id": "a4l5e000000RkLaAAK"
+  }
+]
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="to canonical" doc:id="1612c165-31c3-46ca-8631-e99b2d16972a" >
+			<ee:message >
+				<ee:set-payload resource="dwl/accounts/accounts-search-to-canonical-response.dwl" />
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="accounts-get-by-id" doc:id="9731f874-dc52-4083-bb92-3fa7079389dd" >
+		<set-variable value="#[attributes.uriParams.accountId]" doc:name="accountId" doc:id="d39af258-bbc0-4277-90c6-c4fc6a5c4d9b" variableName="accountId"/>
+		<!--
+		<salesforce:query doc:name="FinancialAccount by Id" doc:id="887590cd-4876-4c41-8b0a-4c2f72ad249a" config-ref="Salesforce_Config" >
+			<salesforce:salesforce-query ><![CDATA[#[p("salesforce.soql.FinancialAccount.select") ++ " WHERE Id = ':accountId'"]]]></salesforce:salesforce-query>
+			<salesforce:parameters ><![CDATA[#[output application/java
+-&#45;&#45;
+{
+	"accountId" : vars.accountId
+}]]]></salesforce:parameters>
+		</salesforce:query>
+		-->
+		<ee:transform doc:name="Mock Query FinancialAccount by Id" doc:id="c5623efa-07f7-438e-bb0b-43b737dd4c87" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="to canonical" doc:id="6ff0cd85-81a8-46b1-baae-5ce8c8d36648">
+			<ee:message>
+				<ee:set-payload resource="dwl/accounts/accounts-get-by-id-to-canonical-response.dwl" />
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="accounts-create" doc:id="4f86562e-3ffd-4668-8cfb-ded94fb715f6" >
+		<ee:transform doc:name="from canonical to FinancialAccount" doc:id="641a1dbe-347f-4106-aaa9-f86dbbccd7a0">
+			<ee:message>
+				<ee:set-payload resource="dwl/accounts/accounts-create-to-sf.dwl" />
+			</ee:message>
+		</ee:transform>
+<!-- 		<salesforce:create type="FinServ__FinancialAccount__c" doc:name="FinancialAccount" doc:id="20ab57f6-3421-4493-89ae-d4fa0c639925" config-ref="Salesforce_Config"/>
+ -->		<ee:transform doc:name="Mock Create FinancialAccount" doc:id="4e0a73d6-05f4-431c-929b-0b1430ad0442" >
+			<ee:message>
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+  "id": null,
+  "items": [
+    {
+      "exception": null,
+      "message": null,
+      "payload": {
+        "success": true,
+        "id": "a4l5e000000RlU3AAK",
+        "errors": [
+          
+        ]
+      },
+      "id": "a4l5e000000RlU3AAK",
+      "statusCode": null,
+      "successful": true
+    }
+  ],
+  "successful": true
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<validation:is-true doc:name="successful?" doc:id="cf20156d-b60f-48e9-96a3-56a5cea76d82" expression="#[payload.successful]" message="SF Create FinancialAccount failed"/>
+		<set-variable value="#[payload.items[0].id]" doc:name="accountId" doc:id="1ea3554d-ccff-4ef0-a6b9-7f58344b64ac" variableName="accountId" />
+		<ee:transform doc:name="success response with Location header" doc:id="081fccd8-5f2d-44ba-b942-93ef51e1deaf" >
+			<ee:message >
+				<ee:set-payload resource="dwl/generic-success-response.dwl" />
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable resource="dwl/accounts/accounts-create-response-headers.dwl" variableName="outboundHeaders" />
+				<ee:set-variable variableName="httpStatus" ><![CDATA[%dw 2.0
+output application/java
+---
+201]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+	</flow>
+	<flow name="accounts-patch" doc:id="71ec97f0-ea13-4622-b62e-63c8e18acdda" >
+		<set-variable value="#[payload.id]" doc:name="accountId" doc:id="79a681ed-f484-47e4-8247-cea389710984" variableName="accountId" />
+		<ee:transform doc:name="from canonical to FinancialAccount" doc:id="728b0904-2321-4ca1-86d9-0f94456026c0">
+			<ee:message>
+				<ee:set-payload resource="dwl/accounts/accounts-patch-to-sf.dwl" />
+			</ee:message>
+		</ee:transform>
+<!-- 		<salesforce:update doc:name="FinancialAccount" doc:id="5e8a3411-0e5d-4ea3-9bb8-9aa5392f2f56" config-ref="Salesforce_Config" type="FinServ__FinancialAccount__c"/>
+ -->		<ee:transform doc:name="Mock Update FinancialAccount" doc:id="35ee3fbe-481b-4e43-b3ef-02a665d3ba70" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+  "id": null,
+  "items": [
+    {
+      "exception": null,
+      "message": null,
+      "payload": {
+        "success": true,
+        "id": "a4l5e000000RkLaAAK",
+        "errors": [
+          
+        ]
+      },
+      "id": "a4l5e000000RkLaAAK",
+      "statusCode": null,
+      "successful": true
+    }
+  ],
+  "successful": true
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<validation:is-true doc:name="successful?" doc:id="3377fdd3-244e-41e6-8483-7e0671844521" expression="#[payload.successful]" message="SF Update FinancialAccount failed" />
+		<ee:transform doc:name="success response with Location header" doc:id="9315cf33-0992-4b37-9481-909a66acbee2" >
+			<ee:message >
+				<ee:set-payload resource="dwl/generic-success-response.dwl" />
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable resource="dwl/accounts/accounts-create-response-headers.dwl" variableName="outboundHeaders" />
+				<ee:set-variable variableName="httpStatus" ><![CDATA[%dw 2.0
+output application/java
+---
+200]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+	</flow>
+	<flow name="accounts-get-transactions" doc:id="33a7720e-615c-4efb-b9e6-cf62e0386bc9">
+		<set-variable value="#[attributes.uriParams.accountId]" doc:name="accountId" doc:id="21469ddf-ac4d-4847-9a67-bd9fde9464e4" variableName="accountId" />
+		<set-variable value="#[attributes.queryParams]" doc:name="Query Params" doc:id="1d537b7f-a760-43b7-8591-d1033e01aa19" variableName="queryParams"/>
+		<!--
+		<salesforce:query doc:name="FinancialAccountTransaction" doc:id="9f28204a-d08a-4b5f-b28b-5705e0eb966b" config-ref="Salesforce_Config" >
+			<salesforce:salesforce-query ><![CDATA[#[p("salesforce.soql.FinancialAccountTransaction.select") ++ " WHERE FinServ__FinancialAccount__c = ':accountId' LIMIT :limit OFFSET :offset"]]]></salesforce:salesforce-query>
+			<salesforce:parameters ><![CDATA[#[output application/java
+-&#45;&#45;
+{
+	"accountId" : vars.accountId,
+	"limit": vars.queryParams.limit,
+	"offset" : vars.queryParams.offset
+}]]]></salesforce:parameters>
+		</salesforce:query>
+		-->
+		<ee:transform doc:name="Mock Query FinancialAccountTransaction" doc:id="56e5c689-ce0a-4ec7-aff7-fc4e73fbd47b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+[
+  {
+    "FinServ__TransactionType__c": "Credit",
+    "FinServ__TransactionDate__c": "2020-07-01T19:00:00.000Z",
+    "FinServ__TransactionId__c": "43589083",
+    "Disputed__c": "false",
+    "type": "FinServ__FinancialAccountTransaction__c",
+    "FinServ__FinancialAccount__c": "a4l5e000000RPylAAG",
+    "Name": "T-000000027",
+    "FinServ__Amount__c": "20000.0",
+    "CreatedById": "0055e000003fNkkAAE",
+    "FinServ__TransactionStatus__c": "Posted",
+    "FinServ__TransactionSubtype__c": "On-Us Check Deposit",
+    "LastModifiedById": "0055e000003fNkkAAE"
+  }
+]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<choice doc:name="Choice" doc:id="7e09043c-0c3c-413d-8327-756be90e744b" >
+			<when expression="#[!isEmpty(vars.queryParams.transactionType) or !isEmpty(vars.queryParams.transactionSubType) or !isEmpty(vars.queryParams.postedDate) or !isEmpty(vars.queryParams.fromDate) or !isEmpty(vars.queryParams.toDate)]">
+				<ee:transform doc:name="Lookup Transactions" doc:id="85a914a0-fe5b-41a9-bea4-8e7fdbd320ee" >
+					<ee:message >
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable resource="dwl/filteredTransactions.dwl" variableName="filteredTransactions" />
+					</ee:variables>
+				</ee:transform>
+				<ee:transform doc:name="to canonical" doc:id="63b00573-c1fd-4f72-99f9-1344533655bf" >
+					<ee:message >
+						<ee:set-payload resource="dwl/accounts-get-transactions.dwl" />
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="to canonical" doc:id="8362e678-8474-4acf-b53d-b88f92c77318">
+			<ee:message>
+				<ee:set-payload resource="dwl/accounts/accounts-get-transactions-to-canonical.dwl" />
+			</ee:message>
+		</ee:transform>
+			</otherwise>
+		</choice>
+	</flow>
+	<flow name="accounts-get-transactions-by-id" doc:id="9d540219-5c55-4651-9c34-d4357427a1ee">
+		<set-variable value="#[attributes.uriParams.accountId]" doc:name="accountId" doc:id="8d0484d9-df43-4e4f-8e34-83b7a6db2a4d" variableName="accountId" />
+		<set-variable value="#[attributes.uriParams.'transactionId']" doc:name="transactionId" doc:id="185d52c9-5f43-437c-b2ff-b03aa65b9b15" variableName="transactionId"/>
+		<!--
+		<salesforce:query doc:name="FinancialAccountTransaction" doc:id="c1a7e09f-795c-4837-85bd-d333b11db973" config-ref="Salesforce_Config" >
+			<salesforce:salesforce-query ><![CDATA[#[p("salesforce.soql.FinancialAccountTransaction.select") ++ " WHERE FinServ__FinancialAccount__c = ':accountId' AND Id = ':transactionId'"]]]></salesforce:salesforce-query>
+			<salesforce:parameters ><![CDATA[#[output application/java
+-&#45;&#45;
+{
+	"accountId" : vars.accountId,
+	"transactionId" : vars.transactionId
+}]]]></salesforce:parameters>
+		</salesforce:query>
+		-->
+		<ee:transform doc:name="Mock Query FinancialAccountTransaction" doc:id="262bb637-9253-41da-8910-345c2be08923" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+[
+  {
+    "FinServ__TransactionType__c": "Credit",
+    "FinServ__TransactionDate__c": "2020-07-01T19:00:00.000Z",
+    "FinServ__TransactionId__c": "43589083",
+    "Disputed__c": "false",
+    "type": "FinServ__FinancialAccountTransaction__c",
+    "FinServ__FinancialAccount__c": "a4l5e000000RPylAAG",
+    "Name": "T-000000027",
+    "FinServ__Amount__c": "20000.0",
+    "CreatedById": "0055e000003fNkkAAE",
+    "FinServ__TransactionStatus__c": "Posted",
+    "FinServ__TransactionSubtype__c": "On-Us Check Deposit",
+    "LastModifiedById": "0055e000003fNkkAAE"
+  }
+]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="to canonical" doc:id="1fc503cc-6f1d-4f16-bde6-f3d02a62041a" >
+			<ee:message >
+				<ee:set-payload resource="dwl/accounts/accounts-get-transaction-by-id-to-canonical.dwl" />
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="accounts-post-transactions" doc:id="be51d158-8115-462d-b157-727225239a14">
+		<set-variable value="#[attributes.uriParams.accountId]" doc:name="accountId" doc:id="bc847905-59ab-4cb2-829e-3bdc6b4b90a6" variableName="accountId" />
+		<ee:transform doc:name="Form Transaction Request" doc:id="0241ae3b-1983-4704-bc01-a67faf6a34d6" >
+			<ee:message >
+				<ee:set-payload resource="dwl/accounts/accounts-post-transaction-request.dwl" />
+			</ee:message>
+		</ee:transform>
+<!-- 		<salesforce:create doc:name="Create Transaction" doc:id="60b05d58-d889-46f7-8c81-aebd40340976" config-ref="Salesforce_Config" type="FinServ__FinancialAccountTransaction__c"/>
+ -->		<ee:transform doc:name="Mock Create Create Transaction" doc:id="b0e6eb2f-658c-4cc6-8b56-9d8e8fe756d0" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	"successful": true
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<validation:is-true doc:name="successful?" doc:id="3141a912-d60e-49e3-bdf6-a4e83e367e56" expression="#[payload.successful]" message="SF Create FinancialAccountTransaction failed"/>
+		<ee:transform doc:name="Form Response" doc:id="046f0efe-41a6-47b9-9a84-e608f7bc2b7c" >
+			<ee:message >
+				<ee:set-payload resource="dwl/generic-success-response.dwl" />
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable resource="dwl/accounts/transaction-response-header.dwl" variableName="outboundHeaders" />
+			</ee:variables>
+		</ee:transform>
+	</flow>
+	<flow name="accounts-transactions-patch" doc:id="7d3500dd-c391-44f8-b622-7ef33daaf89a" >
+		<set-variable value="#[payload.id]" doc:name="accountId" doc:id="7a97b4c3-5ffb-42b9-aee7-aa867a40d0a3" variableName="accountId" />
+		<set-variable value="#[payload.id]" doc:name="transactionId" doc:id="a163fafa-6d0f-4a76-978c-df09494cbfc9" variableName="transactionId" />
+		<ee:transform doc:name="from canonical to FinancialAccount" doc:id="a3f36464-7abf-4904-8426-bfd6f62c4ce4" >
+			<ee:message >
+				<ee:set-payload resource="dwl/accounts/accounts-patch-transaction-to-sf.dwl" />
+			</ee:message>
+		</ee:transform>
+<!-- 		<salesforce:update type="FinServ__FinancialAccountTransaction__c" doc:name="FinancialAccountTransaction" doc:id="996f10c4-825b-44be-90fc-a23291a5f42f" config-ref="Salesforce_Config" />
+ -->		<ee:transform doc:name="Mock Update FinancialAccountTransaction" doc:id="4fe6784d-7f0f-4c5e-bf74-ee19fea50cf5" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	"successful": true
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<validation:is-true doc:name="successful?" doc:id="600240c9-b238-484b-82ec-672dba68efea" expression="#[payload.successful]" message="SF Update FinancialAccount failed" />
+		<ee:transform doc:name="success response with Location header" doc:id="98aae83e-4508-4324-a918-f4c838022afb" >
+			<ee:message >
+				<ee:set-payload resource="dwl/generic-success-response.dwl" />
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable resource="dwl/accounts/transaction-response-header.dwl" variableName="outboundHeaders" />
+				<ee:set-variable variableName="httpStatus" ><![CDATA[%dw 2.0
+output application/java
+---
+200]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+	</flow>
+</mule>

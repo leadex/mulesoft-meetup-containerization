@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:batch="http://www.mulesoft.org/schema/mule/batch"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="get-customers-from-fis" doc:id="3b607188-c5fd-47b3-9645-8c0650bcee11" >
+		<http:request method="GET" doc:name="sys-fis GET /customers" doc:id="b466cb00-6c98-4e21-8d6b-5d12ce4f3609" config-ref="sys-fis_HTTP_Request_configuration" path="/customers" />
+	</flow>
+	<flow name="get-specific-customer-from-fis" doc:id="e6205b31-57f6-4d9b-bed4-70e03a03ecd4" >
+		<http:request method="GET" doc:name="sys-fis GET /customers/{customerId}" doc:id="bc9ebe1d-385f-417d-b0b7-68a501aaec14" config-ref="sys-fis_HTTP_Request_configuration" path="/customers/{customerId}" >
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"customerId" : vars.fisCustomerId
+}]]]></http:uri-params>
+		</http:request>
+	</flow>
+	<flow name="search-customers-from-salesforce-customers" doc:id="c7add3c1-883d-411a-9d7c-c115ebf0de48" >
+		<http:request method="GET" doc:name="sys-salesforce-customers GET /customers" doc:id="e9d12921-6256-4c43-9fd0-949be302f66f" config-ref="sys-salesforce-customers_HTTP_Request_configuration" path="/customers" >
+			<http:query-params ><![CDATA[#[vars.fscQueryParams default {}]]]></http:query-params>
+		</http:request>
+	</flow>
+	<flow name="get-specific-customer-from-fsc" doc:id="01ca2b7c-9b3c-4032-bad3-c9766ff314f1" >
+		<http:request method="GET" doc:name="sys-salesforce-customers GET /customers/{customerId}" doc:id="db0bb2f4-e7c3-4316-bd79-f69f80342985" config-ref="sys-salesforce-customers_HTTP_Request_configuration" path="/customers/{customerId}" >
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"customerId" : vars.fscCustomerId
+}]]]></http:uri-params>
+			<http:query-params ><![CDATA[#[vars.fscQueryParams default {}]]]></http:query-params>
+		</http:request>
+	</flow>
+	<flow name="post-customer-to-salesforce-customers" doc:id="8efde1fd-53c8-452e-9a57-f18498266ccd">
+		<http:request method="POST" doc:name="sys-salesforce-customers POST /customers" doc:id="bfbb0453-2d05-4af8-8b30-fd15a01bb7a2" config-ref="sys-salesforce-customers_HTTP_Request_configuration" path="/customers" />
+	</flow>
+	<flow name="patch-customer-to-salesforce-customers" doc:id="77f96942-d62f-4190-8b24-4678fa990278">
+		<http:request method="PATCH" doc:name="sys-salesforce-customers PATCH /customers/{customerId}" doc:id="8a5f0af8-7a16-46c9-946b-9c238f5568cc" config-ref="sys-salesforce-customers_HTTP_Request_configuration" path="/customers/{customerId}">
+			<http:uri-params><![CDATA[#[output application/java
+---
+{
+	"customerId" : vars.fscCustomerId
+}]]]></http:uri-params>
+		</http:request>
+	</flow>
+	<flow name="sync-customers" doc:id="4b5ff204-3249-4396-8e03-8dc39358685c">
+		<scheduler doc:name="Scheduler" doc:id="ec8f2466-a014-4c2d-910e-caa9e14d82fd">
+			<scheduling-strategy>
+				<cron expression="${process.scheduler.customers.cron}" />
+			</scheduling-strategy>
+		</scheduler>
+		<flow-ref doc:name="get-customers-from-fis" doc:id="cfac4251-74dd-4e8e-9ccc-710a932e1136" name="get-customers-from-fis" target="fisCustomers"/>
+		<foreach doc:name="For Each customer" doc:id="b2321cb3-2b49-4b09-a106-51ead237a736" collection="#[vars.fisCustomers]">
+			<try doc:name="Try" doc:id="c458353d-a7c9-4425-8546-3841b31370ba" >
+				<flow-ref doc:name="sync-customers-batchjob" doc:id="18ee496b-cced-4efa-b03c-bcbf5f5704b2" name="sync-customers-batchjob" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="e58f9556-7923-43a8-8c4f-3a6e1fee935c">
+								<logger level="ERROR" doc:name="Logger" doc:id="7fdc5f62-6615-4085-868a-ee4b1bd7e486" message="Error occurred in post-customer-to-salesforce-customers. Continuing." />
+							</on-error-continue>
+				</error-handler>
+			</try>
+		</foreach>
+	</flow>
+	<flow name="sync-customers-batchjob" doc:id="b55565ae-1cce-488e-9a91-8b22de735b75" >
+		<set-variable value="#[payload]" doc:name="fisCustomer" doc:id="4058f734-6e84-43e2-bec0-16c55f5089e8" variableName="fisCustomer"/>
+		<set-variable value="#[{externalId: payload.id}]" doc:name="fscQueryParams" doc:id="704101d7-0a24-43e7-b9ee-1a6539536a92" variableName="fscQueryParams" />
+		<flow-ref doc:name="search-customers-from-salesforce-customers" doc:id="8b5b50e7-e45b-4b3e-9fb3-80dcc6f6f568" name="search-customers-from-salesforce-customers" target="fscCustomer" />
+		<choice doc:name="already exists in FSC?" doc:id="51f29af9-4f66-4683-ab38-24104f48bf62">
+						<when expression="sizeOf(vars.fscCustomer) == 0">
+							<ee:transform doc:name="move FIS ID to externalIds" doc:id="d596b7cb-0391-484b-81ec-104f483b7fc0">
+								<ee:message>
+						<ee:set-payload resource="dwl/customers-post.dwl" />
+								</ee:message>
+							</ee:transform>
+				<flow-ref doc:name="post-customer-to-salesforce-customers" doc:id="7fea9a11-057b-4558-9822-4778708c39df" name="post-customer-to-salesforce-customers" />
+				<logger level="DEBUG" doc:name="Debug logger" doc:id="e78a297f-175c-4e5b-9443-0095e47f668f" message="Finished POST customer with FIS id: #[vars.fisCustomer.id]" category="fins"/>
+						</when>
+						<when expression="#[sizeOf(vars.fscCustomer) == 1]">
+							<set-variable value="#[vars.fscCustomer[0].id]" doc:name="fscCustomerId" doc:id="a88debeb-2885-4da9-8cba-c2be0497fc75" variableName="fscCustomerId" />
+							<ee:transform doc:name="enrich fisCustomer with FSC ID" doc:id="403bf33d-b41e-4ee7-a53d-f4c2c0f247be">
+								<ee:message>
+						<ee:set-payload resource="dwl/customers-patch.dwl" />
+								</ee:message>
+							</ee:transform>
+					<flow-ref doc:name="patch-customer-to-salesforce-customers" doc:id="22ed6a9b-9da8-4169-b181-96424602f775" name="patch-customer-to-salesforce-customers" />
+				<logger level="DEBUG" doc:name="Debug logger" doc:id="c05fc9ed-a8c1-4d8f-b443-5334144b2939" message="Finished PATCH customer with FIS id: #[vars.fisCustomer.id]" category="fins"/>
+						</when>
+					</choice>
+	</flow>
+</mule>

@@ -1,0 +1,142 @@
+#%RAML 1.0 Library
+usage: Provides types for banking-related types Account and Transaction
+
+types:
+  Account:
+    description: Financial account information for a specific customer
+    properties:
+      id:
+        type: string
+        description: Account identifier
+        example: "100000000278"
+      name:
+        type: string
+        description: Account product name
+        example: "ANALYSIS INTEREST CHKG"
+      accountNumber:
+        type: string
+        description: Unique number of the account
+        example: "SavingsAccount"
+      primaryAccountOwner:
+        type: string
+        description: Primary account owner customer identifier
+        example: "1234567890"
+      secondaryAccountOwners:
+        type: string
+        description: A comman separated list of secondary account owners
+      accountStatus:
+        enum: [OPEN, ON_HOLD]
+        description: The current status of the account
+      accountBalance:
+        type: number
+        description: The current balance of the account (including blocked amount)
+        example: 18835362.3
+      availableBalance:
+        type: number
+        description: The current account balance which is available for withdrawal
+        example: 17832365.7
+      accountLabel:
+        type: string
+        description: A short description of the account
+        example: "ANALYSIS INTEREST CHKG"
+      interestRate:
+        type: number | nil
+        description: The interested rate of credit-based accounts
+        example: null
+      taxIdentificationNumber:
+        type: string
+        description: Tax identification number (can be empty)
+        example: ""
+      openedDate:
+        type: date-only
+        description: The opening date of the account
+        example: "2018-02-02"
+      closedDate:
+        type: date-only | nil
+        description: The closing date of the account
+        example: null
+      auditInfo:
+        type: object
+        description: Audit information on the account
+        properties:
+          createdDate:
+            type: datetime
+            description: Audit create date-time information
+          createdBy:
+            type: string
+            description: The system user that created the account
+          updatedDate:
+            type: datetime
+            description: The datetime of the last update of the account
+          updatedBy:
+            type: string
+            description: The system user that updated the account
+          isDeleted:
+            type: boolean
+            description: The flag if the account was deleted
+  Transaction:
+    description: Financial transaction infromation
+    properties:
+      id:
+        type: string
+        description: Transaction identifier
+        example: "200304000278"
+      name:
+        type: string
+        description: Transaction type name
+        example: "SERVICE CHARGE"
+      description:
+        type: string
+        description: Description of the transaction
+        example: "SERVICE CHARGE"
+      amount:
+        type: number
+        description: The amount involved into the transaction
+      transactionDate:
+        type: datetime
+        description: The datetime when the transaction was performed
+        example: "2018-03-07T03:57:15Z"
+      transactionType:
+        type: string
+        description: The type of the transaction
+        example: "CreditTransaction"
+      transactionSubType:
+        enum: [CHECK, ATM]
+        description: The sub-type of the transaction
+      transactionStatus:
+        type: string
+        description: The final status of the transaction
+        example: "POSTED"
+      postedDate:
+        type: datetime
+        description: Posted date of the transaction
+        example: "2018-03-07T03:57:15Z"
+      vendorName:
+        type: string
+        description: Transaction vendor name
+        example: ""
+      isDisputed:
+        type: boolean
+        description: Is the current transaction disputed
+      notes:
+        type: string
+        description: Additional transaction notes
+      auditInfo:
+        type: object
+        description: Audit information on the transaction
+        properties:
+          createdDate:
+            type: datetime
+            description: Audit create date-time information
+          createdBy:
+            type: string
+            description: The system user that created the transaction
+          updatedDate:
+            type: datetime
+            description: The datetime of the last update of the transaction
+          updatedBy:
+            type: string
+            description: The system user that updated the transaction
+          isDeleted:
+            type: boolean
+            description: The flag if the transaction was deleted

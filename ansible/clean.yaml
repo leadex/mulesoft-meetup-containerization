@@ -1,0 +1,55 @@
+---
+
+- name: Clean up Docker Swarm services
+  hosts: swarm_leader
+  tasks:
+    - name: Pip libs for docker-related ansible modules
+      pip:
+        name: "{{ docker_pip_packages }}"
+        state: present
+
+    - name: Remove docker stacks
+      ignore_errors: yes
+      community.docker.docker_stack:
+        name: "{{ item }}"
+        state: absent
+      loop:
+        - portainer
+        - fins
+
+    - name: Pause before removing Portainer volume
+      pause:
+        seconds: 10
+
+    - name: Remove Portainer volume
+      community.docker.docker_volume:
+        name: portainer_portainer_data
+        state: absent
+
+    - name: Exclude nodes from the cluster
+      community.docker.docker_swarm:
+        state: absent
+        force: true
+
+- name: Remove dangling images
+  hosts: swarm
+  tasks:
+
+    - name: Find dangling images
+      command: "docker images --filter \"dangling=true\" -q --no-trunc"
+      register: dangling_images
+
+    - name: Remove dangling images
+      ignore_errors: yes
+      command: "docker rmi -f {{ dangling_images.stdout }}"
+      when: dangling_images.stdout_lines | length != 0
+
+- name: Clean up local files
+  hosts: 127.0.0.1
+  connection: local
+  tasks:
+
+    - name: Remove build directory
+      file:
+        state: absent
+        path: "{{ build_dir }}"

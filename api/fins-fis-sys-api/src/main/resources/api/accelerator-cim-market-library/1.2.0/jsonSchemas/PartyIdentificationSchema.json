@@ -1,0 +1,174 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/definitions/PartyIdentification",
+  "definitions": {
+    "PartyIdentification": {
+      "type": "object",
+      "example": {
+        "name": "reprehenderit nisi",
+        "id": null,
+        "identificationNumber": "do sint cupidatat dolor",
+        "partyIdentificationType": "labore in cupidatat",
+        "verifiedDate": "1976-08-26",
+        "issuedDate": "1999-07-29",
+        "party": [
+          "ipsum ullamco ea"
+        ],
+        "issuedByAuthority": "Ut fugiat Lorem",
+        "auditInfo": {
+          "isDeleted": null,
+          "createdBy": "laboris officia tempor ad",
+          "updatedBy": "tempor irure do",
+          "updatedDate": null,
+          "createdDate": null
+        },
+        "partyRole": [
+          "ex sit"
+        ]
+      },
+      "additionalProperties": true,
+      "required": [
+        "name",
+        "id",
+        "identificationNumber",
+        "partyIdentificationType"
+      ],
+      "properties": {
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "expiryDate": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "partyIdentificationType": {
+          "type": "string"
+        },
+        "verifiedDate": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "issuedByAuthority": {
+          "type": "string"
+        },
+        "issuedAtLocation": {
+          "type": "string"
+        },
+        "issuedDate": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "partyRole": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "identificationNumber": {
+          "type": "string"
+        },
+        "party": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "auditInfo": {
+          "description": "Defines standard system audit fields available for most types",
+          "type": "object",
+          "example": {
+            "isDeleted": true,
+            "createdBy": "commodo minim dolore est",
+            "updatedBy": "dolor quis nulla",
+            "updatedDate": "1950-01-23T19:52:29.659Z",
+            "createdDate": "1950-01-23T19:52:29.659Z"
+          },
+          "additionalProperties": true,
+          "required": [
+            "isDeleted",
+            "createdBy",
+            "updatedBy",
+            "updatedDate",
+            "createdDate"
+          ],
+          "properties": {
+            "createdDate": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Timestamp of when the entity was created"
+            },
+            "createdBy": {
+              "type": "string",
+              "description": "Identifies the system or user which created the entity"
+            },
+            "updatedDate": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Timestamp of when the entity was last updated"
+            },
+            "updatedBy": {
+              "type": "string",
+              "description": "Identifies the system or user which last updated the entity"
+            },
+            "isDeleted": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Indicates whether or not the entity has been soft-deleted"
+            }
+          }
+        }
+      }
+    }
+  }
+}

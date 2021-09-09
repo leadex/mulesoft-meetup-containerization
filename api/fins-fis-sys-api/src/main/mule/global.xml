@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:accelerator-banking="http://www.mulesoft.org/schema/mule/accelerator-banking" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd  http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd  http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd  http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd http://www.mulesoft.org/schema/mule/accelerator-banking http://www.mulesoft.org/schema/mule/accelerator-banking/current/mule-accelerator-banking.xsd">
+    <http:listener-config name="fis-sys-api-httpListenerConfig">
+        <http:listener-connection host="${https.host}" port="${https.port}" protocol="HTTPS" tlsContext="common-selfsigned_tlsContext"/>
+    </http:listener-config>
+    <validation:config name="Validation_Config" doc:name="Validation Config" doc:id="0c839dd9-5256-4c27-bbae-6d3c9d144b0e" />
+    <configuration-properties doc:name="Application Configuration properties" doc:id="bf8fa3d3-cefe-476c-bbc7-91c37bbf27f4" file="config/config-${mule.env}.yaml" />
+    <configuration doc:name="global-error-handler" doc:id="ad224ed7-a231-40a7-a83f-016523d31607" defaultErrorHandler-ref="error-handler_common" />
+    <global-property doc:name="Global Property-mule.env" doc:id="89e453d0-37d5-4809-ac12-7d1fc5c549fe" name="mule.env" value="local" />
+    <import doc:name="global-exception" doc:id="56e67998-a673-4fd3-9d2d-b04d11be43c7" file="common-error-handler.xml" />
+    <import doc:name="common-configuration" doc:id="bce13519-cd7b-41fd-93ee-43ccbce6c873" file="global-common.xml" />
+    <!--
+    <http:request-config name="fis-httpRequestConfig" doc:name="HTTP Request configuration" doc:id="e7b79f33-f964-465f-be30-6c8d40b8ce9a" responseTimeout="${fis.response-timeout}">
+        <http:request-connection host="${fis.host}" port="${fis.port}" connectionIdleTimeout="${fis.connection-idle-timeout}" protocol="HTTPS">
+            <reconnection>
+                <reconnect frequency="${fis.http-frequency}" count="${fis.http-reconnection-attempts}" />
+            </reconnection>
+        </http:request-connection>
+    </http:request-config>
+    -->
+    <accelerator-banking:config name="accelerator-banking-config" doc:name="Accelerator Banking Config" doc:id="1c8a6df0-fe8a-433e-b24c-06a004d9ce8a" apiName="${api.name}" apiVersion="${api.version}" />
+    <apikit:config name="fis-sys-api-config" api="api/fins-fis-sys-api-spec.raml" outboundHeadersMapName="outboundHeadersMapName" httpStatusVarName="httpStatus" />
+</mule>

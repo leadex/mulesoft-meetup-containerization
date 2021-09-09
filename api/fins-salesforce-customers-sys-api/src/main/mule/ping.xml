@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	<sub-flow name="ping_get-health" doc:id="697340ce-9574-43e8-a253-00bfbfa5a7c1" >
+		<set-variable value='#[attributes.queryParams.checkDependencies == "true" default false]' doc:name="checkDependencies" doc:id="5d893919-8cbd-4602-a3b3-71e76ec3c5a5" variableName="checkDependencies"/>
+		<choice doc:name="Choice" doc:id="d78d9d67-db9a-4c20-a93b-47bffbe75c0f" >
+			<when expression="#[vars.checkDependencies]">
+				<flow-ref doc:name="Check Dependencies" doc:id="24341dfa-b323-43b1-ae9b-faa4e32ce21f" name="ping_check-dependencies" target="dependencyList"/>
+			</when>
+			<otherwise>
+				<set-variable doc:name="dependencyList" doc:id="5eeed13a-9f98-462d-850c-64eafe322a46" variableName="dependencyList" value="#[null]"/>
+			</otherwise>
+		</choice>
+		<ee:transform doc:name="Map Response" doc:id="91119293-ffd0-4dca-97bb-703f608a81b2">
+					<ee:message>
+				<ee:set-payload resource="dwl/ping-response-payload.dwl" />
+					</ee:message>
+				</ee:transform>
+		<set-variable value="200" doc:name="httpStatus" doc:id="91522169-41fa-4dec-a573-4a8e28c875e5" variableName="httpStatus"/>
+	</sub-flow>
+	<sub-flow name="ping_check-dependencies" doc:id="7373f8bd-168b-47cf-b15d-0d2e4612cc25" >
+		<flow-ref doc:name="ping_check-dependency-salesforce-system" doc:id="f37db536-f70d-415b-8836-763a6f9ae4f3" name="ping_check-dependency-salesforce-system"/>
+	</sub-flow>
+
+	<sub-flow name="ping_check-dependency-salesforce-system" doc:id="4de8f865-1ce1-479c-a48e-e1a3ca92673c" >
+
+		<try doc:name="Try" doc:id="395a53e1-50a6-4c44-af83-62f090ac25ec" >
+			<set-variable value="#['UP']" doc:name="backendSystemStatus" doc:id="acd9c4e8-8a38-44d7-9ac1-f919a66b6433" variableName="backendSystemStatus"/>
+			<error-handler >
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="943d9f93-de83-4f4e-bf97-f910e279118a" type="HTTP:GATEWAY_TIMEOUT, HTTP:TIMEOUT">
+					<set-variable value="#['DOWN']" doc:name="backendSystemStatus" doc:id="778ffbb7-bea7-47ec-96f4-f06f0445c773" variableName="backendSystemStatus" />
+			</on-error-continue>
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="b43de6e5-462d-4a3b-99b2-d89e08479db6">
+					<set-variable value="#['ERROR']" doc:name="backendSystemStatus" doc:id="f9a17c05-09ad-46db-ba43-4b5ab0383563" variableName="backendSystemStatus" />
+			</on-error-continue>
+			</error-handler>
+		</try>
+		<ee:transform doc:name="Dependency Status Response" doc:id="bdec3672-e4b0-406b-a129-82fe7e1325b0">
+				<ee:message>
+				<ee:set-payload resource="dwl/ping-check-dependency-sys-api-response.dwl" />
+				</ee:message>
+			</ee:transform>
+	</sub-flow>
+</mule>

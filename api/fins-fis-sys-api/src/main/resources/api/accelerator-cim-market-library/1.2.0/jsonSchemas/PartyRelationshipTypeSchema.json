@@ -1,0 +1,1591 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/definitions/PartyRelationshipType",
+  "definitions": {
+    "PartyRelationshipType": {
+      "type": "object",
+      "example": {
+        "relatedPartyRole": {
+          "id": null,
+          "partyRoleType": "cillum laboris in dolore aliqua",
+          "externalIds": [
+            {
+              "externalIdType": [
+                {
+                  "id": null,
+                  "name": "magna aliquip Excepteur"
+                }
+              ],
+              "externalId": "amet",
+              "id": "fugiat consectetur irure",
+              "status": "VALID",
+              "statusLastChangedDate": null
+            }
+          ],
+          "auditInfo": {
+            "isDeleted": false,
+            "createdBy": "cupidatat sint",
+            "updatedBy": "anim ea",
+            "updatedDate": "1943-09-25T16:30:24.824Z",
+            "createdDate": null
+          },
+          "party": [
+            "ullamco Lorem sit deserunt"
+          ]
+        },
+        "id": "do ut occaecat sit fugiat",
+        "partyRole": "consectetur reprehenderit nulla dolore incididunt",
+        "auditInfo": {
+          "isDeleted": true,
+          "createdBy": "proident consectetur",
+          "updatedBy": "enim cillum",
+          "updatedDate": null,
+          "createdDate": null
+        },
+        "isBidirectional": true
+      },
+      "additionalProperties": true,
+      "required": [
+        "relatedPartyRole",
+        "id",
+        "partyRole"
+      ],
+      "properties": {
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "isBidirectional": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "partyRole": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "id",
+                "partyRoleType"
+              ],
+              "properties": {
+                "id": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "partyRoleType": {
+                  "type": "string"
+                },
+                "party": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "id",
+                          "partyType"
+                        ],
+                        "properties": {
+                          "id": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "partyType": {
+                            "type": "string"
+                          },
+                          "globalParty": {
+                            "type": "string"
+                          },
+                          "noMergeReason": {
+                            "type": "string"
+                          },
+                          "primaryAccount": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "contactPoints": {
+                            "type": "array",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "object",
+                                  "additionalProperties": true,
+                                  "required": [
+                                    "id",
+                                    "activeFromDate",
+                                    "contactPointType"
+                                  ],
+                                  "properties": {
+                                    "id": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "primaryFlag": {
+                                      "anyOf": [
+                                        {
+                                          "type": "boolean"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "bestTimeToContactStartTime": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string",
+                                          "format": "time"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "profileLastUpdatedDate": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string",
+                                          "format": "time"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "partyRole": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "activeFromDate": {
+                                      "type": "string",
+                                      "format": "date"
+                                    },
+                                    "activeToDate": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string",
+                                          "format": "date"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "profileOccurrenceCount": {
+                                      "anyOf": [
+                                        {
+                                          "type": "integer"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "profileFirstCreatedDate": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string",
+                                          "format": "time"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "bestTimeToContactEndTime": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string",
+                                          "format": "time"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "party": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "contactPointType": {
+                                      "type": "array",
+                                      "items": {
+                                        "anyOf": [
+                                          {
+                                            "type": "string"
+                                          },
+                                          {
+                                            "type": "object",
+                                            "additionalProperties": true,
+                                            "required": [
+                                              "id",
+                                              "name"
+                                            ],
+                                            "properties": {
+                                              "id": {
+                                                "anyOf": [
+                                                  {
+                                                    "type": "string"
+                                                  },
+                                                  {
+                                                    "type": "null"
+                                                  }
+                                                ]
+                                              },
+                                              "name": {
+                                                "type": "string"
+                                              },
+                                              "optInPriority": {
+                                                "anyOf": [
+                                                  {
+                                                    "type": "integer"
+                                                  },
+                                                  {
+                                                    "type": "null"
+                                                  }
+                                                ]
+                                              },
+                                              "auditInfo": {
+                                                "description": "Defines standard system audit fields available for most types",
+                                                "type": "object",
+                                                "example": {
+                                                  "isDeleted": true,
+                                                  "createdBy": "commodo minim dolore est",
+                                                  "updatedBy": "dolor quis nulla",
+                                                  "updatedDate": "1950-01-23T19:52:29.659Z",
+                                                  "createdDate": "1950-01-23T19:52:29.659Z"
+                                                },
+                                                "additionalProperties": true,
+                                                "required": [
+                                                  "isDeleted",
+                                                  "createdBy",
+                                                  "updatedBy",
+                                                  "updatedDate",
+                                                  "createdDate"
+                                                ],
+                                                "properties": {
+                                                  "createdDate": {
+                                                    "anyOf": [
+                                                      {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                      },
+                                                      {
+                                                        "type": "null"
+                                                      }
+                                                    ],
+                                                    "description": "Timestamp of when the entity was created"
+                                                  },
+                                                  "createdBy": {
+                                                    "type": "string",
+                                                    "description": "Identifies the system or user which created the entity"
+                                                  },
+                                                  "updatedDate": {
+                                                    "anyOf": [
+                                                      {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                      },
+                                                      {
+                                                        "type": "null"
+                                                      }
+                                                    ],
+                                                    "description": "Timestamp of when the entity was last updated"
+                                                  },
+                                                  "updatedBy": {
+                                                    "type": "string",
+                                                    "description": "Identifies the system or user which last updated the entity"
+                                                  },
+                                                  "isDeleted": {
+                                                    "anyOf": [
+                                                      {
+                                                        "type": "boolean"
+                                                      },
+                                                      {
+                                                        "type": "null"
+                                                      }
+                                                    ],
+                                                    "description": "Indicates whether or not the entity has been soft-deleted"
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "forBusinessUse": {
+                                      "anyOf": [
+                                        {
+                                          "type": "boolean"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "forPersonalUse": {
+                                      "anyOf": [
+                                        {
+                                          "type": "boolean"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "auditInfo": {
+                                      "description": "Defines standard system audit fields available for most types",
+                                      "type": "object",
+                                      "example": {
+                                        "isDeleted": true,
+                                        "createdBy": "commodo minim dolore est",
+                                        "updatedBy": "dolor quis nulla",
+                                        "updatedDate": "1950-01-23T19:52:29.659Z",
+                                        "createdDate": "1950-01-23T19:52:29.659Z"
+                                      },
+                                      "additionalProperties": true,
+                                      "required": [
+                                        "isDeleted",
+                                        "createdBy",
+                                        "updatedBy",
+                                        "updatedDate",
+                                        "createdDate"
+                                      ],
+                                      "properties": {
+                                        "createdDate": {
+                                          "anyOf": [
+                                            {
+                                              "type": "string",
+                                              "format": "date-time"
+                                            },
+                                            {
+                                              "type": "null"
+                                            }
+                                          ],
+                                          "description": "Timestamp of when the entity was created"
+                                        },
+                                        "createdBy": {
+                                          "type": "string",
+                                          "description": "Identifies the system or user which created the entity"
+                                        },
+                                        "updatedDate": {
+                                          "anyOf": [
+                                            {
+                                              "type": "string",
+                                              "format": "date-time"
+                                            },
+                                            {
+                                              "type": "null"
+                                            }
+                                          ],
+                                          "description": "Timestamp of when the entity was last updated"
+                                        },
+                                        "updatedBy": {
+                                          "type": "string",
+                                          "description": "Identifies the system or user which last updated the entity"
+                                        },
+                                        "isDeleted": {
+                                          "anyOf": [
+                                            {
+                                              "type": "boolean"
+                                            },
+                                            {
+                                              "type": "null"
+                                            }
+                                          ],
+                                          "description": "Indicates whether or not the entity has been soft-deleted"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "externalIds": {
+                            "type": "array",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "object",
+                                  "example": {
+                                    "externalIdType": [
+                                      {
+                                        "id": "id1",
+                                        "name": "adipisicing labore Duis in anim"
+                                      }
+                                    ],
+                                    "externalId": "Ut",
+                                    "id": "irure proident cillum deserunt dolor",
+                                    "status": "INVALID",
+                                    "statusLastChangedDate": "1999-11-26T02:28:11.661Z"
+                                  },
+                                  "description": "Defines a structure for referencing an entity in external systems",
+                                  "additionalProperties": true,
+                                  "required": [
+                                    "externalIdType",
+                                    "externalId",
+                                    "id"
+                                  ],
+                                  "properties": {
+                                    "id": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "externalId": {
+                                      "type": "string",
+                                      "description": "A unique identifier assigned to an entity in another system"
+                                    },
+                                    "externalIdType": {
+                                      "description": "Identifies the system that owns or otherwise recognizes this unique identifier",
+                                      "type": "array",
+                                      "items": {
+                                        "anyOf": [
+                                          {
+                                            "type": "string"
+                                          },
+                                          {
+                                            "description": "Identifies the external system that owns or otherwise recognizes a particular identifier",
+                                            "type": "object",
+                                            "additionalProperties": true,
+                                            "required": [
+                                              "id",
+                                              "name"
+                                            ],
+                                            "properties": {
+                                              "id": {
+                                                "anyOf": [
+                                                  {
+                                                    "type": "string"
+                                                  },
+                                                  {
+                                                    "type": "null"
+                                                  }
+                                                ]
+                                              },
+                                              "name": {
+                                                "type": "string"
+                                              }
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "status": {
+                                      "enum": [
+                                        "VALID",
+                                        "INVALID"
+                                      ],
+                                      "description": "Indicates whether this identifier is currently valid or not",
+                                      "type": "string"
+                                    },
+                                    "statusLastChangedDate": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string",
+                                          "format": "date-time"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ],
+                                      "description": "Date and time of the last change in status"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "auditInfo": {
+                            "description": "Defines standard system audit fields available for most types",
+                            "type": "object",
+                            "example": {
+                              "isDeleted": true,
+                              "createdBy": "commodo minim dolore est",
+                              "updatedBy": "dolor quis nulla",
+                              "updatedDate": "1950-01-23T19:52:29.659Z",
+                              "createdDate": "1950-01-23T19:52:29.659Z"
+                            },
+                            "additionalProperties": true,
+                            "required": [
+                              "isDeleted",
+                              "createdBy",
+                              "updatedBy",
+                              "updatedDate",
+                              "createdDate"
+                            ],
+                            "properties": {
+                              "createdDate": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "format": "date-time"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ],
+                                "description": "Timestamp of when the entity was created"
+                              },
+                              "createdBy": {
+                                "type": "string",
+                                "description": "Identifies the system or user which created the entity"
+                              },
+                              "updatedDate": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "format": "date-time"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ],
+                                "description": "Timestamp of when the entity was last updated"
+                              },
+                              "updatedBy": {
+                                "type": "string",
+                                "description": "Identifies the system or user which last updated the entity"
+                              },
+                              "isDeleted": {
+                                "anyOf": [
+                                  {
+                                    "type": "boolean"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ],
+                                "description": "Indicates whether or not the entity has been soft-deleted"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                },
+                "externalIds": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "object",
+                        "example": {
+                          "externalIdType": [
+                            {
+                              "id": "id1",
+                              "name": "adipisicing labore Duis in anim"
+                            }
+                          ],
+                          "externalId": "Ut",
+                          "id": "irure proident cillum deserunt dolor",
+                          "status": "INVALID",
+                          "statusLastChangedDate": "1999-11-26T02:28:11.661Z"
+                        },
+                        "description": "Defines a structure for referencing an entity in external systems",
+                        "additionalProperties": true,
+                        "required": [
+                          "externalIdType",
+                          "externalId",
+                          "id"
+                        ],
+                        "properties": {
+                          "id": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "externalId": {
+                            "type": "string",
+                            "description": "A unique identifier assigned to an entity in another system"
+                          },
+                          "externalIdType": {
+                            "description": "Identifies the system that owns or otherwise recognizes this unique identifier",
+                            "type": "array",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "description": "Identifies the external system that owns or otherwise recognizes a particular identifier",
+                                  "type": "object",
+                                  "additionalProperties": true,
+                                  "required": [
+                                    "id",
+                                    "name"
+                                  ],
+                                  "properties": {
+                                    "id": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "status": {
+                            "enum": [
+                              "VALID",
+                              "INVALID"
+                            ],
+                            "description": "Indicates whether this identifier is currently valid or not",
+                            "type": "string"
+                          },
+                          "statusLastChangedDate": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ],
+                            "description": "Date and time of the last change in status"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                },
+                "auditInfo": {
+                  "description": "Defines standard system audit fields available for most types",
+                  "type": "object",
+                  "example": {
+                    "isDeleted": true,
+                    "createdBy": "commodo minim dolore est",
+                    "updatedBy": "dolor quis nulla",
+                    "updatedDate": "1950-01-23T19:52:29.659Z",
+                    "createdDate": "1950-01-23T19:52:29.659Z"
+                  },
+                  "additionalProperties": true,
+                  "required": [
+                    "isDeleted",
+                    "createdBy",
+                    "updatedBy",
+                    "updatedDate",
+                    "createdDate"
+                  ],
+                  "properties": {
+                    "createdDate": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Timestamp of when the entity was created"
+                    },
+                    "createdBy": {
+                      "type": "string",
+                      "description": "Identifies the system or user which created the entity"
+                    },
+                    "updatedDate": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Timestamp of when the entity was last updated"
+                    },
+                    "updatedBy": {
+                      "type": "string",
+                      "description": "Identifies the system or user which last updated the entity"
+                    },
+                    "isDeleted": {
+                      "anyOf": [
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Indicates whether or not the entity has been soft-deleted"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "relatedPartyRole": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "id",
+                "partyRoleType"
+              ],
+              "properties": {
+                "id": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "partyRoleType": {
+                  "type": "string"
+                },
+                "party": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "id",
+                          "partyType"
+                        ],
+                        "properties": {
+                          "id": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "partyType": {
+                            "type": "string"
+                          },
+                          "globalParty": {
+                            "type": "string"
+                          },
+                          "noMergeReason": {
+                            "type": "string"
+                          },
+                          "primaryAccount": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "contactPoints": {
+                            "type": "array",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "object",
+                                  "additionalProperties": true,
+                                  "required": [
+                                    "id",
+                                    "activeFromDate",
+                                    "contactPointType"
+                                  ],
+                                  "properties": {
+                                    "id": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "primaryFlag": {
+                                      "anyOf": [
+                                        {
+                                          "type": "boolean"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "bestTimeToContactStartTime": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string",
+                                          "format": "time"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "profileLastUpdatedDate": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string",
+                                          "format": "time"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "partyRole": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "activeFromDate": {
+                                      "type": "string",
+                                      "format": "date"
+                                    },
+                                    "activeToDate": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string",
+                                          "format": "date"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "profileOccurrenceCount": {
+                                      "anyOf": [
+                                        {
+                                          "type": "integer"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "profileFirstCreatedDate": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string",
+                                          "format": "time"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "bestTimeToContactEndTime": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string",
+                                          "format": "time"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "party": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "contactPointType": {
+                                      "type": "array",
+                                      "items": {
+                                        "anyOf": [
+                                          {
+                                            "type": "string"
+                                          },
+                                          {
+                                            "type": "object",
+                                            "additionalProperties": true,
+                                            "required": [
+                                              "id",
+                                              "name"
+                                            ],
+                                            "properties": {
+                                              "id": {
+                                                "anyOf": [
+                                                  {
+                                                    "type": "string"
+                                                  },
+                                                  {
+                                                    "type": "null"
+                                                  }
+                                                ]
+                                              },
+                                              "name": {
+                                                "type": "string"
+                                              },
+                                              "optInPriority": {
+                                                "anyOf": [
+                                                  {
+                                                    "type": "integer"
+                                                  },
+                                                  {
+                                                    "type": "null"
+                                                  }
+                                                ]
+                                              },
+                                              "auditInfo": {
+                                                "description": "Defines standard system audit fields available for most types",
+                                                "type": "object",
+                                                "example": {
+                                                  "isDeleted": true,
+                                                  "createdBy": "commodo minim dolore est",
+                                                  "updatedBy": "dolor quis nulla",
+                                                  "updatedDate": "1950-01-23T19:52:29.659Z",
+                                                  "createdDate": "1950-01-23T19:52:29.659Z"
+                                                },
+                                                "additionalProperties": true,
+                                                "required": [
+                                                  "isDeleted",
+                                                  "createdBy",
+                                                  "updatedBy",
+                                                  "updatedDate",
+                                                  "createdDate"
+                                                ],
+                                                "properties": {
+                                                  "createdDate": {
+                                                    "anyOf": [
+                                                      {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                      },
+                                                      {
+                                                        "type": "null"
+                                                      }
+                                                    ],
+                                                    "description": "Timestamp of when the entity was created"
+                                                  },
+                                                  "createdBy": {
+                                                    "type": "string",
+                                                    "description": "Identifies the system or user which created the entity"
+                                                  },
+                                                  "updatedDate": {
+                                                    "anyOf": [
+                                                      {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                      },
+                                                      {
+                                                        "type": "null"
+                                                      }
+                                                    ],
+                                                    "description": "Timestamp of when the entity was last updated"
+                                                  },
+                                                  "updatedBy": {
+                                                    "type": "string",
+                                                    "description": "Identifies the system or user which last updated the entity"
+                                                  },
+                                                  "isDeleted": {
+                                                    "anyOf": [
+                                                      {
+                                                        "type": "boolean"
+                                                      },
+                                                      {
+                                                        "type": "null"
+                                                      }
+                                                    ],
+                                                    "description": "Indicates whether or not the entity has been soft-deleted"
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "forBusinessUse": {
+                                      "anyOf": [
+                                        {
+                                          "type": "boolean"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "forPersonalUse": {
+                                      "anyOf": [
+                                        {
+                                          "type": "boolean"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "auditInfo": {
+                                      "description": "Defines standard system audit fields available for most types",
+                                      "type": "object",
+                                      "example": {
+                                        "isDeleted": true,
+                                        "createdBy": "commodo minim dolore est",
+                                        "updatedBy": "dolor quis nulla",
+                                        "updatedDate": "1950-01-23T19:52:29.659Z",
+                                        "createdDate": "1950-01-23T19:52:29.659Z"
+                                      },
+                                      "additionalProperties": true,
+                                      "required": [
+                                        "isDeleted",
+                                        "createdBy",
+                                        "updatedBy",
+                                        "updatedDate",
+                                        "createdDate"
+                                      ],
+                                      "properties": {
+                                        "createdDate": {
+                                          "anyOf": [
+                                            {
+                                              "type": "string",
+                                              "format": "date-time"
+                                            },
+                                            {
+                                              "type": "null"
+                                            }
+                                          ],
+                                          "description": "Timestamp of when the entity was created"
+                                        },
+                                        "createdBy": {
+                                          "type": "string",
+                                          "description": "Identifies the system or user which created the entity"
+                                        },
+                                        "updatedDate": {
+                                          "anyOf": [
+                                            {
+                                              "type": "string",
+                                              "format": "date-time"
+                                            },
+                                            {
+                                              "type": "null"
+                                            }
+                                          ],
+                                          "description": "Timestamp of when the entity was last updated"
+                                        },
+                                        "updatedBy": {
+                                          "type": "string",
+                                          "description": "Identifies the system or user which last updated the entity"
+                                        },
+                                        "isDeleted": {
+                                          "anyOf": [
+                                            {
+                                              "type": "boolean"
+                                            },
+                                            {
+                                              "type": "null"
+                                            }
+                                          ],
+                                          "description": "Indicates whether or not the entity has been soft-deleted"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "externalIds": {
+                            "type": "array",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "object",
+                                  "example": {
+                                    "externalIdType": [
+                                      {
+                                        "id": "id1",
+                                        "name": "adipisicing labore Duis in anim"
+                                      }
+                                    ],
+                                    "externalId": "Ut",
+                                    "id": "irure proident cillum deserunt dolor",
+                                    "status": "INVALID",
+                                    "statusLastChangedDate": "1999-11-26T02:28:11.661Z"
+                                  },
+                                  "description": "Defines a structure for referencing an entity in external systems",
+                                  "additionalProperties": true,
+                                  "required": [
+                                    "externalIdType",
+                                    "externalId",
+                                    "id"
+                                  ],
+                                  "properties": {
+                                    "id": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "externalId": {
+                                      "type": "string",
+                                      "description": "A unique identifier assigned to an entity in another system"
+                                    },
+                                    "externalIdType": {
+                                      "description": "Identifies the system that owns or otherwise recognizes this unique identifier",
+                                      "type": "array",
+                                      "items": {
+                                        "anyOf": [
+                                          {
+                                            "type": "string"
+                                          },
+                                          {
+                                            "description": "Identifies the external system that owns or otherwise recognizes a particular identifier",
+                                            "type": "object",
+                                            "additionalProperties": true,
+                                            "required": [
+                                              "id",
+                                              "name"
+                                            ],
+                                            "properties": {
+                                              "id": {
+                                                "anyOf": [
+                                                  {
+                                                    "type": "string"
+                                                  },
+                                                  {
+                                                    "type": "null"
+                                                  }
+                                                ]
+                                              },
+                                              "name": {
+                                                "type": "string"
+                                              }
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "status": {
+                                      "enum": [
+                                        "VALID",
+                                        "INVALID"
+                                      ],
+                                      "description": "Indicates whether this identifier is currently valid or not",
+                                      "type": "string"
+                                    },
+                                    "statusLastChangedDate": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string",
+                                          "format": "date-time"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ],
+                                      "description": "Date and time of the last change in status"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "auditInfo": {
+                            "description": "Defines standard system audit fields available for most types",
+                            "type": "object",
+                            "example": {
+                              "isDeleted": true,
+                              "createdBy": "commodo minim dolore est",
+                              "updatedBy": "dolor quis nulla",
+                              "updatedDate": "1950-01-23T19:52:29.659Z",
+                              "createdDate": "1950-01-23T19:52:29.659Z"
+                            },
+                            "additionalProperties": true,
+                            "required": [
+                              "isDeleted",
+                              "createdBy",
+                              "updatedBy",
+                              "updatedDate",
+                              "createdDate"
+                            ],
+                            "properties": {
+                              "createdDate": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "format": "date-time"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ],
+                                "description": "Timestamp of when the entity was created"
+                              },
+                              "createdBy": {
+                                "type": "string",
+                                "description": "Identifies the system or user which created the entity"
+                              },
+                              "updatedDate": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "format": "date-time"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ],
+                                "description": "Timestamp of when the entity was last updated"
+                              },
+                              "updatedBy": {
+                                "type": "string",
+                                "description": "Identifies the system or user which last updated the entity"
+                              },
+                              "isDeleted": {
+                                "anyOf": [
+                                  {
+                                    "type": "boolean"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ],
+                                "description": "Indicates whether or not the entity has been soft-deleted"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                },
+                "externalIds": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "object",
+                        "example": {
+                          "externalIdType": [
+                            {
+                              "id": "id1",
+                              "name": "adipisicing labore Duis in anim"
+                            }
+                          ],
+                          "externalId": "Ut",
+                          "id": "irure proident cillum deserunt dolor",
+                          "status": "INVALID",
+                          "statusLastChangedDate": "1999-11-26T02:28:11.661Z"
+                        },
+                        "description": "Defines a structure for referencing an entity in external systems",
+                        "additionalProperties": true,
+                        "required": [
+                          "externalIdType",
+                          "externalId",
+                          "id"
+                        ],
+                        "properties": {
+                          "id": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "externalId": {
+                            "type": "string",
+                            "description": "A unique identifier assigned to an entity in another system"
+                          },
+                          "externalIdType": {
+                            "description": "Identifies the system that owns or otherwise recognizes this unique identifier",
+                            "type": "array",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "description": "Identifies the external system that owns or otherwise recognizes a particular identifier",
+                                  "type": "object",
+                                  "additionalProperties": true,
+                                  "required": [
+                                    "id",
+                                    "name"
+                                  ],
+                                  "properties": {
+                                    "id": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "status": {
+                            "enum": [
+                              "VALID",
+                              "INVALID"
+                            ],
+                            "description": "Indicates whether this identifier is currently valid or not",
+                            "type": "string"
+                          },
+                          "statusLastChangedDate": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ],
+                            "description": "Date and time of the last change in status"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                },
+                "auditInfo": {
+                  "description": "Defines standard system audit fields available for most types",
+                  "type": "object",
+                  "example": {
+                    "isDeleted": true,
+                    "createdBy": "commodo minim dolore est",
+                    "updatedBy": "dolor quis nulla",
+                    "updatedDate": "1950-01-23T19:52:29.659Z",
+                    "createdDate": "1950-01-23T19:52:29.659Z"
+                  },
+                  "additionalProperties": true,
+                  "required": [
+                    "isDeleted",
+                    "createdBy",
+                    "updatedBy",
+                    "updatedDate",
+                    "createdDate"
+                  ],
+                  "properties": {
+                    "createdDate": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Timestamp of when the entity was created"
+                    },
+                    "createdBy": {
+                      "type": "string",
+                      "description": "Identifies the system or user which created the entity"
+                    },
+                    "updatedDate": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Timestamp of when the entity was last updated"
+                    },
+                    "updatedBy": {
+                      "type": "string",
+                      "description": "Identifies the system or user which last updated the entity"
+                    },
+                    "isDeleted": {
+                      "anyOf": [
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Indicates whether or not the entity has been soft-deleted"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "auditInfo": {
+          "description": "Defines standard system audit fields available for most types",
+          "type": "object",
+          "example": {
+            "isDeleted": true,
+            "createdBy": "commodo minim dolore est",
+            "updatedBy": "dolor quis nulla",
+            "updatedDate": "1950-01-23T19:52:29.659Z",
+            "createdDate": "1950-01-23T19:52:29.659Z"
+          },
+          "additionalProperties": true,
+          "required": [
+            "isDeleted",
+            "createdBy",
+            "updatedBy",
+            "updatedDate",
+            "createdDate"
+          ],
+          "properties": {
+            "createdDate": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Timestamp of when the entity was created"
+            },
+            "createdBy": {
+              "type": "string",
+              "description": "Identifies the system or user which created the entity"
+            },
+            "updatedDate": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Timestamp of when the entity was last updated"
+            },
+            "updatedBy": {
+              "type": "string",
+              "description": "Identifies the system or user which last updated the entity"
+            },
+            "isDeleted": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Indicates whether or not the entity has been soft-deleted"
+            }
+          }
+        }
+      }
+    }
+  }
+}

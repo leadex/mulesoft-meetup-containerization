@@ -1,0 +1,44 @@
+{
+  "contactPointType": [
+    {
+      "id": "tempor",
+      "name": "proident ullamco irure id",
+      "optInPriority": null,
+      "auditInfo": {
+        "isDeleted": null,
+        "createdBy": "laboris",
+        "updatedBy": "sed deserunt do",
+        "updatedDate": "2010-07-05T08:03:48.491Z",
+        "createdDate": "1968-03-30T05:30:53.42Z"
+      }
+    }
+  ],
+  "id": "incididunt quis et labore",
+  "telephoneNumber": "cillum",
+  "activeFromDate": "2006-09-02",
+  "profileLastUpdatedDate": "00:00:01",
+  "isSMSCapable": true,
+  "bestTimeToContactEndTime": "00:00:01",
+  "activeToDate": "1959-12-28",
+  "forPersonalUse": true,
+  "profileOccurrenceCount": null,
+  "formattedE164PhoneNumber": "cupidatat consequat esse",
+  "primaryFlag": null,
+  "auditInfo": {
+    "isDeleted": false,
+    "createdBy": "incididunt",
+    "updatedBy": "velit incididunt in",
+    "updatedDate": null,
+    "createdDate": "1978-02-14T20:01:51.549Z"
+  },
+  "isFaxCapable": false,
+  "party": [
+    "id qui officia magna"
+  ],
+  "formattedInternationalPhoneNumber": "aute id",
+  "partyRole": [
+    "anim nulla occaecat fugiat est"
+  ],
+  "forBusinessUse": true,
+  "extensionNumber": "irure do"
+}

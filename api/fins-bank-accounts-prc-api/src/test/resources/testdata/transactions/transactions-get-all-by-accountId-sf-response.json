@@ -1,0 +1,31 @@
+[
+  {
+    "id": "a4k5e00000015aeAAA",
+    "externalIds": [
+      {
+        "externalId": "GT01",
+        "externalIdType": [
+          "FIS"
+        ],
+        "status": "VALID",
+        "statusLastChangedDate": "2021-07-28T19:33:10.000Z"
+      }
+    ],
+    "name": "T-000000402",
+    "description": "SERVICE CHARGE",
+    "amount": 10.0,
+    "transactionDate": "2018-03-07T07:33:09.000Z",
+    "transactionType": "DebitTransaction",
+    "transactionSubType": "MISC",
+    "transactionStatus": "POSTED",
+    "postedDate": "2018-03-07T00:00:00.000Z",
+    "isDisputed": false,
+    "auditInfo": {
+      "createdDate": "2021-07-28T19:33:10Z",
+      "createdBy": "Accelerator Admin",
+      "updatedDate": "2021-07-28T19:33:10Z",
+      "updatedBy": "Accelerator Admin",
+      "isDeleted": false
+    }
+  }
+]

@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/definitions/AuditInfo",
+  "definitions": {
+    "AuditInfo": {
+      "description": "Defines standard system audit fields available for most types",
+      "type": "object",
+      "example": {
+        "createdDate": "2021-01-21T21:21:21Z",
+        "createdBy": "0054x000002IpBlAAK",
+        "updatedDate": "2021-01-21T21:21:21Z",
+        "updatedBy": "0054x000002xBGGAA2",
+        "isDeleted": false
+      },
+      "additionalProperties": true,
+      "required": [
+        "isDeleted",
+        "createdBy",
+        "updatedBy",
+        "updatedDate",
+        "createdDate"
+      ],
+      "properties": {
+        "createdDate": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Timestamp of when the entity was created"
+        },
+        "createdBy": {
+          "type": "string",
+          "description": "Identifies the system or user which created the entity"
+        },
+        "updatedDate": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Timestamp of when the entity was last updated"
+        },
+        "updatedBy": {
+          "type": "string",
+          "description": "Identifies the system or user which last updated the entity"
+        },
+        "isDeleted": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Indicates whether or not the entity has been soft-deleted"
+        }
+      }
+    }
+  }
+}

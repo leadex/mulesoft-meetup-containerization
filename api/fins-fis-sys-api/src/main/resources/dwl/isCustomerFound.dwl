@@ -1,0 +1,1 @@
+vars.customerData.Metadata.MsgLst[0].Text contains "error"

@@ -1,0 +1,23 @@
+#%RAML 1.0 Library
+usage: Provides common types used across multiple CIM subject areas
+
+uses:
+  GlobalTypes: libraries/GlobalTypeLibrary.raml
+
+types:
+  # Exported GlobalTypes
+  AuditInfo:
+    type: GlobalTypes.AuditInfo
+    example: !include ./examples/AuditInfoExample.json
+  ExternalId:
+    type: GlobalTypes.ExternalId
+    example: !include ./examples/ExternalIdExample.json
+  ExternalIdType:
+    type: GlobalTypes.ExternalIdType
+    example: !include ./examples/ExternalIdTypeExample.json
+  UnitOfMeasure:
+    type: GlobalTypes.UnitOfMeasure
+    example: !include ./examples/UnitOfMeasureExample.json
+  UserSession:
+    type: GlobalTypes.UserSession
+    example: !include ./examples/UserSessionExample.json

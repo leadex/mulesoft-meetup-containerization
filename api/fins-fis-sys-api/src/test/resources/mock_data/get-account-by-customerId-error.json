@@ -1,0 +1,44 @@
+{
+    "metaData": {
+        "status": {
+            "code": 0,
+            "message": "error"
+        }
+    },
+    "acctList": [
+        {
+            "accountId": "100000000278",
+            "accountType": "DDA",
+            "productCode": 1000,
+            "productDescription": "Demand Deposit",
+            "retirementAccountIndicator": false,
+            "primaryOwnerIndicator": false,
+            "currencyCode": "USD",
+            "ownerDirectLiability": false,
+            "dateOpened": "2017-02-04",
+            "status": "Active",
+            "balance": 500,
+            "availableBalance": 500,
+            "availableCredit": 500,
+            "creditLimit": 0,
+            "principleBalance": 500
+        },
+        {
+            "accountId": "400000000278",
+            "accountType": "SAV",
+            "productCode": 1100,
+            "productDescription": "Saving Business",
+            "retirementAccountIndicator": false,
+            "primaryOwnerIndicator": false,
+            "currencyCode": "EUR",
+            "ownerDirectLiability": false,
+            "dateOpened": "2018-02-01",
+            "status": "Dormant",
+            "balance": 900,
+            "availableBalance": 900,
+            "availableCredit": 900,
+            "creditLimit": 0,
+            "principleBalance": 900
+        }
+    ]
+}

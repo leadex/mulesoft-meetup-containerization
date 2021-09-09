@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<sub-flow name="accounts_poller" doc:id="0b18c080-603c-47fc-9ef8-af96f5580030">
+			<until-successful maxRetries="${until.successful.max-retries}" doc:name="Until Successful" doc:id="31d5cf7f-b64e-4624-a642-ccd2058aaa07" millisBetweenRetries="${until.successful.time-between}">
+		<try doc:name="Try" doc:id="955d494b-058a-4a6f-8998-2f11c2c58f59">
+				<http:request method="POST" doc:name="Trigger poller" doc:id="b20c2bd3-bae7-4e0b-b7cc-27a5ef76f3c6" config-ref="bank-accounts-prc-httpRequestConfig" path="#[p('bank-accounts-prc.poller-path')]" sendCorrelationId="ALWAYS" correlationId="#[correlationId]">
+			</http:request>
+			<error-handler>
+				<on-error-continue enableNotifications="true"
+					logException="true" doc:name="On Error Continue"
+					doc:id="5c48bc96-1ae1-4c83-b028-e640fa281269"
+					type="HTTP:BAD_REQUEST, HTTP:CLIENT_SECURITY, HTTP:CONNECTIVITY, HTTP:FORBIDDEN, HTTP:METHOD_NOT_ALLOWED, HTTP:NOT_ACCEPTABLE, HTTP:NOT_FOUND, HTTP:PARSING, HTTP:RETRY_EXHAUSTED, HTTP:SECURITY, HTTP:UNAUTHORIZED, HTTP:UNSUPPORTED_MEDIA_TYPE">
+					<flow-ref doc:name="common-error-handler_http-exception"
+						doc:id="0c2c76ca-11cb-4a79-968b-8a6b44faf63e"
+						name="common-error-handler_http-exception" />
+				</on-error-continue>
+			</error-handler>
+		</try>
+			</until-successful>
+		<choice doc:name="Check for HTTP response"
+			doc:id="b5ecfc36-ceeb-4897-bbd6-a1f65e28ffaa">
+			<when expression="#[vars.httpStatus != null]">
+				<ee:transform doc:name="Error response"
+					doc:id="188b18e3-bd3c-40cb-ae90-c876ed0c33ec">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	responseStatus: "ERROR",
+	resultMessages: [ {
+		severity: "ERROR",
+		code: vars.exceptionResponse.errorCode default "UNKNOWN",
+		message: vars.exceptionResponse.errorCode default ""
+	} ]
+}
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="ERROR" doc:name="Log exception"
+					doc:id="40ad3259-8898-4451-9f2a-e5589ecc7955"
+					message='#["Failed to trigger polling cycle"]' />
+			</when>
+			<otherwise>
+				<logger level="DEBUG" doc:name="Log success"
+					doc:id="d933282f-e84b-42f2-871f-981ec0435f48"
+					message='#["Polling cycle triggered"]' />
+			</otherwise>
+		</choice>
+	
+	</sub-flow>
+</mule>

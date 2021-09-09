@@ -1,0 +1,9 @@
+%dw 2.0
+
+type auto_a54e7d6d_60c9_4d58_9a42_40855e767c6a_Output_Payload = {|
+  status: String, 
+  apiName: String, 
+  apiVersion: String, 
+  dependencies?: Array<{|    name: String,     status: String  |}> | Null
+|}
+

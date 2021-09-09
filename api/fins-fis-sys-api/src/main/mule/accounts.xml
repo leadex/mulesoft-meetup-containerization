@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<sub-flow name="accounts_get-accounts-by-customer-id" doc:id="bf813945-8d4e-49b6-9810-85e00c57864e" >
+		<flow-ref doc:name="Get Access Token" doc:id="4f500b04-9b84-4bd8-91c3-31647a85fb0d" name="common_get-access-token" />
+		<until-successful maxRetries="${retry.fis.numRetries}" doc:name="Until Successful" doc:id="0ae71ba2-c4ea-4189-8b11-cd5d1aacd4c5" millisBetweenRetries="${retry.fis.delayMillisecs}">
+			<try doc:name="Try" doc:id="816f7edc-7a95-405c-9ade-167272ad6e10" >
+		<!--
+		<http:request method="GET" doc:name="Get Account By Customer Id from FIS" doc:id="4530524f-e5df-4677-a663-b8e31db07052" config-ref="fis-httpRequestConfig" path="${fis.getAccountByCustomerIdPath}">
+			<http:headers ><![CDATA[#[output application/java
+-&#45;&#45;
+{
+	"Authorization" : vars.accessToken
+}]]]></http:headers>
+					<http:uri-params ><![CDATA[#[output application/java
+-&#45;&#45;
+{
+	"customerId" : vars.customerId
+}]]]></http:uri-params>
+		</http:request>
+		-->
+				<ee:transform doc:name="Mock Get Account By Customer Id from FIS" doc:id="67d78acd-d986-4e92-965a-72882af7c1f2" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+    "metaData": {
+        "status": {
+            "code": 0,
+            "message": "PROCESS COMPLETE"
+        }
+    },
+    "acctList": [
+        {
+            "accountId": "100000000278",
+            "accountType": "DDA",
+            "productCode": 1000,
+            "productDescription": "Demand Deposit",
+            "retirementAccountIndicator": false,
+            "primaryOwnerIndicator": false,
+            "currencyCode": "USD",
+            "ownerDirectLiability": false,
+            "dateOpened": "2017-02-04",
+            "status": "Active",
+            "balance": 500,
+            "availableBalance": 500,
+            "availableCredit": 500,
+            "creditLimit": 0,
+            "principleBalance": 500
+        },
+        {
+            "accountId": "400000000278",
+            "accountType": "SAV",
+            "productCode": 1100,
+            "productDescription": "Saving Business",
+            "retirementAccountIndicator": false,
+            "primaryOwnerIndicator": false,
+            "currencyCode": "EUR",
+            "ownerDirectLiability": false,
+            "dateOpened": "2018-02-01",
+            "status": "Dormant",
+            "balance": 900,
+            "availableBalance": 900,
+            "availableCredit": 900,
+            "creditLimit": 0,
+            "principleBalance": 900
+        }
+    ]
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Log Response" doc:id="a4021713-dc11-4c9f-9bf0-97efcc784978" message='#[%dw 2.0&#10;output application/json&#10;---&#10;payload]' />
+				<ee:transform doc:name="Set isAccountFound" doc:id="1a9ebf1a-50f4-4ab3-9e9b-e54c9d752d73" >
+					<ee:message >
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable resource="dwl/isAccountFound.dwl" variableName="isAccountFound" />
+					</ee:variables>
+				</ee:transform>
+				<validation:is-false doc:name="Is Account Found" doc:id="a628efca-e997-48b7-b6ee-6e17b4580c39" config-ref="Validation_Config" expression="#[vars.isAccountFound]" message='#["Account Not Found"]'/>
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="20f0117b-1282-4cb6-8fe7-6c3d68619499" type="HTTP:BAD_GATEWAY, HTTP:CONNECTIVITY, HTTP:TIMEOUT">
+						<flow-ref doc:name="common-error-handler_http-exception" doc:id="806fc418-fbbc-402f-ba0c-1fcc9c19ed57" name="common-error-handler_http-exception"/>
+					</on-error-continue>
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="dc5cc4d7-fd53-45a7-ad0b-39a58e71190f" type="VALIDATION:INVALID_BOOLEAN">
+						<set-variable value="404" doc:name="Set HTTP Status" doc:id="e5f81e43-7c8c-40da-969c-d011702fb397" variableName="httpStatus"/>
+						<flow-ref doc:name="common-error-handler_connector-exception" doc:id="8ac2c9df-4a59-49e3-99f3-99466713e431" name="common-error-handler_connector-exception"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</until-successful>
+		
+		<choice doc:name="Check FIS httpStatus" doc:id="4f7adec8-9f02-4a0a-85e1-fe08f26a8469" >
+			<when expression="#[vars.httpStatus != null]">
+				<ee:transform doc:name="Set Exception Payload" doc:id="3b3ca6f6-38b0-451a-bbd0-bbb51f1b3a9d" >
+					<ee:message >
+						<ee:set-payload resource="dwl/exceptionResponse.dwl" />
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise >
+		<ee:transform doc:name="Get Account Response" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+            <ee:message>
+						<ee:set-payload resource="dwl/getAccountByCustomerId.dwl" />
+            </ee:message>
+        </ee:transform>
+			</otherwise>
+		</choice>
+		
+	</sub-flow>
+	<sub-flow name="accounts_get-transaction-by-account-id" doc:id="24074631-a9bf-476a-854a-559e72afaf4a" >
+		<flow-ref doc:name="Get Access Token" doc:id="ae977aab-0ba5-400e-9da5-f50b8e60b624" name="common_get-access-token" />
+		<until-successful maxRetries="${retry.fis.numRetries}" doc:name="Until Successful" doc:id="3052d117-5fb3-4cb4-9e05-ad4e347b9874" millisBetweenRetries="${retry.fis.delayMillisecs}">
+			<try doc:name="Try" doc:id="8dc74862-c12e-4f9a-aea0-d93dc15cfc3f" >
+		<!--
+		<http:request method="GET" doc:name="Get Transaction by Account Id from FIS" doc:id="d84dccc6-2c63-4b2c-ae8b-981114e0f696" config-ref="fis-httpRequestConfig" path="${fis.getTransactionByAccountIdPath}">
+			<http:headers ><![CDATA[#[output application/java
+-&#45;&#45;
+{
+	"Authorization" : vars.accessToken
+}]]]></http:headers>
+					<http:uri-params ><![CDATA[#[output application/java
+-&#45;&#45;
+{
+	"accountId" : vars.accountId,
+	"customerId" : vars.customerId
+}]]]></http:uri-params>
+		</http:request>
+		-->
+				<ee:transform doc:name="Mock Get Transaction by Account Id from FIS" doc:id="21cf0246-f58f-4a01-aa45-55585678b132" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+    "metaData": {
+        "status": {
+            "code": 0,
+            "message": "PROCESS COMPLETE"
+        }
+    },
+    "acctTranList": [
+        {
+            "accountNumber": 100000000278,
+            "datePosted": "2018-03-07",
+            "amount": 10,
+            "isDebit": true,
+            "isCredit": false,
+            "status": "Active",
+            "tranCode": "GT01",
+            "tranType": "DDA DEBIT",
+            "checkNumber": "0000000000",
+            "description": "SERVICE CHARGE"
+        },
+        {
+            "accountNumber": 100000000278,
+            "datePosted": "2018-03-07",
+            "amount": 7.97,
+            "isDebit": false,
+            "isCredit": true,
+            "status": "Active",
+            "tranCode": "GT20",
+            "tranType": "DDA CREDIT",
+            "checkNumber": "0000000000",
+            "description": "IOD INTEREST PAID"
+        }
+    ]
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Log Response" doc:id="a6b3f812-b2bd-480e-b29c-d290eafe47d6" message='#[%dw 2.0&#10;output application/json&#10;---&#10;payload]' />
+				<ee:transform doc:name="Set isAccountFound" doc:id="201a4f6e-ab95-48c6-82cd-6628b74034a6" >
+					<ee:message >
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable resource="dwl/isAccountFound.dwl" variableName="isAccountFound" />
+					</ee:variables>
+				</ee:transform>
+				<validation:is-false doc:name="Is Account Found" doc:id="974cdec8-d14f-4e98-b5fd-250aca1c5ba6" config-ref="Validation_Config" expression="#[vars.isAccountFound]" message='#["Account Not Found"]'/>
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="9cd0df00-4a68-44b3-bd70-73e8c4f885b0" type="HTTP:BAD_GATEWAY, HTTP:CONNECTIVITY, HTTP:TIMEOUT">
+						<flow-ref doc:name="common-error-handler_http-exception" doc:id="4891b816-5b1b-42c2-84c2-df1a29439937" name="common-error-handler_http-exception"/>
+					</on-error-continue>
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="ead6e0b2-06f3-441e-a682-47499c0c6516" type="VALIDATION:INVALID_BOOLEAN">
+						<set-variable value="404" doc:name="Set HTTP Status" doc:id="ed21d999-c1ab-416a-92b3-f12fd1a0510d" variableName="httpStatus"/>
+						<flow-ref doc:name="common-error-handler_connector-exception" doc:id="a957666e-56de-49e4-8197-740befe3ad66" name="common-error-handler_connector-exception"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</until-successful>
+		
+		<choice doc:name="Check FIS httpStatus" doc:id="5b1da686-9398-4262-a78c-6ef986e03c94" >
+			<when expression="#[vars.httpStatus != null]">
+				<ee:transform doc:name="Set Exception Payload" doc:id="d6490b2e-a65f-48ca-bfe3-95fe73a7a202" >
+					<ee:message >
+						<ee:set-payload resource="dwl/exceptionResponse.dwl" />
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise >
+		<ee:transform doc:name="Get Transaction Response" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+            <ee:message>
+						<ee:set-payload resource="dwl/getTransactionByAccountId.dwl" />
+            </ee:message>
+        </ee:transform>
+			</otherwise>
+		</choice>
+		
+	</sub-flow>
+	<sub-flow name="accounts_get-accounts-by-account-id" doc:id="54a17c66-da55-4a68-bed1-b169042cfebd" >
+		<flow-ref doc:name="Get Access Token" doc:id="b6862b59-fcfb-4f69-8fb7-9baf3b7936d0" name="common_get-access-token" />
+		<until-successful maxRetries="${retry.fis.numRetries}" doc:name="Until Successful" doc:id="9b5c1ad3-3584-4ed3-9e12-336dbbe96b8a" millisBetweenRetries="${retry.fis.delayMillisecs}">
+			<try doc:name="Try" doc:id="4ae762a2-8b95-42f3-8be2-af58e3b36f53" >
+		<!--  
+		<http:request method="GET" doc:name="Get Account By Customer Id from FIS" doc:id="2706bc2a-8494-4b88-8e84-1094e967bae8" config-ref="fis-httpRequestConfig" path="${fis.getAccountByAccountIdPath}">
+			<http:headers ><![CDATA[#[output application/java
+-&#45;&#45;
+{
+	"Authorization" : vars.accessToken
+}]]]></http:headers>
+					<http:uri-params ><![CDATA[#[output application/java
+-&#45;&#45;
+{
+	"accountId" : vars.accountId,
+	"customerId" : vars.customerId
+}]]]></http:uri-params>
+		</http:request>
+		-->
+				<ee:transform doc:name="Mock Get Account By Account Id from FIS" doc:id="ceb556cb-f234-4030-937e-3ec1bdf8e83a" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+    "metaData": {
+        "status": {
+            "code": 0,
+            "message": "PROCESS COMPLETE"
+        }
+    },
+    "DepAcctDetails": {
+        "accountId": 100000000278,
+        "accountType": "SAV",
+        "productCode": "1101",
+        "productDescription": "ANALYSIS INTEREST CHKG",
+        "retirementAccountIndicator": false,
+        "currencyCode": "USD",
+        "dateOpened": "2018-02-02",
+        "status": "ACTIVE",
+        "balance": 18835362.3,
+        "availableBalance": 18835362.3,
+        "rate": 0.0025
+    }
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Log Response" doc:id="b0841f24-31e9-4cb8-8e74-e02a5c8041b7" message='#[%dw 2.0&#10;output application/json&#10;---&#10;payload]' />
+				<ee:transform doc:name="Set isAccountFound" doc:id="5042ddbb-7613-4e6a-99b7-66455e011929" >
+					<ee:message >
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable resource="dwl/isAccountFound.dwl" variableName="isAccountFound" />
+					</ee:variables>
+				</ee:transform>
+				<validation:is-false doc:name="Is Account Found" doc:id="37fec08f-0c08-4ea3-97ae-14dd2643bee9" config-ref="Validation_Config" expression="#[vars.isAccountFound]" message='#["Account Not Found"]'/>
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="455cfc1e-446e-4efe-925e-d1dfde57ee0d" type="HTTP:BAD_GATEWAY, HTTP:CONNECTIVITY, HTTP:TIMEOUT">
+						<flow-ref doc:name="common-error-handler_http-exception" doc:id="20068901-d779-46d1-a3c6-077a07f3d76d" name="common-error-handler_http-exception"/>
+					</on-error-continue>
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="e5739981-4bdf-4a29-976b-f3038c40cd6c" type="VALIDATION:INVALID_BOOLEAN">
+						<set-variable value="404" doc:name="Set HTTP Status" doc:id="ef9cd4e7-2469-49bb-8171-6f57ab02bd76" variableName="httpStatus"/>
+						<flow-ref doc:name="common-error-handler_connector-exception" doc:id="57ca5e61-84ba-49ac-8e68-62445b2eba7b" name="common-error-handler_connector-exception"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</until-successful>
+		
+		<choice doc:name="Check FIS httpStatus" doc:id="30f7e3e7-d8ff-46b7-9fa2-d52bd08653b1" >
+			<when expression="#[vars.httpStatus != null]">
+				<ee:transform doc:name="Set Exception Payload" doc:id="7c9e0177-acfe-4821-8862-f27cd7f49bc4" >
+					<ee:message >
+						<ee:set-payload resource="dwl/exceptionResponse.dwl" />
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise >
+		<ee:transform doc:name="Get Account Response" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+            <ee:message>
+						<ee:set-payload resource="dwl/getAccountByAccountId.dwl" />
+            </ee:message>
+        </ee:transform>
+			</otherwise>
+		</choice>
+		
+	</sub-flow>
+	</mule>

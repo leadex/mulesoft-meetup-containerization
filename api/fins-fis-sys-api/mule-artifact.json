@@ -1,0 +1,7 @@
+{
+  "minMuleVersion": "4.3.0",
+  "secureProperties": [
+		"fis.consumer-key",
+		"fis.consumer-secret"
+	]
+}

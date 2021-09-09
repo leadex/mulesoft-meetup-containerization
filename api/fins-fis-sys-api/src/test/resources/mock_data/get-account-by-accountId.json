@@ -1,0 +1,21 @@
+{
+    "metaData": {
+        "status": {
+            "code": 0,
+            "message": "PROCESS COMPLETE"
+        }
+    },
+    "DepAcctDetails": {
+        "accountId": 100000000278,
+        "accountType": "SAV",
+        "productCode": "1101",
+        "productDescription": "ANALYSIS INTEREST CHKG",
+        "retirementAccountIndicator": false,
+        "currencyCode": "USD",
+        "dateOpened": "2018-02-02",
+        "status": "ACTIVE",
+        "balance": 18835362.3,
+        "availableBalance": 18835362.3,
+        "rate": 0.0025
+    }
+}

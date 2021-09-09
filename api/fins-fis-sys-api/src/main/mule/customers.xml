@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	
+	<sub-flow name="customers_get-customers-using-lookup" doc:id="186480f6-a9ba-495b-a5a4-da08dd3f142c" >
+		<ee:transform doc:name="Fetch Query Params" doc:id="b6a114e4-d5e0-4054-b04f-633cbb11d8be" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable resource="dwl/lookupParams.dwl" variableName="queryParams" />
+			</ee:variables>
+		</ee:transform>
+		<choice doc:name="Lookup by CustomerId" doc:id="0f0ebe1b-c6f4-45e4-aefc-af1ce376e582">
+			<when expression="#[!isEmpty(vars.queryParams.customerId) and isEmpty(vars.customerData)]">
+				<flow-ref doc:name="customers_get-customer-by-id" doc:id="3f252e5a-bf13-4942-9d8c-ecf855bb3bec" name="customers_get-customer-by-id" target="customerData"/>
+			</when>
+			<otherwise>
+				<logger level="INFO" doc:name="Logger" doc:id="86ce9249-6705-422e-a951-cc5dd3c49a37" message='#["No lookup for Customer Id"]' />
+			</otherwise>
+		</choice>
+		<choice doc:name="Choice" doc:id="faac95ca-ca4b-43bd-92a5-76ceb1a3ea09" >
+			<when expression="#[isEmpty(vars.queryParams.customerId) and isEmpty(vars.queryParams.externalId)]">
+				<set-variable value="#[vars.queryParams.customerId]" doc:name="Set Customer Id" doc:id="ce55bd9b-8e69-4a6b-8c97-bbd8b4ad207f" variableName="customerId" />
+				<flow-ref doc:name="customers_get-all-customers" doc:id="d642856f-892c-44d7-ba77-eb89899dd3b6" name="customers_get-all-customers" target="customerData"/>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Logger" doc:id="a194d351-fc3d-4eb6-a1c2-0d0ba43faa0b" message='#["Filter Found"]'/>
+			</otherwise>
+		</choice>
+		<ee:transform doc:name="Set Customer Response" doc:id="c8b36381-f694-47d4-bd87-853eaad3784b">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+if (!isEmpty(vars.customerData)) vars.customerData else []]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+	<sub-flow name="customers_get-customer-by-id" doc:id="98172f3b-c209-4c1f-b62c-b5aae9d2f611" >
+		<flow-ref doc:name="Get Access Token" doc:id="b1f69ec9-1fb0-440c-ad18-4221d64c5392" name="common_get-access-token" />
+		<until-successful maxRetries="${retry.fis.numRetries}" doc:name="Until Successful" doc:id="a9180cac-786a-4249-a428-a5e2ef54bb76" millisBetweenRetries="${retry.fis.delayMillisecs}">
+			<try doc:name="Try" doc:id="600661b5-1f02-4402-b2fb-6a4cea03819e" >
+				<!--
+				<http:request method="GET" doc:name="Get Customer By Id from FIS" doc:id="c15b5d50-8de0-4599-bdda-1230268e8f79" config-ref="fis-httpRequestConfig" path="${fis.getCustomerByIdPath}" target="customerData">
+			<http:headers ><![CDATA[#[output application/java
+-&#45;&#45;
+{
+	"Authorization" : vars.accessToken
+}]]]></http:headers>
+					<http:uri-params ><![CDATA[#[output application/java
+-&#45;&#45;
+{
+	"customerId" : vars.customerId
+}]]]></http:uri-params>
+		</http:request>
+				-->
+		<ee:transform doc:name="Mock Get Customer By Id from FIS" doc:id="dd36d31b-14ab-46af-a979-5227af3b2bd6" >
+					<ee:message >
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="customerData" ><![CDATA[%dw 2.0
+output application/java
+---
+{
+    "Metadata": {
+        "MsgLst": [
+            {
+                "Text": "Success",
+                "Severity": "Info",
+                "Type": "Informational Message",
+                "Code": "0"
+            }
+        ]
+    },
+    "Entity": {
+        "customer": {
+            "CICustTaxNbr": 145897531,
+            "CICstCntrNbr": 0,
+            "CIMothersMdnNme": "SHIRLEY",
+            "CICurStdAddr2Cde": "C",
+            "CIFrstNmeMidInitl": "GARY",
+            "CIMrtlStatInd": "S",
+            "ZIP": 995035774,
+            "CICurStdNme01": "GARY",
+            "CICustOpenDte": "2016-11-24",
+            "AddrOvrideInd": "N",
+            "CIScndyOffcrNbr": 0,
+            "CINmeTC": 0,
+            "Cty": "ANCHORAGE",
+            "CISrnme": "BILLL",
+            "CIBrnchNbr": 0,
+            "CIPrspctInd": "C",
+            "CICustTaxCde": "S",
+            "CIApplNbr": 373521,
+            "St": "WI",
+            "CIDunBradstreetCde": 0,
+            "CICurStdAddr1Txt": 195,
+            "CICustCde2": 0,
+            "CICustCde1": 0,
+            "CIOwnRentInd": "R",
+            "CICurNmeSfxCde": 0,
+            "CICurStdAddr1Cde": "S",
+            "CICustCde9": 0,
+            "CIBirthdate": "1989-08-09",
+            "CICustCde8": 0,
+            "CICustCde7": 0,
+            "CICustCde6": 0,
+            "CICustCde5": 0,
+            "CICustCde4": 0,
+            "CICustCde3": 0,
+            "CIOccpnCde": "001",
+            "CICustEducCde": "006",
+            "CICustCde11": 0,
+            "CICustCde10": 0,
+            "CICustCde13": 0,
+            "CICustCde12": 0,
+            "CICustCde15": 0,
+            "CICustCde14": 0,
+            "CISexCodeInd": "M",
+            "CtryCde": "USA",
+            "CICustStat": "O",
+            "CIRmrkLine1Txt": "ADDED  BY KUMAR WSO2",
+            "CICurStdAddr2Txt": "ANCHORAGE AK 99503-5774",
+            "CIPrmyPhNbr": 8774246423,
+            "CICenTrctNbr": 0,
+            "CINaicsCde": 0,
+            "CIPrmyOffcrNbr": 0,
+            "CICurNmePrcsTme": "05.46.07"
+        }
+    }
+}]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<!--
+				<http:request method="GET" doc:name="Get ContactPoints By Id from FIS" doc:id="1391e31f-f596-40f8-beb9-97f198d437da" config-ref="fis-httpRequestConfig" path="${fis.getContactByIdPath}" target="contactPoints">
+			<http:headers ><![CDATA[#[output application/java
+-&#45;&#45;
+{
+	"Authorization" : vars.accessToken
+}]]]></http:headers>
+					<http:uri-params ><![CDATA[#[output application/java
+-&#45;&#45;
+{
+	"customerId" : vars.customerId
+}]]]></http:uri-params>
+		</http:request>
+				-->
+				<ee:transform doc:name="Mock Get ContactPoints By Id from FIS" doc:id="26dc529d-9eaf-4894-a894-ba757bff5ad6" >
+					<ee:message >
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="contactPoints" ><![CDATA[%dw 2.0
+output application/java
+---
+{
+    "Entity": {
+        "IpPoc": {
+            "PhInq": [
+                {
+                    "StrtDte": "2016-01-01",
+                    "Nbr": 9876543210,
+                    "IntlPrfx": 911,
+                    "CtryCallngCde": 11,
+                    "TrnkCde": 123,
+                    "AreaCde": "080",
+                    "TeleNbr": 1234567891,
+                    "ExtnNbr": 1212,
+                    "TxtEnabl": true,
+                    "PhTyp": "Home",
+                    "SeqNbr": 1,
+                    "SpclInst": "Phone Special Instructions",
+                    "TzCode": "Canada/Central",
+                    "PrfrdPhInd": true,
+                    "PrfrdTxtInd": false
+                }
+            ],
+            "EmailAddrInq": [
+                {
+                    "StrtDte": "2016-11-01",
+                    "SpclInst": "Email Special Instructions",
+                    "Addr": "Chakraprasad.j@gmail.com",
+                    "EmailTyp": "Primary",
+                    "SeqNbr": 1,
+                    "PrfrdInd": true
+                }
+            ],
+            "PstlAddrInq": [
+                {
+                    "PstlAddrTyp": "Home",
+                    "SeqNbr": 1,
+                    "PrfrdInd": true
+                }
+            ],
+            "SocmediaInq": [
+                {
+                    "StrtDte": "2015-01-02",
+                    "SpclInst": "Social Media Special Instructions",
+                    "SocMediaAccId": "Cherry@facebook.com",
+                    "SocMediaTyp": "Facebook",
+                    "SeqNbr": 1,
+                    "PrfrdInd": true
+                }
+            ]
+        }
+    }
+}]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<ee:transform doc:name="Set isCustomerFound" doc:id="ab8ddde0-ff16-46fc-9afa-7d7fbcc9d6c1" >
+					<ee:message >
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable resource="dwl/isCustomerFound.dwl" variableName="isCustomerFound" />
+					</ee:variables>
+				</ee:transform>
+				<validation:is-false doc:name="Is Customer Found" doc:id="77980964-f318-4f3a-a420-2a59029ad928" config-ref="Validation_Config" expression="#[vars.isCustomerFound]" message='#["Customer Not Found"]'/>
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="5bc4ece8-8edf-4cec-972f-f5d699bf97d0" type="HTTP:BAD_GATEWAY, HTTP:CONNECTIVITY, HTTP:TIMEOUT">
+						<flow-ref doc:name="common-error-handler_http-exception" doc:id="97a2e693-1ffd-4ad3-9f19-2ef750b4ec93" name="common-error-handler_http-exception"/>
+					</on-error-continue>
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="f7988fba-a644-45e8-a1e9-882bc709080b" type="VALIDATION:INVALID_BOOLEAN">
+						<set-variable value="404" doc:name="Set HTTP Status" doc:id="4e66f845-40dc-49fd-9147-e3950567fbd5" variableName="httpStatus"/>
+						<flow-ref doc:name="common-error-handler_connector-exception" doc:id="9d19d1f3-067b-4eba-9360-121af743bd88" name="common-error-handler_connector-exception"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</until-successful>
+		<choice doc:name="Check FIS httpStatus" doc:id="81d57ae5-afdb-44f0-834d-4edaa5c1e5ee" >
+			<when expression="#[vars.httpStatus != null]">
+				<ee:transform doc:name="Set Exception Payload" doc:id="d0e681cf-cfdf-41dc-86e8-5c64a214d789" >
+					<ee:message >
+						<ee:set-payload resource="dwl/exceptionResponse.dwl" />
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise >
+		<ee:transform doc:name="Get Customer Response" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+            <ee:message>
+						<ee:set-payload resource="dwl/getCustomerByIdResponse.dwl" />
+            </ee:message>
+        </ee:transform>
+			</otherwise>
+		</choice>
+		
+	</sub-flow>
+	<sub-flow name="customers_get-all-customers" doc:id="abc1b357-9859-43c5-b300-29a42b619aac" >
+	<flow-ref doc:name="Get Access Token" doc:id="d30204b8-be17-4c4d-902b-8f67d8e18868" name="common_get-access-token" />
+		<until-successful maxRetries="${retry.fis.numRetries}" doc:name="Until Successful" doc:id="9e7292ad-a14f-497e-9864-d840b96e33c4" millisBetweenRetries="${retry.fis.delayMillisecs}">
+			<try doc:name="Try" doc:id="44780255-ac47-4552-87d7-8d492caa1d33" >
+		<!--
+		<http:request method="POST" doc:name="Get All Customer from FIS" doc:id="8a4c5671-b28f-4312-a829-80329ac63ef4" config-ref="fis-httpRequestConfig" path="${fis.getAllCustomersPath}">
+			<http:headers ><![CDATA[#[output application/java
+-&#45;&#45;
+{
+	"Authorization" : vars.accessToken
+}]]]></http:headers>
+		</http:request>
+		-->
+				<ee:transform doc:name="Mock Get All Customer from FIS" doc:id="ef11f8fa-c53e-4e5f-8ddc-ce9a4e01f785" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+    "metaData": {
+        "status": {
+            "code": 0,
+            "message": "PROCESS COMPLETE"
+        }
+    },
+    "CustomerList": [
+        {
+            "customerId": 6090,
+            "NameFull": "JUAN DELA CRUZ",
+            "firstName": "JUAN",
+            "middleName": null,
+            "lastName": "DELA CRUZ",
+            "addresslineFull": "144 SAMPAGUITA ST  MAKATI  AR  72212",
+            "homePhone": "463-555-1234",
+            "businessPhone": "463-555-1234",
+            "cellPhone": null,
+            "taxIdNumber": "000-2900-67",
+            "dateOfBirth": "1968-02-24"
+        },
+        {
+            "customerId": 9112,
+            "NameFull": "BETTY LEE HAW",
+            "firstName": "BETTY",
+            "middleName": "LEE",
+            "lastName": "HAW",
+            "addresslineFull": "123 CHURCH ST  BANGKOK  AR  72212",
+            "homePhone": "463-555-1234",
+            "businessPhone": null,
+            "cellPhone": null,
+            "taxIdNumber": "000-4100-65",
+            "dateOfBirth": "1968-02-24"
+        },
+        {
+            "customerId": 21106,
+            "NameFull": "OLD STONE BAKERY 3",
+            "firstName": "STONE",
+            "middleName": "BAKERY",
+            "lastName": "OLD",
+            "addresslineFull": "1526 WEST RD  INDIANAPOLIS  IN  46201",
+            "homePhone": "463-555-1234",
+            "businessPhone": "463-555-1234",
+            "cellPhone": "463-555-1234",
+            "taxIdNumber": "000-4108-65",
+            "dateOfBirth": "1986-01-07"
+        },
+        {
+            "customerId": 6662,
+            "NameFull": "ADAM SMITH",
+            "firstName": "ADAM",
+            "middleName": null,
+            "lastName": "SMITH",
+            "addresslineFull": "123 SILOM ST  BANGKOK  10500",
+            "homePhone": null,
+            "businessPhone": null,
+            "cellPhone": "463-555-1234",
+            "taxIdNumber": "123-4100-65",
+            "dateOfBirth": "1972-12-23"
+        },
+        {
+            "customerId": 14902,
+            "NameFull": "BRAIN SMITH",
+            "firstName": "BRAIN",
+            "middleName": null,
+            "lastName": "SMITH",
+            "addresslineFull": "123 SILOM ST  BANGKOK  10500",
+            "homePhone": null,
+            "businessPhone": "463-565-1634",
+            "cellPhone": null,
+            "taxIdNumber": "123-45-9889",
+            "dateOfBirth": "1975-03-26"
+        },
+        {
+            "customerId": 6658,
+            "NameFull": "ADAM SMITH",
+            "firstName": "ADAM",
+            "middleName": null,
+            "lastName": "SMITH",
+            "addresslineFull": "123 SILOM ST  BANGKOK  10500",
+            "homePhone": "469-556-1234",
+            "businessPhone": null,
+            "cellPhone": null,
+            "taxIdNumber": "162-89-6789",
+            "dateOfBirth": "1990-01-18"
+        }
+    ]
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Log Response" doc:id="c2b2ceff-5d80-4ad6-90c1-0728daf5bc2c" message="#[%dw 2.0&#10;output application/json&#10;---&#10;payload]"/>
+				<ee:transform doc:name="Set isCustomerFound" doc:id="3025661c-08ae-455e-b237-b28cc04b495f" >
+					<ee:message >
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable resource="dwl/isAccountFound.dwl" variableName="isCustomersFound" />
+					</ee:variables>
+				</ee:transform>
+				<validation:is-false doc:name="Is Customer Found" doc:id="902ae608-789b-4813-a0df-e2d7eb55e437" config-ref="Validation_Config" expression="#[vars.isCustomerFound]" message='#["Customer Not Found"]'/>
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="9b1bf20a-4fea-44d5-b1cb-527cf3bcd6ed" type="HTTP:BAD_GATEWAY, HTTP:CONNECTIVITY, HTTP:TIMEOUT">
+						<flow-ref doc:name="common-error-handler_http-exception" doc:id="b7065cbf-a95e-48b8-aa8f-9faf52820b08" name="common-error-handler_http-exception"/>
+					</on-error-continue>
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="a37f1116-611a-42dc-89b8-12cd9b793456" type="VALIDATION:INVALID_BOOLEAN">
+						<set-variable value="404" doc:name="Set HTTP Status" doc:id="1afb0b69-e7cb-4174-885c-240ab51b4df3" variableName="httpStatus"/>
+						<flow-ref doc:name="common-error-handler_connector-exception" doc:id="ff03a60c-403d-4205-b30a-7a1a63c85b48" name="common-error-handler_connector-exception"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</until-successful>
+		<choice doc:name="Check FIS httpStatus" doc:id="30d37c17-6313-4dd4-922b-b3ca3e752cb1" >
+			<when expression="#[vars.httpStatus != null]">
+				<ee:transform doc:name="Set Exception Payload" doc:id="eced2d37-bd0c-4897-97ca-9e2887946b4f" >
+					<ee:message >
+						<ee:set-payload resource="dwl/exceptionResponse.dwl" />
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise >
+		<ee:transform doc:name="Get Customer Response" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+            <ee:message>
+						<ee:set-payload resource="dwl/getAllCustomersResponse.dwl" />
+            </ee:message>
+        </ee:transform>
+			</otherwise>
+		</choice>
+	
+	</sub-flow>
+</mule>

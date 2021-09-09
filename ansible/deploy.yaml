@@ -1,0 +1,75 @@
+---
+
+- name: "Initialize Docker Swarm cluster"
+  hosts: swarm_leader
+  tasks:
+    - name: Pip libs for docker-related ansible modules
+      pip:
+        name: "{{ docker_pip_packages }}"
+        state: present
+
+    - name: Create initial manager node
+      register: swarm_info
+      community.docker.docker_swarm:
+        advertise_addr: "{{ ansible_host }}"
+        state: present
+
+    - name: Save advertise address
+      set_fact:
+        leader_host: "{{ ansible_host }}"
+
+- name: "Add swarm manager nodes"
+  hosts: swarm_manager
+  tasks:
+    - community.docker.docker_swarm:
+        state: join
+        join_token: "{{ swarm_stat['swarm_facts']['JoinTokens']['Manager'] }}"
+        remote_addrs:
+          - "{{ leader_host }}:2377"
+      when: "'swarm_leader' not in group_names"
+
+- name: "Add swarm worker nodes"
+  hosts: swarm_worker
+  tasks:
+    - community.docker.docker_swarm:
+        state: join
+        join_token: "{{ swarm_stat['swarm_facts']['JoinTokens']['Worker'] }}"
+        remote_addrs:
+          - "{{ leader_host }}:2377"
+
+- name: Install Portainer and Mule API stacks
+  hosts: swarm_leader
+  tasks:
+    - name: Create temporary directory for Portainer and MuleSoft stack files
+      file:
+        dest: "{{ ansible_env.HOME }}/tmp-compose"
+        state: directory
+
+    - name: Get Portainer compose file
+      uri:
+        url: https://downloads.portainer.io/portainer-agent-stack.yml
+        dest: "{{ ansible_env.HOME }}/tmp-compose/portainer-agent-stack.yml"
+
+    - name: Deploy portainer stack
+      docker_stack:
+        state: present
+        name: portainer
+        compose:
+          - "{{ ansible_env.HOME }}/tmp-compose/portainer-agent-stack.yml"
+
+    - name: Prepare docker stack compose file
+      template:
+        src: "{{ playbook_dir }}/templates/docker-compose.yaml.j2"
+        dest: "{{ ansible_env.HOME }}/tmp-compose/docker-compose.yaml"
+
+    - name: Deploy Mule applications stack
+      docker_stack:
+        state: present
+        name: fins
+        compose:
+          - "{{ ansible_env.HOME }}/tmp-compose/docker-compose.yaml"
+
+    - name: Remove directory for Portainer and Mulesoft stack files
+      file:
+        dest: "{{ ansible_env.HOME }}/tmp-compose"
+        state: absent

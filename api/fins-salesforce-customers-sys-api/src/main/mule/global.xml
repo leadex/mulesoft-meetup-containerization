@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule
+xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+		xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc"
+	xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:accelerator-retail="http://www.mulesoft.org/schema/mule/accelerator-retail"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd 
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd
+http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/accelerator-retail http://www.mulesoft.org/schema/mule/accelerator-retail/current/mule-accelerator-retail.xsd">
+
+	<global-property doc:name="mule.env-property"
+		doc:id="d7e3ed52-42bd-48ec-9559-1c5db9526ce4" name="mule.env"
+		value="local" />
+	<global-property doc:name="mule.key-property"
+		doc:id="12b5f520-8ef5-4c0b-b6aa-dc9f70677fcc" name="mule.key"
+		value="Salesforce123456" />
+	<configuration-properties
+		doc:name="configuration-properties-env"
+		doc:id="e33f36f9-c4f0-40cc-891d-d1d9dbfe6c24"
+		file="config/config-${mule.env}.yaml" />
+	<secure-properties:config
+		name="configuration-properties-secured" doc:name="configuration-properties-secured"
+		doc:id="c93f7734-51b2-4ad5-9fb4-8375e6c43809"
+		file="config/config-secured-${mule.env}.yaml" key="${mule.key}">
+	</secure-properties:config>
+	<http:listener-config
+		name="salesforce-customer-api-httpListenerConfig">
+		<http:listener-connection host="${https.host}"
+			port="${https.port}" protocol="HTTPS" tlsContext="common-selfsigned_tlsContext"/>
+	</http:listener-config>
+  <import doc:name="common-configuration" doc:id="df9dda24-bde1-4b9f-bd79-b6adbb3bf927" file="global-common.xml" />
+  <import doc:name="global-exception" doc:id="d5b0249d-c23a-4ce2-808c-0b5a8fc8f245" file="common-error-handler.xml" />	
+  <configuration doc:name="global-error-handler" doc:id="0947c203-16e7-480a-a80f-86fa350e497f" defaultErrorHandler-ref="error-handler_common" />
+  	<!--  
+  	<salesforce:sfdc-config name="Salesforce_Config" doc:name="salesforce-basic-connection-config" doc:id="5999a4d1-a4ba-4340-880b-1e60c5bcd02a">
+        <salesforce:basic-connection username="${sfdc.user_name}" password="${sfdc.password}" securityToken="${sfdc.token}">
+            <reconnection>
+                <reconnect frequency="1000" count="10" />
+            </reconnection>
+        </salesforce:basic-connection>
+    </salesforce:sfdc-config>
+    -->
+    <apikit:config name="salesforce-customers-sys-api-config" api="resource::org.mule.examples:accelerator-salesforce-customers-sys-api:2.2.1:raml:zip:accelerator-salesforce-customers-sys-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" queryParamsStrictValidation="true"/>
+	<validation:config name="Validation_Config" doc:name="Validation Config" doc:id="c6374ae8-26aa-4e74-a7d1-25515ac417c4" />
+<!-- <api-gateway:autodiscovery apiId="${api.autodiscoveryID}" doc:name="API Autodiscovery" doc:id="039cdd28-6112-46fb-906a-783bdc528cd9" flowRef="fins-salesforce-customers-sys-api-main" ignoreBasePath="true"> -->
+ <accelerator-retail:config name="accelerator-retail-config" doc:name="Accelerator Retail Config" doc:id="c595a0e3-e12f-443d-a20b-88560a3d5e13" apiName="${api.name}" apiVersion="${api.version}" />
+ 
+</mule>

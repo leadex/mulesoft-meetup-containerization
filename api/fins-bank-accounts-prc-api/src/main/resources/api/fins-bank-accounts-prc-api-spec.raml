@@ -1,0 +1,128 @@
+#%RAML 1.0
+title: FINS Bank Accounts Process API
+description: Process API for working with bank accounts maintained in downstream systems.
+version: v1
+mediaType: application/json
+
+uses: 
+  GlobalResources: ./accelerator-global-resources/2.2.0/accelerator-global-resources.raml
+  BankingTypes: ./fins-banking-library/1.0.8/fins-banking-library.raml
+
+securedBy: [ GlobalResources.BasicAuth ]
+
+/ping:
+  get:
+    is: [ GlobalResources.PingResponse ]
+    description: Get the current health status of this API.
+    
+/accounts:
+  description: Base resource for managing bank accounts.
+  get:
+    is: [ GlobalResources.ErrorResponses, GlobalResources.Pageable, GlobalResources.Trackable ]
+    description: Retrieve accounts, optionally for a specific customer identifier or external identifier. Results can be filtered to include only those created or modified during a given time period. Actual account objects returned will be of specific types (e.g., CheckingAccount).
+    queryParameters:
+      customerId?:
+        type: string
+        description: Get accounts for a specific customer
+      externalId?:
+        type: string
+        description: Lookup by an external identifier (e.g., global account ID)
+      fromDate?:
+        type: datetime
+        description: Get accounts created or updated on or after this date and time
+      toDate?:
+        type: datetime
+        description: Get accounts created or updated on or before this date and time
+    responses:
+      200:
+        body:
+          application/json:
+            type: BankingTypes.Account[]
+  post:
+    is: [ GlobalResources.ErrorResponses, GlobalResources.Trackable, GlobalResources.Locatable ]
+    description: Create one or more new accounts in downstream systems.
+    body:
+      application/json:
+        type: BankingTypes.Account[]
+    responses: 
+      200:
+        body: 
+          application/json:
+            type: GlobalResources.BasicResponse
+
+  /{accountId}:
+    get:
+      is: [ GlobalResources.ErrorResponses, GlobalResources.Trackable ]
+      description: Return details for a specific account.
+      responses:
+        200:
+          body:
+            application/json:
+              type: BankingTypes.Account
+
+    /transactions:
+      get:
+        is: [ GlobalResources.ErrorResponses, GlobalResources.Pageable, GlobalResources.Trackable ]
+        description: Retrieve transactions for a specific account, optionally for a given transaction type and/or for a given time period. Actual transaction objects returned will be of specific types (e.g., DebitTransaction).
+        queryParameters:
+          transactionType?:
+            type: string
+            description: Filter by transaction type (e.g., DebitTransaction)
+          transactionSubType?: 
+            type: string
+            description: Filter by transaction sub-type (e.g., CASH)
+          postedDate?:
+            type: date-only
+            description: Get all transactions posted on a specific date
+          fromDate?:
+            type: datetime
+            description: Get transactions created or updated on or after this date and time
+          toDate?:
+            type: datetime
+            description: Get transactions created or updated on or before this date and time
+        responses:
+          200:
+            body:
+              application/json:
+                type: BankingTypes.Transaction[]
+      
+      /{transactionId}:
+        get:
+          is: [ GlobalResources.ErrorResponses, GlobalResources.Trackable ]
+          description: Return details for a specific transaction.
+          responses:
+            200:
+              body:
+                application/json:
+                  type: BankingTypes.Transaction
+        patch:
+          is: [ GlobalResources.ErrorResponses, GlobalResources.Trackable ]
+          description: Update a transaction to mark or unmark it as disputed.
+          body:
+            application/json:
+              type: BankingTypes.Transaction
+          responses:
+            200:
+              body:
+                application/json:
+                  type: GlobalResources.BasicResponse
+
+  /poller:
+    description: Trigger a polling cycle to publish account updates.
+    post:
+      is: [ GlobalResources.Trackable, GlobalResources.ErrorResponses ]
+      queryParameters:
+        customerId?:
+          type: string
+          description: Include accounts for a specific customer only
+        fromDate?:
+          type: datetime
+          description: Include accounts modified on or after this date; default is current timestamp
+        toDate?:
+          type: datetime
+          description: Include accounts modified up to and including this date; default is current timestamp plus configured poll interval
+      responses:
+        202:
+          body:
+            application/json:
+              type: GlobalResources.BasicResponse

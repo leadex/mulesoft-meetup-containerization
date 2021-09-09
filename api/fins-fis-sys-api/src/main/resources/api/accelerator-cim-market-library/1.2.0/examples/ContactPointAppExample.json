@@ -1,0 +1,42 @@
+{
+  "contactPointType": [
+    {
+      "id": "dolor",
+      "name": "voluptate est exercitation et",
+      "optInPriority": -9851219,
+      "auditInfo": {
+        "isDeleted": false,
+        "createdBy": "dolor Ut",
+        "updatedBy": "velit Lorem",
+        "updatedDate": null,
+        "createdDate": null
+      }
+    }
+  ],
+  "id": null,
+  "activeFromDate": "2016-03-19",
+  "profileFirstCreatedDate": null,
+  "applicationLogin": "pariatur ad occaecat",
+  "profileLastUpdatedDate": null,
+  "forPersonalUse": true,
+  "name": "cillum",
+  "primaryFlag": false,
+  "profileOccurrenceCount": 95499868,
+  "auditInfo": {
+    "isDeleted": false,
+    "createdBy": "ea ex",
+    "updatedBy": "cupidatat Excepteur labore",
+    "updatedDate": null,
+    "createdDate": null
+  },
+  "activeToDate": null,
+  "forBusinessUse": false,
+  "bestTimeToContactStartTime": null,
+  "bestTimeToContactEndTime": "00:00:01",
+  "partyRole": [
+    "Lorem proident"
+  ],
+  "party": [
+    "dolore laborum veniam voluptate irure"
+  ]
+}

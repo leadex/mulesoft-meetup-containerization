@@ -1,0 +1,33 @@
+{
+  "id": null,
+  "partyRoleType": "Customer",
+  "party": [
+    {
+      "id": null,
+      "partyType": "Individual",
+      "salutation": "Miss",
+      "firstName": "Sandy",
+      "birthDate": "1984-03-17",
+      "externalIds": [
+        {
+          "id": null,
+          "externalId": "caf9e9c6-678f-472e-a1f5-20ac68346b0f",
+          "externalIdType": [
+            "MDM"
+          ]
+        }
+      ]
+    }
+  ],
+  "externalIds": [
+    {
+      "id": null,
+      "externalId": "c9d485f6-0217-4f72-9976-2a7a45bfefd9",
+      "externalIdType": [
+        "MDM"
+      ]
+    }
+  ],
+  "customerStatus": "ACTIVE",
+  "customerNumber": "OGBECEZ1"
+}

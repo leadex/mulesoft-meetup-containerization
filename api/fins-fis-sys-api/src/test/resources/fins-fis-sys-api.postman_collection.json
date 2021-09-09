@@ -1,0 +1,267 @@
+{
+	"info": {
+		"_postman_id": "9e7207fe-b2ec-407f-b00c-d3c3432233db",
+		"name": "fins-fis-sys-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Account By Account Id - Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{host_fis-sys-api}}/api/customers/1234567890/accounts/100000000278",
+					"protocol": "https",
+					"host": [
+						"{{host_fis-sys-api}}"
+					],
+					"path": [
+						"api",
+						"customers",
+						"1234567890",
+						"accounts",
+						"100000000278"
+					],
+					"query": [
+						{
+							"key": "externalId",
+							"value": "1234567890",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Transactions By Account Id - Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{host_fis-sys-api}}/api/customers/1234567890/accounts/100000000278/transactions",
+					"protocol": "https",
+					"host": [
+						"{{host_fis-sys-api}}"
+					],
+					"path": [
+						"api",
+						"customers",
+						"1234567890",
+						"accounts",
+						"100000000278",
+						"transactions"
+					],
+					"query": [
+						{
+							"key": "externalId",
+							"value": "1234567890",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Customer By Id - Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{host_fis-sys-api}}/api/customers/123456789",
+					"protocol": "https",
+					"host": [
+						"{{host_fis-sys-api}}"
+					],
+					"path": [
+						"api",
+						"customers",
+						"123456789"
+					],
+					"query": [
+						{
+							"key": "external_id",
+							"value": "1234567890",
+							"disabled": true
+						},
+						{
+							"key": "email",
+							"value": "jane.thompson@example.com",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Accounts By Customer Id - Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{host_fis-sys-api}}/api/customers/123456789/accounts",
+					"protocol": "https",
+					"host": [
+						"{{host_fis-sys-api}}"
+					],
+					"path": [
+						"api",
+						"customers",
+						"123456789",
+						"accounts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Customers - Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{host_fis-sys-api}}/api/customers",
+					"protocol": "https",
+					"host": [
+						"{{host_fis-sys-api}}"
+					],
+					"path": [
+						"api",
+						"customers"
+					],
+					"query": [
+						{
+							"key": "external_id",
+							"value": "1234567890",
+							"disabled": true
+						},
+						{
+							"key": "customerId",
+							"value": "1234567890",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ping",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{host_fis-sys-api}}/api/ping",
+					"protocol": "https",
+					"host": [
+						"{{host_fis-sys-api}}"
+					],
+					"path": [
+						"api",
+						"ping"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host_fis-sys-api",
+			"value": "localhost:8082",
+			"disabled": true
+		},
+		{
+			"key": "host_fis-sys-api",
+			"value": "localhost:8082"
+		}
+	]
+}

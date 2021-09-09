@@ -1,0 +1,18 @@
+[
+  {
+    "FinServ__TaxID__c": null,
+    "FinServ__Balance__c": "84000.0",
+    "FinServ__Nickname__c": null,
+    "FinServ__CashBalance__c": null,
+    "External_ID__c": "fa.007",
+    "FinServ__OpenDate__c": "2007-12-29",
+    "FinServ__FinancialAccountNumber__c": null,
+    "type": "FinServ__FinancialAccount__c",
+    "CurrencyIsoCode": "USD",
+    "Name": "529-MORRIS-eTrade Education Plan",
+    "FinServ__FinancialAccountType__c": "Savings",
+    "FinServ__CloseDate__c": null,
+    "FinServ__Status__c": "Open",
+    "Id": "a4l5e000000RPylAAG"
+  }
+]

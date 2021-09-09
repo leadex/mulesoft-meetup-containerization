@@ -1,0 +1,23 @@
+FROM adoptopenjdk:8-jdk-hotspot
+
+# Adding telnet and nano utils
+RUN apt-get update && apt-get install -y \
+      telnet \
+      jq \
+      nano
+
+# Mule EE runtime installation:
+COPY {{ mule_exploded_local_dir }} /opt/mule
+COPY {{ item.path | basename }} /opt/tmp/mule-app/
+
+# Describe possibly promoted ports:
+
+# Mule remote debugger
+EXPOSE  5005
+# Mule Jolokia Agent port
+EXPOSE  8899
+# Application API port
+EXPOSE  8080
+
+
+ENTRYPOINT ["/bin/bash", "-c",  "/opt/mule/bin/start-mule.sh $API_USERNAME $API_PASSWORD \"$ORG_NAME\" $MULE_ENV $SERVER_NAME", "--" ]

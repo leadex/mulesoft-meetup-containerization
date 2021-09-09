@@ -1,0 +1,21 @@
+- name: Copy Dockerfile template
+  template:
+    src: templates/Dockerfile.j2
+    dest: "{{ build_dir }}/Dockerfile"
+
+- name: Build an image
+  community.docker.docker_image:
+    build:
+      path: "{{ build_dir }}"
+    name: "{{ item.service_name }}"
+    tag: "{{ item.id }}"
+    force_tag: yes
+    source: build
+    force_source: yes
+
+- name: Tag the image as latest
+  community.docker.docker_image:
+    name: "{{ item.service_name }}:{{ item.id }}"
+    repository: "{{ item.service_name }}:latest"
+    force_tag: yes
+    source: local

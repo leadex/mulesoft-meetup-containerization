@@ -1,0 +1,126 @@
+[
+  {
+    "id": "a4l5e000000RPylAAG",
+    "accountCurrency": "USD",
+    "accountBalance": 84000.0,
+    "accountType": "CheckingAccount",
+    "openedDate": "2007-12-29",
+    "accountStatus": "OPEN",
+    "name": "529-MORRIS-eTrade Education Plan"
+  },
+  {
+    "id": "a4l5e000000RPypAAG",
+    "accountCurrency": "USD",
+    "accountBalance": 1589.37,
+    "accountType": "CheckingAccount",
+    "openedDate": "1999-01-14",
+    "accountNumber": "723789981",
+    "accountStatus": "OPEN",
+    "name": "Everyday Checking Account"
+  },
+  {
+    "id": "a4l5e000000RPyqAAG",
+    "accountCurrency": "USD",
+    "accountBalance": 780000.0,
+    "accountType": "CheckingAccount",
+    "openedDate": "1998-12-31",
+    "accountNumber": "83787823",
+    "accountStatus": "OPEN",
+    "name": "30 yr Fixed Mortgage"
+  },
+  {
+    "id": "a4l5e000000RPyrAAG",
+    "accountCurrency": "USD",
+    "accountBalance": 1300000.0,
+    "accountType": "CheckingAccount",
+    "openedDate": "2018-12-31",
+    "accountNumber": "738239889",
+    "accountStatus": "OPEN",
+    "name": "Business Savings Account"
+  },
+  {
+    "id": "a4l5e000000RPytAAG",
+    "accountCurrency": "USD",
+    "accountBalance": 75000.0,
+    "accountType": "CheckingAccount",
+    "accountNumber": "7383288923",
+    "accountStatus": "OPEN",
+    "name": "High Yield Savings Account"
+  },
+  {
+    "id": "a4l5e000000RPyuAAG",
+    "accountCurrency": "USD",
+    "accountBalance": 800000.0,
+    "accountType": "CheckingAccount",
+    "accountNumber": "2389893289",
+    "accountStatus": "OPEN",
+    "name": "High Yield Savings Account"
+  },
+  {
+    "id": "a4l5e000000RPyvAAG",
+    "accountCurrency": "USD",
+    "accountBalance": 4587.0,
+    "accountType": "CreditCardAccount",
+    "openedDate": "2000-12-30",
+    "accountNumber": "0797123456",
+    "accountStatus": "OPEN",
+    "name": "Julie Morris Credit Card"
+  },
+  {
+    "id": "a4l5e000000RPz0AAG",
+    "accountCurrency": "USD",
+    "accountBalance": 5600.48,
+    "accountType": "SavingsAccount",
+    "openedDate": "2008-12-22",
+    "accountNumber": "575875769",
+    "accountStatus": "OPEN",
+    "name": "Classic Savings Account"
+  },
+  {
+    "id": "a4l5e000000RPz1AAG",
+    "accountCurrency": "USD",
+    "accountType": "CheckingAccount",
+    "openedDate": "2007-12-31",
+    "closedDate": "2008-01-14",
+    "accountNumber": "INS-3243432",
+    "accountStatus": "OPEN",
+    "name": "Morris-Life Insurance $2M"
+  },
+  {
+    "id": "a4l5e000000RPzEAAW",
+    "accountCurrency": "USD",
+    "accountType": "CheckingAccount",
+    "accountNumber": "M12319494",
+    "accountStatus": "OPEN",
+    "name": "Morris Family Mortgage"
+  },
+  {
+    "id": "a4l5e000000RPzmAAG",
+    "accountCurrency": "USD",
+    "accountBalance": 1150000.0,
+    "accountType": "CheckingAccount",
+    "openedDate": "2009-12-22",
+    "accountStatus": "OPEN",
+    "name": "ROTH IRA-MORRIS"
+  },
+  {
+    "id": "a4l5e000000RPzpAAG",
+    "accountCurrency": "USD",
+    "accountBalance": 1650000.0,
+    "accountType": "CheckingAccount",
+    "openedDate": "1994-12-29",
+    "accountStatus": "OPEN",
+    "name": "401k-MORRIS Corporate-eTrade"
+  },
+  {
+    "id": "a4l5e000000RkLaAAK",
+    "accountCurrency": "USD",
+    "accountBalance": 84000.0,
+    "accountType": "CheckingAccount",
+    "openedDate": "2007-12-29",
+    "closedDate": "2021-01-01",
+    "accountNumber": "12345",
+    "accountStatus": "OPEN",
+    "name": "529-MORRIS-eTrade Education Plan"
+  }
+]

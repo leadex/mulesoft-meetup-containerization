@@ -1,0 +1,4 @@
+1.	MetadataUtility.generateTextField('Account', 'Global_Customer_Id__c', 'MDM global identifier for the Account(Customer) - Customer 360 functionality', 'Global Customer Id');
+
+2.	MetadataUtility.generateTextField('Contact', 'Global_Individual_Id__c', 'MDM global identifier for the Contact', 'Global Party Id');
+

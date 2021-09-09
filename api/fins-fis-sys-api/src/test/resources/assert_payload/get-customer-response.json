@@ -1,0 +1,62 @@
+[
+    {
+        "id": "1234567890",
+        "partyRoleType": "Customer",
+        "party": [
+            {
+                "id": null,
+                "partyType": "Individual",
+                "personName": "GARY BILLL",
+                "firstName": "GARY",
+                "lastName": "BILLL",
+                "birthDate": "1989-08-09",
+                "saluation": "",
+                "gender": "",
+                "middleName": null,
+                "mothersMaidenName": "SHIRLEY",
+                "contactPoints": [
+                    {
+                        "id": null,
+                        "contactPointType": [
+                            "ContactPointAddress"
+                        ],
+                        "activeFromDate": "2021-07-15",
+                        "primaryFlag": true,
+                        "addressLine1": 195,
+                        "cityName": "ANCHORAGE",
+                        "stateProvinceName": "WI",
+                        "countryName": "USA",
+                        "postalCodeText": 995035774
+                    },
+                    {
+                        "id": null,
+                        "contactPointType": [
+                            "ContactPointEmail"
+                        ],
+                        "activeFromDate": "2016-11-01",
+                        "primaryFlag": true,
+                        "emailAddress": "Chakraprasad.j@gmail.com"
+                    },
+                    {
+                        "id": null,
+                        "contactPointType": [
+                            "ContactPointPhone"
+                        ],
+                        "activeFromDate": "2016-01-01",
+                        "primaryFlag": true,
+                        "telephoneNumber": 9876543210
+                    }
+                ]
+            }
+        ],
+        "customerNumber": "145897531",
+        "customerStatus": "ACTIVE",
+        "auditInfo": {
+            "createdDate": "2016-11-24T04:03:58Z",
+            "createdBy": "system",
+            "updatedDate": "2021-07-15T04:03:58Z",
+            "updatedBy": "system",
+            "isDeleted": false
+        }
+    }
+]

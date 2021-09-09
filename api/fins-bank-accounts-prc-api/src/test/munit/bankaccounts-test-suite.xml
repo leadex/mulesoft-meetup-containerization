@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="bankaccounts-api-test-suite.xml" />
+	<munit:test name="fins-bank-accounts-prc-api-test-bankAccountSync-positive" doc:id="5095aa83-edc8-42c1-8668-11fcfcd49d04">
+			<munit:behavior>
+				<munit-tools:mock-when doc:name="sys-fis GET /customers" doc:id="f28f8fe1-64b7-4347-9a4a-9ce052209210" processor="http:request">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="GET" attributeName="method" />
+					<munit-tools:with-attribute whereValue="sys-fis_HTTP_Request_configuration" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="/customers" attributeName="path" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('testdata/customers/customers-search-all-fis-response.json')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="sys-fis GET /customers/{customerId}/accounts" doc:id="4ca41907-d298-4b6b-bb7f-3f826c90dce2" processor="http:request">
+					<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="GET" attributeName="method" />
+					<munit-tools:with-attribute whereValue="sys-fis_HTTP_Request_configuration" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="/customers/{customerId}/accounts" attributeName="path" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('testdata/bankaccounts/bankaccounts-search-all-fis-response.json')]" mediaType="application/json" />
+				</munit-tools:then-return>
+				</munit-tools:mock-when>
+				<munit-tools:mock-when doc:name="sys-salesforce-customers GET /customers" doc:id="8f9ec184-d9ac-404d-8ddf-26dc27b56f09" processor="http:request">
+					<munit-tools:with-attributes>
+						<munit-tools:with-attribute whereValue="GET" attributeName="method" />
+						<munit-tools:with-attribute whereValue="sys-salesforce-customers_HTTP_Request_configuration" attributeName="config-ref" />
+						<munit-tools:with-attribute whereValue="/customers" attributeName="path" />
+					</munit-tools:with-attributes>
+					<munit-tools:then-return>
+						<munit-tools:payload value="#[MunitTools::getResourceAsString('testdata/customers/customers-search-by-customerId-sf-response.json')]" mediaType="application/json" />
+					</munit-tools:then-return>
+				</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="sys-salesforce-financial GET /accounts" doc:id="b6fb90ef-aa68-47e6-acd8-04bf95a96cad" processor="http:request">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="GET" attributeName="method" />
+					<munit-tools:with-attribute whereValue="sys-salesforce-financial_HTTP_Request_configuration" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="/accounts" attributeName="path" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('testdata/bankaccounts/bankaccounts-search-by-externalId-sf-response.json')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="sys-salesforce-customers PATCH /accounts/{accountId} return 200" doc:id="d7727cc2-59c7-46a6-bdc6-c3a8ccbe4d86" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="PATCH" attributeName="method" />
+					<munit-tools:with-attribute whereValue="sys-salesforce-financial_HTTP_Request_configuration" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="/accounts/{accountId}" attributeName="path" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+						<munit-tools:payload value='#[""]' />
+						<munit-tools:attributes value="#[{ statusCode: 200 }]" />
+					</munit-tools:then-return>
+				</munit-tools:mock-when>
+			</munit:behavior>
+			<munit:execution>
+			<flow-ref doc:name="get-customers-from-fis" doc:id="51b41b58-9af6-4eea-9d26-db3e0758cfae" name="get-customers-from-fis" target="fisCustomers" />
+			<foreach doc:name="For Each FIS Customer" doc:id="3cc9961b-5c45-40ff-82b9-a8934b7b8bdb" collection="#[vars.fisCustomers]" >
+				<flow-ref doc:name="sync-bankaccounts-for-customer" doc:id="e3f129d7-d58c-46af-9cb4-96e2ef3c77ea" name="sync-bankaccounts-for-customer" />
+			</foreach>
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:verify-call doc:name="patch-bankaccount-to-salesforce-financial" doc:id="41541e51-0740-414e-ae51-226827ed603e" processor="flow-ref" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="patch-bankaccount-to-salesforce-financial" attributeName="name" />
+				</munit-tools:with-attributes>
+				</munit-tools:verify-call>
+			</munit:validation>
+		</munit:test>
+	<munit:test name="fins-bank-accounts-prc-api-test-bankAccountSync-negative" doc:id="66712e1d-bca5-46ea-91ec-cea02e66199b" expectedErrorType="HTTP:BAD_REQUEST">
+			<munit:behavior>
+				<munit-tools:mock-when doc:name="sys-fis GET /customers" doc:id="81f36c64-1ade-4df5-95b1-593f62259e3b" processor="http:request">
+					<munit-tools:with-attributes>
+						<munit-tools:with-attribute whereValue="GET" attributeName="method" />
+						<munit-tools:with-attribute whereValue="sys-fis_HTTP_Request_configuration" attributeName="config-ref" />
+						<munit-tools:with-attribute whereValue="/customers" attributeName="path" />
+					</munit-tools:with-attributes>
+					<munit-tools:then-return>
+						<munit-tools:payload value="#[MunitTools::getResourceAsString('testdata/customers/customers-search-all-fis-response.json')]" mediaType="application/json" />
+					</munit-tools:then-return>
+				</munit-tools:mock-when>
+				<munit-tools:mock-when doc:name="sys-fis GET /customers/{customerId}/accounts" doc:id="2a35057c-d20b-446f-be85-d3dee04d71b6" processor="http:request">
+					<munit-tools:with-attributes>
+						<munit-tools:with-attribute whereValue="GET" attributeName="method" />
+						<munit-tools:with-attribute whereValue="sys-fis_HTTP_Request_configuration" attributeName="config-ref" />
+						<munit-tools:with-attribute whereValue="/customers/{customerId}/accounts" attributeName="path" />
+					</munit-tools:with-attributes>
+					<munit-tools:then-return>
+						<munit-tools:payload value="#[MunitTools::getResourceAsString('testdata/bankaccounts/bankaccounts-search-all-fis-response.json')]" mediaType="application/json" />
+					</munit-tools:then-return>
+				</munit-tools:mock-when>
+				<munit-tools:mock-when doc:name="sys-salesforce-customers GET /customers" doc:id="1b260bbd-8a4c-43a0-ab28-f2a5ab3f1fd2" processor="http:request">
+					<munit-tools:with-attributes>
+						<munit-tools:with-attribute whereValue="GET" attributeName="method" />
+						<munit-tools:with-attribute whereValue="sys-salesforce-customers_HTTP_Request_configuration" attributeName="config-ref" />
+						<munit-tools:with-attribute whereValue="/customers" attributeName="path" />
+					</munit-tools:with-attributes>
+					<munit-tools:then-return>
+						<munit-tools:payload value="#[MunitTools::getResourceAsString('testdata/customers/customers-search-by-customerId-sf-response.json')]" mediaType="application/json" />
+					</munit-tools:then-return>
+				</munit-tools:mock-when>
+				<munit-tools:mock-when doc:name="sys-salesforce-financial GET /accounts" doc:id="ab0a5c6a-cbbe-4268-aa30-488c77d22d7c" processor="http:request">
+					<munit-tools:with-attributes>
+						<munit-tools:with-attribute whereValue="GET" attributeName="method" />
+						<munit-tools:with-attribute whereValue="sys-salesforce-financial_HTTP_Request_configuration" attributeName="config-ref" />
+						<munit-tools:with-attribute whereValue="/accounts" attributeName="path" />
+					</munit-tools:with-attributes>
+					<munit-tools:then-return>
+						<munit-tools:payload value="#[MunitTools::getResourceAsString('testdata/bankaccounts/bankaccounts-search-by-externalId-sf-response.json')]" mediaType="application/json" />
+					</munit-tools:then-return>
+				</munit-tools:mock-when>
+				<munit-tools:mock-when doc:name="sys-salesforce-customers PATCH /accounts/{accountId} return BAD REQUEST" doc:id="967a1207-aed3-4efb-9168-14eeb8674c73" processor="http:request">
+					<munit-tools:with-attributes>
+						<munit-tools:with-attribute whereValue="PATCH" attributeName="method" />
+						<munit-tools:with-attribute whereValue="sys-salesforce-financial_HTTP_Request_configuration" attributeName="config-ref" />
+						<munit-tools:with-attribute whereValue="/accounts/{accountId}" attributeName="path" />
+					</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:BAD_REQUEST" />
+				</munit-tools:then-return>
+				</munit-tools:mock-when>
+			</munit:behavior>
+			<munit:execution>
+			<flow-ref doc:name="get-customers-from-fis" doc:id="db02468b-be59-421b-9918-c593e62fcd64" name="get-customers-from-fis" target="fisCustomers" />
+			<foreach doc:name="For Each FIS Customer" doc:id="adc3e4f1-ee7b-44d9-87b8-16c2a6925ada" collection="#[vars.fisCustomers]" >
+				<flow-ref doc:name="sync-bankaccounts-for-customer" doc:id="d0d8bc0d-7ea9-4ef2-812b-821b9e681859" name="sync-bankaccounts-for-customer" />
+			</foreach>
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:verify-call doc:name="patch-bankaccount-to-salesforce-financial" doc:id="ffd0c526-4b9d-4373-8d94-c1d7690813d3" processor="flow-ref" times="1">
+					<munit-tools:with-attributes>
+						<munit-tools:with-attribute whereValue="patch-bankaccount-to-salesforce-financial" attributeName="name" />
+					</munit-tools:with-attributes>
+				</munit-tools:verify-call>
+			</munit:validation>
+		</munit:test>
+
+</mule>

@@ -1,0 +1,68 @@
+{
+    "Metadata": {
+        "MsgLst": [
+            {
+                "Text": "Success",
+                "Severity": "Info",
+                "Type": "Informational Message",
+                "Code": "0"
+            }
+        ]
+    },
+    "Entity": {
+        "customer": {
+            "CICustTaxNbr": 145897531,
+            "CICstCntrNbr": 0,
+            "CIMothersMdnNme": "SHIRLEY",
+            "CICurStdAddr2Cde": "C",
+            "CIFrstNmeMidInitl": "GARY",
+            "CIMrtlStatInd": "S",
+            "ZIP": 995035774,
+            "CICurStdNme01": "GARY",
+            "CICustOpenDte": "2016-11-24",
+            "AddrOvrideInd": "N",
+            "CIScndyOffcrNbr": 0,
+            "CINmeTC": 0,
+            "Cty": "ANCHORAGE",
+            "CISrnme": "BILLL",
+            "CIBrnchNbr": 0,
+            "CIPrspctInd": "C",
+            "CICustTaxCde": "S",
+            "CIApplNbr": 373521,
+            "St": "WI",
+            "CIDunBradstreetCde": 0,
+            "CICurStdAddr1Txt": 195,
+            "CICustCde2": 0,
+            "CICustCde1": 0,
+            "CIOwnRentInd": "R",
+            "CICurNmeSfxCde": 0,
+            "CICurStdAddr1Cde": "S",
+            "CICustCde9": 0,
+            "CIBirthdate": "1989-08-09",
+            "CICustCde8": 0,
+            "CICustCde7": 0,
+            "CICustCde6": 0,
+            "CICustCde5": 0,
+            "CICustCde4": 0,
+            "CICustCde3": 0,
+            "CIOccpnCde": "001",
+            "CICustEducCde": "006",
+            "CICustCde11": 0,
+            "CICustCde10": 0,
+            "CICustCde13": 0,
+            "CICustCde12": 0,
+            "CICustCde15": 0,
+            "CICustCde14": 0,
+            "CISexCodeInd": "M",
+            "CtryCde": "USA",
+            "CICustStat": "O",
+            "CIRmrkLine1Txt": "ADDED  BY KUMAR WSO2",
+            "CICurStdAddr2Txt": "ANCHORAGE AK 99503-5774",
+            "CIPrmyPhNbr": 8774246423,
+            "CICenTrctNbr": 0,
+            "CINaicsCde": 0,
+            "CIPrmyOffcrNbr": 0,
+            "CICurNmePrcsTme": "05.46.07"
+        }
+    }
+}

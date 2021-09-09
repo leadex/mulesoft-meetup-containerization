@@ -1,0 +1,1066 @@
+#%RAML 1.0 Library
+usage: Types representing a Party, their contact information, and other related attributes
+
+uses:
+  GlobalTypes: ../../../accelerator-cim-global-library/1.1.2/accelerator-cim-global-library.raml
+
+types:
+  Account:
+    properties:
+      id:
+        type: string | nil
+      name:
+        type: string
+      billDeliveryMethod?:
+        type: string
+      # Accelerators: added string union for ContactPointAddress.id reference
+      billContactAddress?:
+        items: string | ContactPointAddress
+      # Accelerators: made property optional
+      useAsSalesAccount?:
+        type: boolean | nil
+      assignTerritoryFlag?:
+        type: boolean | nil
+      # Accelerators: added string union for BillingFrequency.id reference
+      billFrequency?:
+        items: string | BillingFrequency
+      autoPayEnabledFlag?:
+        type: boolean | nil
+      autoPaymentAmount?:
+        type: integer | nil
+      # Accelerators: made property optional
+      useAsServiceAccount?:
+        type: boolean | nil
+      # Accelerators: made property optional
+      useAsBillingAccount?:
+        type: boolean | nil
+      # Accelerators: added string union for PartyRole.id reference
+      partyRole?:
+        items: string | PartyRole
+      # Accelerators: added string union for ContactPointPhone.id reference
+      faxPhone?:
+        items: string | ContactPointPhone
+      description?:
+        type: string
+      # Accelerators: added string union for ContactPointPhone.id reference
+      salesPhone?:
+        items: string | ContactPointPhone
+      sLAExpirationDate?:
+        type: date-only | nil
+      accountType?:
+        type: string
+      # Accelerators: changed to string for PaymentMethod.id reference
+      autoPaymentMethod?:
+        items: string
+      balanceAmount?:
+        type: integer | nil
+      holdStatusReason?:
+        type: string
+      generalLedgerAccount?:
+        type: string
+      thirtyDayBalanceAmount?:
+        type: integer | nil
+      sixtyDayBalanceAmount?:
+        type: integer | nil
+      # Accelerators: made property optional
+      useAsShippingAccount?:
+        type: boolean | nil
+      # Accelerators: added string union for ContactPointAddress.id reference
+      shippingAddress?:
+        items: string | ContactPointAddress
+      # Accelerators: added string union for Party.id reference
+      party?:
+        items: string | Party
+      # Accelerators: changed to string for Account.id reference
+      parentAccount?:
+        items: string
+      sLAType?:
+        type: string
+      # Accelerators: added string union for AccountContact.id reference
+      shippingContact?:
+        items: string | AccountContact
+      balanceAmountLimit?:
+        type: integer | nil
+      # Accelerators: added string union for ContactPointPhone.id reference
+      shippingPhoneid?:
+        items: string | ContactPointPhone
+      # Accelerators: added string union for ContactPointEmail.id reference
+      shippingEmail?:
+        items: string | ContactPointEmail
+      lastActivityDate?:
+        type: date-only | nil
+      # Accelerators: changed to string for OrderDeliveryMethod.id reference
+      orderDeliveryMethod?:
+        items: string
+      # Accelerators: added string union for ContactPoint.id reference
+      primarySalesContactPoint?:
+        items: string | ContactPoint
+      number:
+        type: string
+      ninetyDayBalanceAmount?:
+        type: integer | nil
+      # Accelerators: made property optional
+      paymentTerm?:
+        type: string
+      defaultFreightTerms?:
+        type: string
+      # Accelerators: added support for external identifiers
+      externalIds?: 
+        items: string | GlobalTypes.ExternalId
+      # Accelerators: added audit info block
+      auditInfo?: GlobalTypes.AuditInfo
+  AccountContact:
+    properties:
+      id:
+        type: string | nil
+      # Accelerators: changed to string for AccountContact.id reference
+      reportsToAccountContact?:
+        items: string
+      # Accelerators: added string union for ContactPointAddress.id reference
+      mailingAddress?:
+        items: string | ContactPointAddress
+      # Accelerators: changed to string for Account.id reference
+      account?:
+        items: string
+      # Accelerators: added string union for ContactPointPhone.id reference
+      faxPhone?:
+        items: string | ContactPointPhone
+      departmentName?:
+        type: string
+      # Accelerators: added string union for ContactPointPhone.id reference
+      businessPhone?:
+        items: string | ContactPointPhone
+      # Accelerators: added string union for ContactPointEmail.id reference
+      contactEmail?:
+        items: string | ContactPointEmail
+      # Accelerators: added string union for ContactPointPhone.id reference
+      mobilePhone?:
+        items: string | ContactPointPhone
+      assistantPhone?:
+        type: string
+      # Accelerators: changed to string for AccountContact.id reference
+      indirectRelationAccountContact?:
+        items: string
+      title?:
+        type: string
+      lastActivityDate?:
+        type: date-only | nil
+      contactNote?:
+        type: string
+      assistantName?:
+        type: string
+      # Accelerators: added string union for Individual.id reference
+      individual?:
+        items: string | Individual
+      # Accelerators: added string union for ContactPointAddress.id reference
+      otherContactAddress?:
+        items: string | ContactPointAddress
+      # Accelerators: added string union for ContactPointPhone.id reference
+      homePhone?:
+        items: string | ContactPointPhone
+      # Accelerators: added support for external identifiers
+      externalIds?: 
+        items: string | GlobalTypes.ExternalId
+      # Accelerators: added audit info block
+      auditInfo?: GlobalTypes.AuditInfo
+  AccountContactRole:
+    properties:
+      id:
+        type: string | nil
+      accountContactRoleType?:
+        type: string
+      activeFromDate?:
+        type: date-only | nil
+      activeToDate?:
+        type: date-only | nil
+      # Accelerators: added string union for AccountContact.id reference
+      accountContact?:
+        items: string | AccountContact
+      # Accelerators: added audit info block
+      auditInfo?: GlobalTypes.AuditInfo
+  AccountPartner:
+    properties:
+      id:
+        type: string | nil
+      # Accelerators: added string union for Account.id reference
+      # Accelerators: made property optional
+      account?:
+        items: string | Account
+      # Accelerators: added string union for Account.id reference
+      # Accelerators: made property optional
+      partnerAccount?:
+        items: string | Account
+      # Accelerators: added audit info block
+      auditInfo?: GlobalTypes.AuditInfo
+  # Not found in class diagram
+  BillingFrequency:
+    properties:
+      id:
+        type: string | nil
+      name:
+        type: string
+      billingFrequencyName:
+        type: string
+      # Accelerators: added audit info block
+      auditInfo?: GlobalTypes.AuditInfo
+  Competitor:
+    type: PartyRole
+    properties:
+      competitorStrengths?:
+        type: string
+      competitorFromDate:
+        type: date-only
+      socialMediaPostRate?:
+        type: integer | nil
+      competitorThreats?:
+        type: string
+      currentRatio?:
+        type: integer | nil
+      cashFlowGrowth?:
+        type: integer | nil
+      competitorObjectives?:
+        type: string
+      netProfitMargin?:
+        type: integer | nil
+      competitorWeaknesses?:
+        type: string
+      pressMentionsRate?:
+        type: integer | nil
+      assetTurnoverRatio?:
+        type: integer | nil
+      competitorToDate?:
+        type: date-only | nil
+      competitorLeverageOpportunities?:
+        type: string
+      assetReturnRatio?:
+        type: integer | nil
+      ptoENumber?:
+        type: integer | nil
+      adKeywords?:
+        type: string
+      adReachRate?:
+        type: integer | nil
+  ContactPoint:
+    properties:
+      id:
+        type: string | nil
+      # Accelerators: introduced property to related contact point items with other systems
+      name?:
+        type: string
+      primaryFlag?:
+        type: boolean | nil
+      bestTimeToContactStartTime?:
+        type: time-only | nil
+      profileLastUpdatedDate?:
+        type: time-only | nil
+      # Accelerators: changed to string for PartyRole.id reference
+      partyRole?:
+        items: string
+      activeFromDate:
+        type: date-only
+      activeToDate?:
+        type: date-only | nil
+      profileOccurrenceCount?:
+        type: integer | nil
+      profileFirstCreatedDate?:
+        type: time-only | nil
+      bestTimeToContactEndTime?:
+        type: time-only | nil
+      # Accelerators: changed to string for Party.id reference
+      # Accelerators: made property optional
+      party?:
+        items: string
+      # Accelerators: added string union for ContactPointType.id reference
+      contactPointType:
+        items: string | ContactPointType
+      # Accelerators: made property optional
+      forBusinessUse?:
+        type: boolean | nil
+      forPersonalUse?:
+        type: boolean | nil
+      # Accelerators: added audit info block
+      auditInfo?: GlobalTypes.AuditInfo
+  ContactPointAddress:
+    type: ContactPoint
+    properties:
+      isUsedForShipping?:
+        type: boolean | nil
+      stateProvinceName?:
+        type: string
+      addressLine3?:
+        type: string
+      countryName?:
+        type: string
+      postalCodeText?:
+        type: string
+      geoLatitude?:
+        type: integer | nil
+      addressLine2?:
+        type: string
+      addressLine4?:
+        type: string
+      geoAccuracy?:
+        type: integer | nil
+      # Accelerators: changed to string for ContactPointPhone.id reference
+      contactPhone?:
+        items: string
+      geoLongitude?:
+        type: integer | nil
+      # Accelerators: made property mandatory
+      addressLine1:
+        type: string
+      cityName?:
+        type: string
+      isUsedForBilling?:
+        type: boolean | nil
+  ContactPointApp:
+    type: ContactPoint
+    properties:
+      applicationLogin?:
+        type: string
+  ContactPointEmail:
+    type: ContactPoint
+    properties:
+      # Accelerators: made property optional
+      emailLatestBounceReasonText?:
+        type: string
+      # Accelerators: made property optional
+      emailMailBox?:
+        type: string
+      # Accelerators: made property optional
+      emailDomain?:
+        type: string
+      emailAddress:
+        type: string
+      emailLatestBounceDateTime?:
+        type: date-only | nil
+  ContactPointLocation:
+    type: ContactPoint
+    properties: {}
+  ContactPointPhone:
+    type: ContactPoint
+    properties:
+      extensionNumber?:
+        type: string
+      phoneCountryCode?:
+        type: string
+      countryName?:
+        type: string
+      areaCode?:
+        type: string
+      # Accelerators: made property optional
+      isSMSCapable?:
+        type: boolean
+      shortCode?:
+        type: integer | nil
+      # Accelerators: made property optional
+      formattedInternationalPhoneNumber?:
+        type: string
+      # Accelerators: made property optional
+      primaryPhoneType?:
+        type: string
+      # Accelerators: made property optional
+      isFaxCapable?:
+        type: boolean | nil
+      formattedE164PhoneNumber?:
+        type: string
+      # Accelerators: made property optional
+      formattedNationalPhoneNumber?:
+        type: string
+      telephoneNumber:
+        type: string
+  ContactPointSocial:
+    type: ContactPoint
+    properties:
+      # Accelerators: made property optional
+      profilePictureURL?:
+        type: string
+      # Accelerators: made property optional
+      followersCount?:
+        type: integer | nil
+      # Accelerators: made property optional
+      socialHandleName?:
+        type: string
+      # Accelerators: made property optional
+      socialFanStatus?:
+        type: string
+      socialHandle:
+        type: string
+      socialNetworkProvider:
+        type: string
+  ContactPointType:
+    properties:
+      id:
+        type: string | nil
+      name:
+        type: string
+      # Accelerators: made property optional
+      optInPriority?:
+        type: integer | nil
+      # Accelerators: added audit info block
+      auditInfo?: GlobalTypes.AuditInfo
+  Customer:
+    type: PartyRole
+    properties:
+      customerStatus:
+        type: string
+      prospectRating?:
+        type: string
+      netPromoterScore?:
+        type: integer | nil
+      customerSatisfactionScore?:
+        type: integer | nil
+      marketingEmailResponseRate?:
+        type: integer | nil
+      totalContractedAmount?:
+        type: integer | nil
+      totalProfitContributionAmount?:
+        type: integer | nil
+      customerNumber?:
+        type: string
+      churnScore?:
+        type: integer | nil
+      originatingCustomerSource?:
+        type: string
+      totalLifeTimeValue?:
+        type: integer | nil
+      totalBookingsAmount?:
+        type: integer | nil
+      last24MonthsNewRevenueAmount?:
+        type: integer | nil
+      last12MonthsNewRevenueAmount?:
+        type: integer | nil
+      last12MonthsSupportCallCount?:
+        type: integer | nil
+  CustomerStatusHistory:
+    properties:
+      id:
+        type: string | nil
+      startDateTime:
+        type: time-only
+      # Accelerators: added string union for PartyRole.id reference
+      # Accelerators: made property optional
+      partyRole?:
+        items: string | PartyRole
+      partyRoleStatus:
+        type: string
+      # Accelerators: made property optional
+      endDateTIme?:
+        type: time-only | nil
+      # Accelerators: added audit info block
+      auditInfo?: GlobalTypes.AuditInfo
+  Household:
+    type: Party
+    properties:
+      name:
+        type: string
+      householdMemberCount?:
+        type: integer | nil
+      householdFormedDate?:
+        type: date-only | nil
+      householdDissolvedDate?:
+        type: date-only | nil
+  Individual:
+    type: Party
+    properties:
+      hasAlcoholAbuseHistory?:
+        type: boolean | nil
+      highestEducationLevel?:
+        type: string
+      personHeight?:
+        type: integer | nil
+      mailingName?:
+        type: string
+      surgeriesLast5YearsCount?:
+        type: integer | nil
+      doNotTrackUpdateDate?:
+        type: date-only | nil
+      weddingAnniversaryDate?:
+        type: date-only | nil
+      minorCitationCount?:
+        type: integer | nil
+      mainDietaryHabitType?:
+        type: string
+      personHeightUnitOfMeasure?:
+        type: string
+      firstName?:
+        type: string
+      personName:
+        type: string
+      photoURL?:
+        type: string
+      isHighRiskHobby?:
+        type: boolean | nil
+      doNotProcessFromUpdateDate?:
+        type: date-only | nil
+      militaryService?:
+        type: string
+      maritalStatus?:
+        type: string
+      doNotMarketFromUpdateDate?:
+        type: date-only | nil
+      shouldForget?:
+        type: boolean | nil
+      mainDisabilityType?:
+        type: string
+      consumerCreditScoreProviderName?:
+        type: string
+      isTobaccoConsume?:
+        type: boolean | nil
+      webSiteURL?:
+        type: string
+      secondLastName?:
+        type: string
+      # Accelerators: changed to string for Household.id reference
+      primaryHousehold?:
+        items: string
+      orderingName?:
+        type: string
+      hospitalizationsLast5YearsCount?:
+        type: integer | nil
+      dependentCount?:
+        type: integer | nil
+      convictionsCount?:
+        type: integer | nil
+      isGoodDriver?:
+        type: boolean | nil
+      primaryHobby?:
+        type: string
+      mainPersonalValueType?:
+        type: string
+      isAlcoholConsumer?:
+        type: boolean | nil
+      taxBracketRange?:
+        type: string
+      childrenCount?:
+        type: integer | nil
+      isGoodStudent?:
+        type: boolean | nil
+      mainLifeAttitudeType?:
+        type: string
+      netWorth?:
+        type: integer | nil
+      personWeight?:
+        type: integer | nil
+      birthDate?:
+        type: date-only | nil
+      religion?:
+        type: string
+      sendIndividualData?:
+        type: boolean | nil
+      deathDate?:
+        type: date-only | nil
+      doExtractMyDataUpdateDate?:
+        type: date-only | nil
+      birthPlace?:
+        type: string
+      overAgeNumber?:
+        type: integer | nil
+      doForgetMeFromUpdateDate?:
+        type: date-only | nil
+      personWeightUnitOfMeasure?:
+        type: string
+      mainLifeStyleType?:
+        type: string
+      gender?:
+        type: string
+      hasDrugAbuseHistory?:
+        type: boolean | nil
+      salutation?:
+        type: string
+      mothersMaidenName?:
+        type: string
+      doNotTrackLocationUpdateDate?:
+        type: date-only | nil
+      ethnicity?:
+        type: string
+      mainPersonalityType?:
+        type: string
+      employedSinceDate?:
+        type: date-only | nil
+      officialName?:
+        type: string
+      isHighRiskOccupation?:
+        type: boolean | nil
+      residenceCaptureMethod?:
+        type: string
+      doNotProfileFromUpdateDate?:
+        type: date-only | nil
+      nameSuffix?:
+        type: string
+      isDrugConsumer?:
+        type: boolean | nil
+      isHomeOwner?:
+        type: boolean | nil
+      doNotProcessReason?:
+        type: string
+      occupationType?:
+        type: string
+      deathPlace?:
+        type: string
+      influencerRating?:
+        type: integer | nil
+      militaryStatus?:
+        type: string
+      consumerCreditScore?:
+        type: integer | nil
+      yearlyIncome?:
+        type: integer | nil
+      preferredName?:
+        type: string
+      personLifeStage?:
+        type: string
+      yearlyIncomeRange?:
+        type: string
+      majorCitationCount?:
+        type: integer | nil
+      middleName?:
+        type: string
+      residenceCountryName?:
+        type: string
+      lastName?:
+        type: string
+      occupation?:
+        type: string
+      currentEmployerName?:
+        type: string
+  InternalBusinessUnit:
+    type: Party
+    properties:
+      name:
+        type: string
+      businessUnitType:
+        type: string
+      # Accelerators: changed to string for InternalBusinessUnit.id reference
+      parentInternalBusinessUnit?:
+        items: string
+  Lead:
+    properties:
+      id:
+        type: string | nil
+      # Accelerators: added string union for ContactPointPhone.id reference
+      faxContactPhone?:
+        items: string | ContactPointPhone
+      stateProvinceName?:
+        type: string
+      leadStatus?:
+        type: string
+      photoURL?:
+        type: string
+      countryName?:
+        type: string
+      # Accelerators: added string union for PartyRole.id reference
+      # Accelerators: made property optional
+      partyRole?:
+        items: string | PartyRole
+      convertedDate?:
+        type: date-only | nil
+      description?:
+        type: string
+      # Accelerators: added string union for ContactPointEmail.id reference
+      contactPointEmail?:
+        items: string | ContactPointEmail
+      companyName?:
+        type: string
+      streetName?:
+        type: string
+      leadScore?:
+        type: integer | nil
+      # Accelerators: added string union for ContactPointPhone.id reference
+      mobileContactPhone?:
+        items: string | ContactPointPhone
+      # Accelerators: added string union for ContactPointAddress.id reference
+      contactAddress?:
+        items: string | ContactPointAddress
+      geoCodeLatitude?:
+        type: integer | nil
+      leadRating?:
+        type: string
+      geoCodeLongitude?:
+        type: integer | nil
+      emailBouncedDate?:
+        type: time-only | nil
+      geoCodeAccuracy?:
+        type: integer | nil
+      leadSource:
+        type: string
+      # Accelerators: added string union for Account.id reference
+      convertedToAccount?:
+        items: string | Account
+      # Accelerators: added string union for AccountContact.id reference
+      convertedToAccountContact?:
+        items: string | AccountContact
+      # Accelerators: added string union for ContactPointPhone.id reference
+      phoneContactPoint?:
+        items: string | ContactPointPhone
+      lastActivityDate?:
+        type: date-only | nil
+      annualRevenue?:
+        type: integer | nil
+      emailBouncedReason?:
+        type: string
+      website?:
+        type: string
+      isConverted?:
+        type: boolean | nil
+      # Accelerators: added string union for Account.id reference
+      partnerAccount?:
+        items: string | Account
+      # Accelerators: added support for external identifiers
+      externalIds?: 
+        items: string | GlobalTypes.ExternalId
+      # Accelerators: added audit info block
+      auditInfo?: GlobalTypes.AuditInfo
+  # Accelerators: new type introduced
+  Organization:
+    type: Party
+    properties:
+      name:
+        type: string
+      legalName?:
+        type: string
+  Party:
+    properties:
+      id:
+        type: string | nil
+      partyType:
+        type: string
+      globalParty?:
+        type: string
+      noMergeReason?:
+        type: string
+      # Accelerators: changed to string for Account.id reference
+      primaryAccount?:
+        items: string
+      # Accelerators: added support for associating contact information with a party
+      contactPoints?:
+        items: string | ContactPoint
+      # Accelerators: added support for external identifiers
+      externalIds?: 
+        items: string | GlobalTypes.ExternalId
+      # Accelerators: added audit info block
+      auditInfo?: GlobalTypes.AuditInfo
+  PartyAdditionalName:
+    properties:
+      id:
+        type: string | nil
+      name:
+        type: string
+      additionalNameType:
+        type: string
+      # Accelerators: changed to string for Party.id reference
+      # Accelerators: made property optional
+      party?:
+        items: string
+      # Accelerators: added audit info block
+      auditInfo?: GlobalTypes.AuditInfo
+  PartyIdentification:
+    properties:
+      id:
+        type: string | nil
+      name:
+        type: string
+      expiryDate?:
+        type: date-only | nil
+      partyIdentificationType:
+        type: string
+      verifiedDate?:
+        type: date-only | nil
+      issuedByAuthority?:
+        type: string
+      issuedAtLocation?:
+        type: string
+      issuedDate?:
+        type: date-only | nil
+      # Accelerators: changed to string for PartyRole.id reference
+      partyRole?:
+        items: string
+      identificationNumber:
+        type: string
+      # Accelerators: changed to string for Party.id reference
+      # Accelerators: made property optional
+      party?:
+        items: string
+      # Accelerators: added audit info block
+      auditInfo?: GlobalTypes.AuditInfo
+  PartyRelatedParty:
+    properties:
+      id:
+        type: string | nil
+      relatedFromDate:
+        type: date-only
+      # Accelerators: added string union for PartyRelationshipType.id
+      partyRelationshipType:
+        items: string | PartyRelationshipType
+      # Accelerators: added string union for Party.id reference
+      # Accelerators: made property optional
+      relatedParty?:
+        items: string | Party
+      # Accelerators: made property optional
+      relatedToDate?:
+        type: date-only | nil
+      # Accelerators: added string union for Party.id reference
+      # Accelerators: made property optional
+      party?:
+        items: string | Party
+      # Accelerators: added audit info block
+      auditInfo?: GlobalTypes.AuditInfo
+  PartyRelationshipType:
+    properties:
+      id:
+        type: string | nil
+      # Accelerators: made property optional
+      isBidirectional?:
+        type: boolean | nil
+      # Accelerators: added string union for PartyRole.id reference
+      partyRole:
+        type: string | PartyRole
+      # Accelerators: added string union for PartyRole.id reference
+      relatedPartyRole:
+        type: string | PartyRole
+      # Accelerators: added audit info block
+      auditInfo?: GlobalTypes.AuditInfo
+  PartyRole:
+    properties:
+      id:
+        type: string | nil
+      # Accelerators: added type identification
+      partyRoleType:
+        type: string
+      # Accelerators: added string union for Party.id reference
+      # Accelerators: made property optional
+      party?:
+        items: string | Party
+      # Accelerators: added support for external identifiers
+      externalIds?: 
+        items: string | GlobalTypes.ExternalId
+      # Accelerators: added audit info block
+      auditInfo?: GlobalTypes.AuditInfo
+  PartyWebAddress:
+    type: ContactPoint
+    properties:
+      webSiteURL:
+        type: string
+      # Accelerators: changed to string for Party.id reference
+      # Accelerators: made property optional
+      party?:
+        items: string
+  PersonEducation:
+    properties:
+      id:
+        type: string | nil
+      educationLevel:
+        type: string
+      educationName:
+        type: string
+      # Accelerators: made property optional
+      graduationDate?:
+        type: date-only | nil
+      # Accelerators: changed to string for Individual.id reference
+      # Accelerators: made property optional
+      individual?:
+        items: string
+      institutionName:
+        type: string
+      # Accelerators: added audit info block
+      auditInfo?: GlobalTypes.AuditInfo
+  PersonEmployment:
+    properties:
+      id:
+        type: string | nil
+      employmentStatus:
+        type: string
+      # Accelerators: made property optional
+      positionText?:
+        type: string
+      # Accelerators: added string union for ContactPointAddress.id reference
+      employerContactPointAddress?:
+        items: string | ContactPointAddress
+      employerAddressLine3?:
+        type: string
+      # Accelerators: made property optional
+      endDate?:
+        type: date-only | nil
+      # Accelerators: made property optional
+      startDate?:
+        type: date-only | nil
+      occupationText:
+        type: string
+      employerName:
+        type: string
+      employerAddressLine4?:
+        type: string
+      # Accelerators: made property optional
+      employerAddressLine1?:
+        type: string
+      # Accelerators: made property optional
+      annualIncome?:
+        type: integer | nil
+      employerCityName?:
+        type: string
+      # Accelerators: changed to string for Individual.id reference
+      # Accelerators: made property optional
+      individual?:
+        items: string
+      employerAddressLine2?:
+        type: string
+      employerPostalCodeText?:
+        type: string
+      # Accelerators: made property optional
+      employerPhoneNumber?:
+        type: string
+      # Accelerators: added audit info block
+      auditInfo?: GlobalTypes.AuditInfo
+  PersonLanguage:
+    properties:
+      id:
+        type: string | nil
+      spokenProficiencyLevel?:
+        type: string
+      # Accelerators: changed to string for Individual.id reference
+      # Accelerators: made property optional
+      individual?:
+        items: string
+      writtenProficiencyLevel?:
+        type: string
+      # Accelerators: added audit info block
+      auditInfo?: GlobalTypes.AuditInfo
+  PersonLifeEvent:
+    properties:
+      id:
+        type: string | nil
+      # Accelerators: changed to string for Individual.id reference
+      # Accelerators: made property optional
+      individual?:
+        items: string
+      personLifeEventDateTime:
+        type: time-only
+      personLifeEventType:
+        type: string
+      # Accelerators: added audit info block
+      auditInfo?: GlobalTypes.AuditInfo
+  Seller:
+    type: PartyRole
+    properties:
+      communityParticipationCount?:
+        type: integer | nil
+      demonstrationsGivenCount?:
+        type: integer | nil
+      eventParticipationCount?:
+        type: integer | nil
+      customerSatisfactionScore?:
+        type: integer | nil
+      trainingCertificationCount?:
+        type: integer | nil
+      opportunityInvolvementCount?:
+        type: integer | nil
+      marketingDevelopmentAmount?:
+        type: integer | nil
+      sellerType?:
+        type: string
+      documentationDownloadCount?:
+        type: integer | nil
+      activeFromDate:
+        type: date-only
+      activeToDate?:
+        type: date-only | nil
+      trialParticipationCount?:
+        type: integer | nil
+      creditRating?:
+        type: integer | nil
+      satisfactionScore?:
+        type: integer | nil
+      salesAmount?:
+        type: integer | nil
+      opportunityWinRate?:
+        type: integer | nil
+      productReturnRate?:
+        type: integer | nil
+      leadGenerationCount?:
+        type: integer | nil
+      inventoryValueAmount?:
+        type: integer | nil
+      majorPostSaleSupportNeeded?:
+        type: boolean | nil
+      trainingParticipationCount?:
+        type: integer | nil
+      newCustomerAcquisitionCount?:
+        type: integer | nil
+      successStoryCount?:
+        type: integer | nil
+      systemLoginCount?:
+        type: integer | nil
+      jointBusinessPlanExist?:
+        type: boolean | nil
+      averageConvertedLeadAmount?:
+        type: integer | nil
+      estimatedPartnerGrossMargin?:
+        type: integer | nil
+  Supplier:
+    type: PartyRole
+    properties:
+      satisfactionEthicsRank?:
+        type: integer | nil
+      contractInvoiceAccuracyRate?:
+        type: integer | nil
+      satisfactionWeightPercent?:
+        type: integer | nil
+      contractOnTimeDeliveryRate?:
+        type: integer | nil
+      activeFromDate:
+        type: date-only
+      activeToDate?:
+        type: date-only | nil
+      competitiveWarrantyRank?:
+        type: integer | nil
+      competitiveMarketingRank?:
+        type: integer | nil
+      contractDeliveryCorrectnessRate?:
+        type: integer | nil
+      competitiveWeightScore?:
+        type: integer | nil
+      contractSLAIssueRate?:
+        type: integer | nil
+      competitiveWeightPercent?:
+        type: integer | nil
+      supplierScore?:
+        type: integer | nil
+      competitiveProductPriceRank?:
+        type: integer | nil
+      contractWeightPercent?:
+        type: integer | nil
+      supplierSpend?:
+        type: integer | nil
+      satisfactionTechnicalSupportRank?:
+        type: integer | nil
+      contractWeightScore?:
+        type: integer | nil
+      satisfactionCustomerServiceRank?:
+        type: integer | nil
+      satisfactionWeightScore?:
+        type: integer | nil
+      contractSourcingCycleDays?:
+        type: integer | nil
+      supplierType?:
+        type: string
+      isCarrier?:
+        type: boolean | nil
+      contractProductReturnRate?:
+        type: integer | nil
+      competitiveCostAvoidanceRank?:
+        type: integer | nil
+      contractProductQualityRate?:
+        type: integer | nil
+      contractBudgetCostRate?:
+        type: integer | nil
+  UncategorizedParty:
+    type: Party
+    properties:
+      creationReason?:
+        type: string
+      uncategorizedPartyLabel:
+        type: string
+      originalSourceRecord?:
+        type: string
+      originalSourceSystem?:
+        type: string

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd  http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+    <flow name="fins-bank-accounts-prc-api-main">
+        <http:listener config-ref="api-template-httpListenerConfig" path="/api/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="bank-accounts-prc-api-config" />
+    </flow>
+    <flow name="fins-bank-accounts-prc-api-console">
+        <http:listener config-ref="api-template-httpListenerConfig" path="/console/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:console config-ref="bank-accounts-prc-api-config" />
+    </flow>
+    <flow name="get:\accounts:bank-accounts-prc-api-config">
+        <set-variable value="#[attributes.queryParams]" doc:name="fscQueryParams" doc:id="eb388d1f-9049-4d85-848b-66511bc219c1" variableName="fscQueryParams" />
+        <flow-ref doc:name="search-bankaccounts-from-salesforce-financial" doc:id="bd4efb51-8000-489b-8ada-b5ee3c72825b" name="search-bankaccounts-from-salesforce-financial" />
+    </flow>
+    <flow name="get:\accounts\(accountId):bank-accounts-prc-api-config" doc:id="72991c2b-13c4-4681-99fa-3c39e6a4cb72">
+        <set-variable value="#[attributes.uriParams.accountId]" doc:name="fscAccountId" doc:id="89c5a232-825e-497a-b01c-06668fb85ec0" variableName="fscAccountId" />
+        <flow-ref doc:name="get-bankaccount-from-salesforce-financial" doc:id="72c0fffb-f772-4571-9ad6-9ebb5f4f3a2b" name="get-bankaccount-from-salesforce-financial" />
+    </flow>
+    <flow name="get:\accounts\(accountId)\transactions:bank-accounts-prc-api-config" doc:id="8c342977-4958-46f3-a370-4b44508d6635">
+        <set-variable value="#[attributes.queryParams]" doc:name="fscQueryParams" doc:id="53f2e067-713c-48ae-a9ae-62dc6666ae19" variableName="fscQueryParams" />
+        <set-variable value="#[attributes.uriParams.accountId]" doc:name="fscAccountId" doc:id="7a41d35e-1dad-460b-b60f-c7064a4dbb9d" variableName="fscAccountId" />
+        <flow-ref doc:name="get-bankaccount-transactions-from-salesforce-financial" doc:id="28faa381-893e-4441-bbb4-907bf84005a1" name="get-bankaccount-transactions-from-salesforce-financial" />
+    </flow>
+    <flow name="get:\accounts\(accountId)\transactions\(transactionId):bank-accounts-prc-api-config" doc:id="6b7f2172-14d8-43de-bb56-0a387979168f">
+        <set-variable value="#[attributes.queryParams]" doc:name="fscQueryParams" doc:id="9c8502ff-c9a2-4916-857d-e2fb4c272a52" variableName="fscQueryParams" />
+        <set-variable value="#[attributes.uriParams.accountId]" doc:name="fscAccountId" doc:id="3fa35882-ca6a-4620-8fcb-18d09563f817" variableName="fscAccountId" />
+        <set-variable value="#[attributes.uriParams.transactionId]" doc:name="fscTransactionId" doc:id="a43a1622-3d18-40a9-8643-7e3ec8199852" variableName="fscTransactionId" />
+        <flow-ref doc:name="get-specific-bankaccount-transaction-from-salesforce-financial" doc:id="45f5c655-ce2d-46b9-a541-229e716987db" name="get-specific-bankaccount-transaction-from-salesforce-financial" />
+    </flow>
+    <flow name="get:\ping:bank-accounts-prc-api-config">
+        <flow-ref doc:name="ping_get-health" doc:id="e8ebdc6d-fdf9-4c43-bc6f-7ae2aff5d691" name="ping_get-health" />
+    </flow>
+    <flow name="post:\accounts:application\json:bank-accounts-prc-api-config">
+        <flow-ref doc:name="post-bankaccount-to-salesforce-financial" doc:id="0cff380c-6469-45fd-b0cb-eba77af0bd24" name="post-bankaccount-to-salesforce-financial" />
+    </flow>
+    <flow name="patch:\accounts\(accountId):application\json:bank-accounts-prc-api-config" doc:id="767221d4-4047-4013-8e7b-7f1037373ff4">
+        <set-variable value="#[attributes.uriParams.accountId]" doc:name="fscAccountId" doc:id="514f8a83-68be-4d23-9914-73a95dc50dee" variableName="fscAccountId" />
+        <flow-ref doc:name="patch-bankaccount-to-salesforce-financial" doc:id="32e6e498-87b1-400b-b429-785c6a33e4a5" name="patch-bankaccount-to-salesforce-financial" />
+    </flow>
+    <flow name="patch:\accounts\(accountId)\transactions\(transactionId):application\json:bank-accounts-prc-api-config" doc:id="80a02227-7881-4ca9-962c-4e93a688c507">
+        <set-variable value="#[attributes.uriParams.accountId]" doc:name="fscAccountId" doc:id="735c2c48-882e-4d1f-8696-707d7a4c6221" variableName="fscAccountId" />
+        <set-variable value="#[attributes.uriParams.transactionId]" doc:name="fscTransactionId" doc:id="baf6f3d4-b757-423c-bd5c-30e3850733cd" variableName="fscTransactionId" />
+        <flow-ref doc:name="patch-bankaccount-transaction-to-salesforce-financial" doc:id="48ee245b-89b1-4628-9196-91b709d34b53" name="patch-bankaccount-transaction-to-salesforce-financial" />
+    </flow>
+    <flow name="post:\accounts\poller:bank-accounts-prc-api-config">
+        <async doc:name="Async" doc:id="e0a27116-e460-4189-aa2c-bb91b5ba1945">
+            <choice doc:name="customerId was provided?" doc:id="356aa8a3-bbc1-4bfe-a652-d4f2ef2493da" >
+				<when expression="#[!isEmpty(attributes.queryParams.customerId)]">
+					<set-variable value="#[attributes.queryParams.customerId]" doc:name="fscCustomerId" doc:id="6fdab237-5701-4095-b933-5d6ccfd3d824" variableName="fscCustomerId"/>
+					<flow-ref doc:name="get-specific-customer-from-fsc" doc:id="78732a0a-7f11-445d-9eea-9a0290add202" name="get-specific-customer-from-fsc"/>
+					<set-variable value='#[(payload.externalIds default []) filter (extIdObj) -&gt; (extIdObj.externalIdType contains "MDM")]' doc:name="fisExtIds" doc:id="7de55fed-7e6b-4bcc-a4e1-0be3d5f23bed" variableName="fisExtIds"/>
+					<choice doc:name="Customer has one MDM externalId?" doc:id="f0397e08-feb6-4b6c-981a-37f04ae39243">
+						<when expression="#[sizeOf(vars.fisExtIds) == 1]">
+							<set-variable value="#[vars.fisExtIds[0].externalId]" doc:name="fisCustomerId" doc:id="77541904-6b8c-4714-9fea-aa60423d6f98" variableName="fisCustomerId"/>
+							<flow-ref doc:name="get-specific-customer-from-fis" doc:id="e40f61cc-2c05-4ae7-a9b1-f9a3c4e1cd02" name="get-specific-customer-from-fis" />
+							<set-payload value="#[payload[0]]" doc:name="take first" doc:id="08566355-7332-48cc-903e-51efcd05716c" />
+							<flow-ref doc:name="poll-sync-specific-customer" doc:id="d05b4b21-239f-4097-98a8-eabd4319a62a" name="poll-sync-specific-customer" />
+						</when>
+						<otherwise >
+							<flow-ref doc:name="poll-all" doc:id="15664d92-e540-415f-964f-01155f1a7961" name="poll-all" />
+						</otherwise>
+					</choice>
+				</when>
+				<otherwise >
+					<flow-ref doc:name="poll-all" doc:id="63070639-5b4a-42dd-af58-53da97e309d3" name="poll-all" />
+				</otherwise>
+			</choice>
+        </async>
+        <set-payload value="#[&quot;&quot;]" doc:name="clear payload" doc:id="17cccb4d-115c-4a9d-85a7-cd0445a9df54" />
+        <set-variable value="202" doc:name="httpStatus" doc:id="d6278807-0abe-4400-8cde-b140bea93ebc" variableName="httpStatus" />
+    </flow>
+    <flow name="poll-all" doc:id="2ac2f235-1c7e-4cb8-bd43-353c15dd8db7">
+        <scheduler doc:name="All Objects" doc:id="847c41c6-cc15-444e-a6bd-ced294efbfe9">
+            <scheduling-strategy>
+                <cron expression="${process.scheduler.all.cron}" />
+            </scheduling-strategy>
+        </scheduler>
+		<flow-ref doc:name="get-customers-from-fis" doc:id="c80b8611-f6bd-4d4d-a410-ff9d5a554aa3" name="get-customers-from-fis" target="fisCustomers" />
+		<foreach doc:name="For Each FIS Customer" doc:id="b952b784-937e-4b01-84a1-4bf31d292785" collection="#[vars.fisCustomers]" >
+			<flow-ref doc:name="poll-sync-specific-customer" doc:id="5aa051c8-010b-4100-b4de-6a3b793e3230" name="poll-sync-specific-customer"/>
+		</foreach>
+    </flow>
+	<flow name="poll-sync-specific-customer" doc:id="07f3e3e3-5273-4107-a384-b7e4f6774021" >
+		<flow-ref doc:name="sync-customers-batchjob" doc:id="7340867d-7714-4f8d-b9ee-0b96fb2eb026" name="sync-customers-batchjob" target="syncCustomerResult" />
+		<flow-ref doc:name="sync-bankaccounts-for-customer" doc:id="76e6f931-704a-4599-ab25-60cc488e810f" name="sync-bankaccounts-for-customer" target="syncBankAccountsResult" />
+		<flow-ref doc:name="sync-transactions-for-customer" doc:id="c3186816-ec00-4277-83bb-c3d3e93290ae" name="sync-transactions-for-customer" target="syncTransactionsResult" />
+	</flow>
+</mule>

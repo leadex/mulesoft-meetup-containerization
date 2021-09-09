@@ -1,0 +1,48 @@
+{
+    "partyRoleType": "Customer",
+    "id": "null",
+    "party": [
+        {
+            "id": null,
+            "name": "Bednar co",
+            "partyType": "Organization",
+            "contactPoints": [
+                {
+                    "contactPointType": [
+                        "ContactPointAddress"
+                    ],
+                    "id": null,
+                    "activeFromDate": "2021-04-14",
+                    "addressLine1": "Julianne Prairie",
+                    "cityName": "East Osbaldo",
+                    "postalCodeText": "",
+                    "stateProvinceName": "TX",
+                    "countryName": "USA",
+                    "geoLatitude": "14.997",
+                    "geoLongitude": "164.6381",
+                    "geoAccuracy": ""
+                },
+                {
+                    "contactPointType": [
+                        "ContactPointPhone"
+                    ],
+                    "id": null,
+                    "activeFromDate": "2021-04-14",
+                    "telephoneNumber": "224-556-8959"
+                }]
+        }
+    ],
+    "externalIds": [
+        {
+            "id": "",
+            "externalId": "bbcaa980438a",
+            "externalIdType": [
+                "MDM"
+            ],
+            "statusLastChangedDate": "2021-04-14T19:45:47Z",
+            "status": "VALID"
+        }
+    ],
+    "customerNumber": "ZYDUSYP2",
+    "customerStatus": "ACTIVE"
+}

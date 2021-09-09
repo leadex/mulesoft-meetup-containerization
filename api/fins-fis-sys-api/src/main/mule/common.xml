@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="common_get-access-token" doc:id="83a18d44-5a8f-472c-8ee3-53f52a67dbf3" >
+        <ee:transform doc:name="Set Authorization" doc:id="ed9058b3-2dd1-462c-b5f9-a45755192ed5" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable resource="dwl/requestAccessToken.dwl" variableName="authorizationToken" />
+			</ee:variables>
+		</ee:transform>
+		<until-successful maxRetries="${retry.fis.numRetries}" doc:name="Until Successful" doc:id="057e5667-5255-43e6-b29e-937a25754248" millisBetweenRetries="${retry.fis.delayMillisecs}">
+			<try doc:name="Try" doc:id="60291e36-6b93-4460-a08f-4d3335a71140" >
+				<!--
+				<http:request method="POST" doc:name="Get Access Token" doc:id="f6d41ae2-5315-4cfc-965e-7c5ea4b2f460" config-ref="fis-httpRequestConfig" path="${fis.tokenPath}">
+            <http:body><![CDATA[#[output application/x-www-form-urlencoded
+-&#45;&#45;
+{
+     grant_type: "client_credentials"
+}]]]></http:body>
+            <http:headers><![CDATA[#[output application/java
+-&#45;&#45;
+{
+	"Authorization" : vars.AuthorizationToken
+}]]]></http:headers>
+        </http:request>
+        		-->
+				<ee:transform doc:name="Mock Get Access Token" doc:id="08c2287b-5300-4170-8122-96081b6baf58" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+    "access_token": "ac31b0c8-e0c4-3cce-ae2f-9774a93f8ce0",
+    "scope": "am_application_scope default",
+    "token_type": "Bearer",
+    "expires_in": 3442
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="59dcec45-6638-44f2-8732-e071b9085a4a" type="HTTP:BAD_GATEWAY, HTTP:CONNECTIVITY, HTTP:TIMEOUT">
+						<flow-ref doc:name="common-error-handler_http-exception" doc:id="df45bb0d-cc54-4520-bc5e-7590a34d1923" name="common-error-handler_http-exception"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</until-successful>
+		<ee:transform doc:name="Retrieve Access Token" doc:id="adc6f541-933b-4d86-bd6a-2d85bb71c63f" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable resource="dwl/fetchAccessToken.dwl" variableName="accessToken" />
+			</ee:variables>
+		</ee:transform>
+	</sub-flow>
+</mule>

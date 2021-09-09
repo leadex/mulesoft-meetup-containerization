@@ -1,0 +1,32 @@
+[
+  {
+  "MailingStreet": "Julianne Prairie",
+  "LastModifiedDate": "2021-04-14T19:45:47.000Z",
+  "LastModifiedBy": {
+    "Id": null,
+    "type": "User",
+    "Name": "Admin Accelerator"
+  },
+  "IsDeleted": "false",
+  "Global_Individual_Id__c": "fdddf723",
+  "CreatedBy": {
+    "Id": null,
+    "type": "User",
+    "Name": "Admin Accelerator"
+  },
+  "FirstName": "Mandy",
+  "ContactId": "0034x00000GCkxGAAT",
+  "MailingLatitude": "14.997",
+  "Birthdate": "1984-03-17",
+  "type": "Account",
+  "Salutation": "Mr.",
+  "AccountNumber": "ZYDUSYP1",
+  "Phone": "703-850-3754",
+  "MailingLongitude": "164.6381",
+  "CreatedDate": "2021-04-14T19:44:00.000Z",
+  "MailingPostalCode": null,
+  "Id": "0014x00000HwZFdAAN",
+  "LastName": "Jacob",
+  "Email": "elisa.lockman@gmail.com"
+}
+]

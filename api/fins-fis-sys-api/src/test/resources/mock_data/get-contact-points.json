@@ -1,0 +1,52 @@
+{
+    "Entity": {
+        "IpPoc": {
+            "PhInq": [
+                {
+                    "StrtDte": "2016-01-01",
+                    "Nbr": 9876543210,
+                    "IntlPrfx": 911,
+                    "CtryCallngCde": 11,
+                    "TrnkCde": 123,
+                    "AreaCde": "080",
+                    "TeleNbr": 1234567891,
+                    "ExtnNbr": 1212,
+                    "TxtEnabl": true,
+                    "PhTyp": "Home",
+                    "SeqNbr": 1,
+                    "SpclInst": "Phone Special Instructions",
+                    "TzCode": "Canada/Central",
+                    "PrfrdPhInd": true,
+                    "PrfrdTxtInd": false
+                }
+            ],
+            "EmailAddrInq": [
+                {
+                    "StrtDte": "2016-11-01",
+                    "SpclInst": "Email Special Instructions",
+                    "Addr": "Chakraprasad.j@gmail.com",
+                    "EmailTyp": "Primary",
+                    "SeqNbr": 1,
+                    "PrfrdInd": true
+                }
+            ],
+            "PstlAddrInq": [
+                {
+                    "PstlAddrTyp": "Home",
+                    "SeqNbr": 1,
+                    "PrfrdInd": true
+                }
+            ],
+            "SocmediaInq": [
+                {
+                    "StrtDte": "2015-01-02",
+                    "SpclInst": "Social Media Special Instructions",
+                    "SocMediaAccId": "Cherry@facebook.com",
+                    "SocMediaTyp": "Facebook",
+                    "SeqNbr": 1,
+                    "PrfrdInd": true
+                }
+            ]
+        }
+    }
+}

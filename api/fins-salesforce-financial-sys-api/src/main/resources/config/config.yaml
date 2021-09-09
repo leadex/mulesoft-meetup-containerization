@@ -1,0 +1,10 @@
+api:
+  name: "fins-salesforce-financial-sys-api"
+  version: "v1"
+
+salesforce:
+  soql:
+    FinancialAccount:
+      select: "SELECT Id, Global_Account_Id__c, Name, FinServ__Balance__c, CurrencyIsoCode, FinServ__CashBalance__c, FinServ__FinancialAccountNumber__c, FinServ__FinancialAccountType__c, FinServ__Status__c, FinServ__Nickname__c, FinServ__OpenDate__c, FinServ__CloseDate__c, FinServ__TaxID__c, FinServ__PrimaryOwner__c, IsDeleted, CreatedDate, CreatedBy.Name, LastModifiedDate, LastModifiedBy.Name FROM FinServ__FinancialAccount__c"
+    FinancialAccountTransaction:
+      select: "SELECT Id, Global_Transaction_Id__c, Name, FinServ__Description__c, FinServ__Amount__c, FinServ__TransactionDate__c, Transaction_Date__c, FinServ__TransactionType__c, FinServ__TransactionSubtype__c, FinServ__TransactionStatus__c, FinServ__IsDisputed__c, FinServ__DisputeReason__c, FinServ__PostDate__c, FinServ__CardAccountID__c, FinServ__FinancialAccount__c, Disputed__c, IsDeleted, CreatedDate, CreatedBy.Name, LastModifiedDate, LastModifiedBy.Name FROM FinServ__FinancialAccountTransaction__c"

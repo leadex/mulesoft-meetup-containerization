@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="ping_get-health"
+		doc:id="a54e7d6d-60c9-4d58-9a42-40855e767c6a">
+		<set-variable
+			value='#[attributes.queryParams.checkDependencies == "true" default false]'
+			doc:name="checkDependencies"
+			doc:id="bffeb0c6-510d-4e08-a4e0-1269803604ec"
+			variableName="checkDependencies" />
+		<choice doc:name="Choice for check dependencies"
+			doc:id="245af207-4b50-47d8-ac4d-87e6f48301fc">
+			<when expression="#[vars.checkDependencies]">
+				<flow-ref doc:name="ping_check-dependencies"
+					doc:id="ba480201-c8d2-4ce9-8729-6e106320e45d"
+					name="ping_check-dependencies" target="dependencyList" />
+			</when>
+			<otherwise>
+				<set-variable doc:name="dependencyList"
+					doc:id="67da54ed-1bf9-40f6-bbe6-41162a3e37f6"
+					variableName="dependencyList" value="#[null]" />
+			</otherwise>
+		</choice>
+		<ee:transform doc:name="Map Response"
+			doc:id="38321d86-8900-4b73-8db9-bb47908f4faf">
+			<ee:message>
+				<ee:set-payload resource="dwl/ping-map-response.dwl" />
+			</ee:message>
+		</ee:transform>
+		<set-variable value="200" doc:name="httpStatus"
+			doc:id="d1a76d34-db2f-4094-8e05-0100b67eb042"
+			variableName="httpStatus" />
+	</sub-flow>
+	<sub-flow name="ping_check-dependencies"
+		doc:id="b78391ad-a9b4-4055-94c0-29aaf6d40f25">
+		<try doc:name="Try" doc:id="2a4280b8-614f-45f4-a380-fe17bf40d02a" >
+			<http:request method="GET" doc:name="Invoke Bank Accounts Process API" doc:id="4dbc2538-aabf-4236-8519-41bf2c06bbfa" config-ref="bank-accounts-prc-httpRequestConfig" path="${bank-accounts-prc.ping-path}" outputMimeType="application/json">
+				<http:query-params ><![CDATA[#[output application/java
+---
+{
+	("checkDependencies" : "true") if vars.checkDependencies
+}]]]></http:query-params>
+      		</http:request>
+			<error-handler >
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="a9d6f838-ad61-4e5a-811b-273ba9189231" type="HTTP:METHOD_NOT_ALLOWED">
+					<set-variable value="#['UP']" doc:name="backendSystemStatus" doc:id="cd2f7b82-4336-4cc9-9424-dbdca33a0248" variableName="backendSystemStatus" />
+				</on-error-continue>
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="9896fa4e-919e-4f4b-a562-e6a3e4374b6f" type="HTTP:BAD_GATEWAY, HTTP:CONNECTIVITY">
+					<set-variable value="#['DOWN']" doc:name="backendSystemStatus" doc:id="de77eda3-8cd7-4915-93af-d24ad5e12890" variableName="backendSystemStatus" />
+				</on-error-continue>
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="ec28a773-cec3-4052-9000-52d2d4c07447" type="ANY">
+					<set-variable value="#['ERROR']" doc:name="backendSystemStatus" doc:id="7ff78a7f-0331-4f07-aabb-5ad294f1f73e" variableName="backendSystemStatus" />
+				</on-error-continue>
+			</error-handler>
+		</try>
+		<ee:transform doc:name="Dependency Status Response" doc:id="d38d207d-4448-4097-9fbd-a61a51dd13ae">
+			<ee:message>
+				<ee:set-payload resource="dwl/ping-check-dependency-sys-api-response.dwl" />
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+</mule>

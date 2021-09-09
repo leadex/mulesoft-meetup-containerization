@@ -1,0 +1,70 @@
+[
+    {
+        "partyRoleType": "Customer",
+        "id": "0015e00000Fn8vFAAR",
+        "party": [
+            {
+                "id": null,
+                "salutation": "",
+                "personName": "GARY BILLL",
+                "firstName": "GARY",
+                "lastName": "BILLL",
+                "birthDate": "1989-08-09",
+                "partyType": "Individual",
+                "contactPoints": [
+                    {
+                        "contactPointType": [
+                            "ContactPointAddress"
+                        ],
+                        "id": null,
+                        "activeFromDate": "2021-08-03",
+                        "addressLine1": "195",
+                        "cityName": "ANCHORAGE",
+                        "postalCodeText": "995035774",
+                        "stateProvinceName": "WI",
+                        "countryName": "USA",
+                        "geoLatitude": null,
+                        "geoLongitude": null,
+                        "geoAccuracy": null
+                    },
+                    {
+                        "contactPointType": [
+                            "ContactPointEmail"
+                        ],
+                        "id": null,
+                        "activeFromDate": "2021-08-03",
+                        "emailAddress": "chakraprasad.j@gmail.com"
+                    },
+                    {
+                        "contactPointType": [
+                            "ContactPointPhone"
+                        ],
+                        "id": null,
+                        "activeFromDate": "2021-08-03",
+                        "telephoneNumber": "9876543210"
+                    }
+                ]
+            }
+        ],
+        "externalIds": [
+            {
+                "id": "",
+                "externalId": "6658",
+                "externalIdType": [
+                    "MDM"
+                ],
+                "statusLastChangedDate": "2021-08-03T09:57:08Z",
+                "status": "VALID"
+            }
+        ],
+        "auditInfo": {
+            "createdDate": "2021-07-28T19:31:20Z",
+            "createdBy": "Accelerator Admin",
+            "updatedDate": "2021-08-03T09:57:08Z",
+            "updatedBy": "Accelerator Admin",
+            "isDeleted": false
+        },
+        "customerNumber": "145897531",
+        "customerStatus": "ACTIVE"
+    }
+]

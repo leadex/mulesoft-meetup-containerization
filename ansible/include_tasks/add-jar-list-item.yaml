@@ -1,0 +1,8 @@
+- name: Get git revision id
+  register: rev_id
+  command:
+    cmd: git rev-parse --short HEAD
+    chdir: "{{ apps_dir }}/{{ item.item }}"
+- name: Add element to the list
+  set_fact:
+    api_apps: "{{ api_apps + [{ 'service_name': item.item, 'path': item.files[0].path, 'id': rev_id.stdout }] }}"

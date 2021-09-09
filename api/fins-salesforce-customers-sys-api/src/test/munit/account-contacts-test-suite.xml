@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="account-contacts-test-suite.xml" />
+	<munit:test name="account-contacts-test-suite-account-contacts_get-contact-by-id-success" doc:id="eafa0353-f559-4f83-a584-cb8144173f08" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Salesforce Get Contacts" doc:id="728d73b1-3bb6-4a55-aa40-cb358ef43182" processor="salesforce:query">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Contact" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="contactReturned" value="#[MunitTools::getResourceAsString('sample_data/contacts/get-contact-sf-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Contact Id" doc:id="d0385f63-65b5-4b40-9310-12d78b4ecc4e" >
+				<munit:attributes value='#[{"uriParams": {"contactId":"0014x00000H6TRgAAN"}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="get:\contacts\(contactId):salesforce-customers-sys-api-config" doc:id="4e450914-a7c8-4f1f-9109-2d21c0c2ce23" name="get:\contacts\(contactId):salesforce-customers-sys-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert Lastname" doc:id="244fe981-4d49-4e77-95d3-4180bf02b082" actual="#[payload.lastName]" expected='#["Monahan"]' message="Incorrect LastName"/>
+			<munit-tools:assert-equals doc:name="Assert global Party Id" doc:id="fd9545ad-e4b8-4f83-bda2-de9f581efe06" actual='#[payload.externalIds[0]."externalId"]' expected='#["f86eba80-7afe35ee5f17"]' message="Incorrect Global Party Id" />
+			<munit-tools:assert-equals doc:name="Assert Email Id" doc:id="f834dc6a-f7ed-4ad3-9e53-750aef3047a8" actual='#[(payload.contactPoints filter ($.contactPointType  contains "ContactPointEmail"))[0].emailAddress]' expected='#["testuser16@gmail.com"]' message="Incorrect Email Id" />
+			<munit-tools:assert-equals doc:name="Assert Telephone" doc:id="1bf43282-9228-484a-9aac-d30fedd9991a" actual='#[(payload.contactPoints filter ($.contactPointType  contains "ContactPointPhone"))[0].telephoneNumber]' expected='#["534-318-0788"]' message="Incorrect Email Id" />
+			<munit-tools:assert-equals doc:name="Assert AddressLine1" doc:id="a7e0966e-3339-4af6-9056-ca4e402f5522" actual='#[(payload.contactPoints filter ($.contactPointType contains "ContactPointAddress"))[0].addressLine1]' expected='#["Gloria Port"]' message="Incorrect Address" />
+			<munit-tools:assert-equals doc:name="Assert Party Type" doc:id="897cb257-672a-48d5-b20c-a2307d19e3b2" actual='#[payload.partyType]' expected='#["Individual"]' message="Incorrect party type" />
+		</munit:validation>
+	</munit:test>
+<munit:test name="account-contacts-test-suite-account-contacts_get-contact-by-id-not-found-404-error-test" doc:id="5987a0c2-a52a-47a5-8117-a714e373690b" description="Test" ignore="true">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Salesforce Get Contacts" doc:id="e1c26f57-f654-4917-bcc9-b692b435d5a9" processor="salesforce:query">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Contact" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="contactReturned" value="#[MunitTools::getResourceAsString('sample_data/contacts/get-contact-sf-empty-records-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Contact Id" doc:id="f5bbf7a6-704b-4957-adb1-a8074750afdd" >
+				<munit:attributes value='#[{"uriParams": {"contactId":"0014x00000H6TRgAAN"}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="get:\contacts\(contactId):salesforce-customers-sys-api-config" doc:id="7b65cf40-44a3-4206-8895-217a4dfd9605" name="get:\contacts\(contactId):salesforce-customers-sys-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert Http Status" doc:id="cdc917f2-e887-4b89-8d24-7ead80fb19b7" actual="#[vars.httpStatus]" expected='#["404"]' message="Invalid Status code"/>
+			<munit-tools:assert-that doc:name="Assert error message" doc:id="514187c5-7b0a-4542-b94d-da8f8f025ee5" expression='#[payload.errorMessage contains "Contact Not Found"]' is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="post:\contacts:salesforce-customers-sys-api-create-contact-success-test" doc:id="c73be154-7e9b-46ee-a6b6-9f2adf03932e" description="create contact success" ignore="true">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Salesforce create contact" doc:id="304a7442-ece5-41ed-9266-6fc25fb18c3d" processor="salesforce:create" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Contact" attributeName="type" />
+					<munit-tools:with-attribute whereValue="Create Contact" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="createdContact" value="#[MunitTools::getResourceAsString('sample_data/contacts/create-contact-sf-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set payload" doc:id="52a6dd3a-ba6c-4ebe-8afa-34e0c9359ae5" >
+				<munit:payload value="#[MunitTools::getResourceAsString('sample_data/contacts/create-contact-request-payload')]" mediaType="application/json" />
+				<munit:attributes value='#[{"uriParams": {"customerId":"0014x00000H6TRgAAN"}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="post:\contacts:application\json:salesforce-customers-sys-api-config" doc:id="b2ecb951-a2cb-403e-97d2-fde14826ae6a" name="post:\contacts:application\json:salesforce-customers-sys-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert http status" doc:id="a404b826-ff70-41f5-8210-a007b647598a" actual="#[vars.httpStatus]" expected='#[201]' message="Customer creation failed"/>
+			<munit-tools:assert-equals doc:name="Assert Response message" doc:id="37786450-5e09-430d-9806-31d99bfb73e9" actual='#[payload.responseStatus]' expected='#["SUCCESS"]' message="Incorrect response" />
+			<munit-tools:verify-call doc:name="Verify Create Contact is Called" doc:id="68089c49-2f55-4777-a3d3-b2e22d32e518" processor="salesforce:create" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Contact" attributeName="type" />
+					<munit-tools:with-attribute whereValue="Create Contact" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="post:\contacts:salesforce-customers-sys-api-update-contact-success-test" doc:id="2b3bcba7-3444-4146-875d-739b517955ee" description="create contact success" ignore="true">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Salesforce update contact" doc:id="b498fc02-7dc4-46ba-88dd-52ad1c1a9a5b" processor="salesforce:update" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Update Contact" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="updatedContact" value="#[MunitTools::getResourceAsString('sample_data/contacts/update-contact-sf-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Salesforce Get Contacts" doc:id="fc728321-e072-489a-8ed7-4486444eab9a" processor="salesforce:query" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Contact" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="contactReturned" value="#[MunitTools::getResourceAsString('sample_data/contacts/get-contact-sf-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set payload" doc:id="9503ed26-8a2c-428e-b519-c10073208eef" >
+				<munit:payload value="#[MunitTools::getResourceAsString('sample_data/contacts/update-contact-request-payload')]" mediaType="application/json" />
+				<munit:attributes value='#[{"uriParams": {"customerId":"0014x00000H6TRgAAN"}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="patch:\contacts\(contactId):application\json:salesforce-customers-sys-api-config" doc:id="43a61b44-fdd4-4fdd-a69e-2711d2ecc13d" name="patch:\contacts\(contactId):application\json:salesforce-customers-sys-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert Lastname" doc:id="a290c30e-5f8b-4eaa-8e0f-be60deb21d72" actual="#[payload.lastName]" expected='#["Monahan"]' message="Incorrect LastName"/>
+			<munit-tools:assert-equals doc:name="Assert global Party Id" doc:id="b33d3b32-2e56-4db3-a271-a84820260d6f" actual='#[payload.externalIds[0]."externalId"]' expected='#["f86eba80-7afe35ee5f17"]' message="Incorrect Global Party Id" />
+			<munit-tools:assert-equals doc:name="Assert Email Id" doc:id="bd5c740d-be48-4192-baec-f30e6b69f673" actual='#[(payload.contactPoints filter ($.contactPointType  contains "ContactPointEmail"))[0].emailAddress]' expected='#["testuser16@gmail.com"]' message="Incorrect Email Id" />
+			<munit-tools:assert-equals doc:name="Assert Telephone" doc:id="03500df4-201f-42c4-a4f7-dfd15c268f83" actual='#[(payload.contactPoints filter ($.contactPointType  contains "ContactPointPhone"))[0].telephoneNumber]' expected='#["534-318-0788"]' message="Incorrect Email Id" />
+			<munit-tools:assert-equals doc:name="Assert AddressLine1" doc:id="c9fdb5f4-5833-49c7-b01f-27e241aad9c1" actual='#[(payload.contactPoints filter ($.contactPointType contains "ContactPointAddress"))[0].addressLine1]' expected='#["Gloria Port"]' message="Incorrect Address" />
+			<munit-tools:assert-equals doc:name="Assert Party Type" doc:id="c7ec3600-1fcf-4638-a607-3f7f42df8886" actual='#[payload.partyType]' expected='#["Individual"]' message="Incorrect party type" />
+			<munit-tools:verify-call doc:name="Verify Update Contact is Called" doc:id="d7828e2b-79f5-4c8d-bab6-bdee5e2866aa" processor="salesforce:update" times="1" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Contact" attributeName="type" />
+					<munit-tools:with-attribute whereValue="Update Contact" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="get:\contacts:salesforce-customers-sys-api-lookup-contacts-by-contactId-success-test" doc:id="ae4663b5-f457-42fd-8e21-bbc8d25a0fa6" description="lookup contacts by contactId success">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Salesforce Get Contacts by Id" doc:id="577f0ec3-7620-41f5-baf6-026513002425" processor="salesforce:query" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Contacts by Contact Id" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="contactsReturned" value="#[MunitTools::getResourceAsString('sample_data/contacts/lookup-contact-by-id-sf-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Contact Id" doc:id="5176acfc-3bca-4b0b-9a4d-1c06e29ff2b5" >
+				<munit:attributes value='#[{"queryParams": {"contactId":"0014x00000HwZFdAAN"}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="get:\contacts:salesforce-customers-sys-api-config" doc:id="8042418b-2566-448c-a679-b8d0eb6429ac" name="get:\contacts:salesforce-customers-sys-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert Lastname" doc:id="61214127-96a9-476c-aa89-19b09cd2cb47" actual="#[payload[0].lastName]" expected='#["Jacob"]' message="Incorrect LastName"/>
+			<munit-tools:assert-equals doc:name="Assert customer Global PartyRole Id" doc:id="90bb336a-4c4e-4a64-b175-19ed5a47ef9d" actual='#[payload[0].externalIds[0]."externalId"]' expected='#["fdddf723"]' message="Incorrect Global Party Id" />
+			<munit-tools:verify-call doc:name="Verify Get Contact by External id Call" doc:id="0c26b1cb-2135-47de-80ed-48f3e52ea805" processor="salesforce:query" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Contacts by External Id" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Get Contact by Email Address Call" doc:id="3206bc4c-82d2-431d-b25e-8fc4afd83c04" processor="salesforce:query" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Contacts By Email Address" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="get:\contacts:salesforce-customers-sys-api-lookup-contacts-by-externalId-success-test" doc:id="f35da18d-0805-4175-bee8-7fd992d5d4d3" description="lookup customers by globalId success">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Salesforce   Get Contacts by External Id" doc:id="b1af6e01-cdc8-4207-9486-32700cd838f2" processor="salesforce:query" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Contacts by External Id" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="contactsReturned" value="#[MunitTools::getResourceAsString('sample_data/contacts/lookup-contact-by-external-id-sf-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set External Id" doc:id="808d192d-333d-492b-9ed9-e81ee15ab562" >
+				<munit:attributes value='#[{"queryParams": {"externalId":"a7d21f74-bdd8-41d8-84d7-832ed1a6afa5"}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="get:\contacts:salesforce-customers-sys-api-config" doc:id="71833578-b737-43c7-a82a-fd2c8b1a8249" name="get:\contacts:salesforce-customers-sys-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert Lastname" doc:id="6c1c2477-63d5-464a-8f2b-864c7c573fdc" actual="#[payload[0].lastName]" expected='#["Fisher"]' message="Incorrect LastName"/>
+			<munit-tools:assert-equals doc:name="Assert customer Global PartyRole Id" doc:id="660219cb-a6c4-4774-9329-4c85a1880e14" actual='#[payload[0].externalIds[0]."externalId"]' expected='#["a7d21f74-bdd8-41d8-84d7-832ed1a6afa5"]' message="Incorrect Global Party Id" />
+    		<munit-tools:verify-call doc:name="Verify Get Get Contacts by Contact Id Call" doc:id="13ebd336-3d6f-4fbb-a4dc-e5337aeaf3ee" processor="salesforce:query" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Contacts by Contact Id" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Get Contact by Email Address Call" doc:id="738ec8e5-476a-45d9-a135-fe63cec98971" processor="salesforce:query" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Contacts By Email Address" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="get:\contacts:salesforce-customers-sys-api-lookup-contacts-by-emailAddress-success-test" doc:id="0daa4892-80a7-4a62-8e13-854822a25e2b" description="lookup contacts by emailAddress success">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Salesforce by Email Address" doc:id="7d20bf69-2358-4d10-ac64-ea97803398c2" processor="salesforce:query" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Contacts By Email Address" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="contactsReturned" value="#[MunitTools::getResourceAsString('sample_data/contacts/lookup-contact-by-email-id-response')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Customer Id" doc:id="d442df37-fd23-4cc4-813e-299fd9dec167" >
+				<munit:attributes value='#[{"queryParams": {"emailAddress":"sandy.silian@gmail.com", "limit": 20, "offset":0}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="get:\contacts:salesforce-customers-sys-api-config" doc:id="e1b9d0d2-00ee-4a90-8cea-2e1d041b0e52" name="get:\contacts:salesforce-customers-sys-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert Lastname" doc:id="dd2c8346-9faa-4a50-af63-88035616d6b5" actual="#[payload[0].lastName]" expected='#["Silian"]' message="Incorrect LastName"/>
+			<munit-tools:assert-equals doc:name="Assert customer Global PartyRole Id" doc:id="f5e7c6e0-5078-4a22-bab2-f4a4113afd9b" actual='#[payload[0].externalIds[0]."externalId"]' expected='#["test123"]' message="Incorrect Global Party Id" />
+<munit-tools:verify-call doc:name="Verify Get Get Contacts by Contact Id Call" doc:id="7e370683-2ca1-4c10-b3d6-5f4e13754c21" processor="salesforce:query" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Contacts by Contact Id" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Get Contacts by External Id Call" doc:id="9a6415ff-e87d-4521-80d8-4c586e5e6fce" processor="salesforce:query" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Contacts by External Id" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>	</munit:validation>
+	</munit:test>
+</mule>

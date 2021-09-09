@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="accounts-test-suite.xml" />
+	<munit:test name="accounts-test-suite-post:\accounts\poller:salesforce-financial-exp-api-configTest" doc:id="9990fd5f-64aa-4d4e-b238-6c698d853740" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock HTTP Request" doc:id="0f4055aa-1be9-4149-883c-4529fbc58671" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="POST" attributeName="method" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="httpStatus" value="#[202]" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to post:\accounts\poller:salesforce-financial-exp-api-config" doc:id="ef35f9f3-0fb4-49e2-94ad-5f5ae6861250" name="post:\accounts\poller:salesforce-financial-exp-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert 200 Response" doc:id="5e400af1-5665-448c-be56-a710b5fca1fc" actual="#[vars.httpStatus]" expected="#[202]" message="Expected success response"/>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

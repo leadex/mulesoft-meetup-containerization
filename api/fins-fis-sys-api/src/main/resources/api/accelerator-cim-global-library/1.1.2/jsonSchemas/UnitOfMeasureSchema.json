@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/definitions/UnitOfMeasure",
+  "definitions": {
+    "UnitOfMeasure": {
+      "type": "object",
+      "example": {
+        "id": "dolor esse incididunt",
+        "name": "laborum cupidatat Duis",
+        "pluralName": "sed"
+      },
+      "additionalProperties": true,
+      "required": [
+        "pluralName",
+        "name",
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "pluralName": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

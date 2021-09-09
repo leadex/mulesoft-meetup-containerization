@@ -1,0 +1,10 @@
+[
+  {
+    "name": "T-000000027",
+    "amount": 20000.0,
+    "transactionDate": "2020-07-01T19:00:00.000Z",
+    "transactionType": "CreditTransaction",
+    "transactionSubType": "CHECK",
+    "transactionStatus": "POSTED"
+  }
+]

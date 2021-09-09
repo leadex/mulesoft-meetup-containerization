@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd  http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+    <flow name="salesforce-financial-sys-api-main">
+        <http:listener config-ref="salesforce-financial-sys-api-httpListenerConfig" path="/api/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="salesforce-financial-sys-api-config" />
+        <error-handler ref="error-handler_common" />
+    </flow>
+    <flow name="salesforce-financial-sys-api-console" doc:id="ae21d728-9c29-486e-9e10-0c0aebcf861b" >
+    	<http:listener config-ref="salesforce-financial-sys-api-httpListenerConfig" path="/console/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+		<apikit:console doc:name="APIkit Console" doc:id="763ac382-6424-464e-b4a0-48d55070bdf5" config-ref="salesforce-financial-sys-api-config"/>
+	</flow>
+	<flow name="get:\ping:salesforce-financial-sys-api-config">
+		<flow-ref doc:name="Flow Reference" doc:id="ace0eabe-05bd-4b89-9143-b416de4773f3" name="ping_get-health"/>
+    </flow>
+    <flow name="get:\accounts:salesforce-financial-sys-api-config">
+        <flow-ref doc:name="accounts-search" doc:id="a18d3cfa-0af2-475c-86c1-f69c0455c792" name="accounts-search" />
+    </flow>
+    <flow name="get:\accounts\(accountId):salesforce-financial-sys-api-config">
+        <flow-ref doc:name="accounts-get-by-id" doc:id="d5abe2d7-ca23-4376-bb18-e2272479a683" name="accounts-get-by-id" />
+    </flow>
+    <flow name="post:\accounts:application\json:salesforce-financial-sys-api-config">
+        <flow-ref doc:name="accounts-create" doc:id="422c143a-f18c-4c7d-9e1c-629d230dc17b" name="accounts-create" />
+    </flow>
+    <flow name="patch:\accounts\(accountId):application\json:salesforce-financial-sys-api-config" doc:id="4bd62db2-3d45-471d-80a7-ca5105f68dbd">
+        <flow-ref doc:name="accounts-patch" doc:id="e60223c7-dc5e-48bc-a7a7-556e5a467dc9" name="accounts-patch" />
+    </flow>
+    <flow name="get:\accounts\(accountId)\transactions:salesforce-financial-sys-api-config">
+        <flow-ref doc:name="accounts-get-transactions" doc:id="a2340335-d9b7-49d3-bb7e-b6ad73226259" name="accounts-get-transactions" />
+    </flow>
+    <flow name="patch:\accounts\(accountId)\transactions\(transactionId):application\json:salesforce-financial-sys-api-config" doc:id="e05962cf-98cb-4f7c-9ff1-65d101dea90b">
+        <flow-ref doc:name="accounts-transactions-patch" doc:id="8ef49dc2-cde3-49aa-a219-3a93e963295a" name="accounts-transactions-patch" />
+    </flow>
+    <flow name="get:\accounts\(accountId)\transactions\(transactionId):salesforce-financial-sys-api-config">
+		<flow-ref doc:name="accounts-get-transactions-by-id" doc:id="0a519277-9e69-4ed9-b3b7-18ffca194b18" name="accounts-get-transactions-by-id"/>
+    </flow>
+    <flow name="post:\accounts\(accountId)\transactions:application\json:salesforce-financial-sys-api-config">
+		<flow-ref doc:name="accounts-post-transactions" doc:id="bb40ce23-d496-4cf1-a487-ec0a6e07ecb4" name="accounts-post-transactions"/>
+    </flow>
+</mule>
